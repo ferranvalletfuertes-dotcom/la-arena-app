@@ -80,7 +80,6 @@ st.markdown("""
         filter: brightness(1.2);
     }
     
-    /* Input oscuro para misiones */
     .stTextInput > div > div > input {
         background-color: #111 !important;
         color: #00ff00 !important;
@@ -88,7 +87,6 @@ st.markdown("""
         font-family: monospace;
     }
 
-    /* Dopamina Visual: Reglas de Combate */
     .neon-red { color: #ff4b4b; text-shadow: 0 0 10px rgba(255, 75, 75, 0.8); font-weight: 900; }
     .neon-green { color: #00ff00; text-shadow: 0 0 10px rgba(0, 255, 0, 0.8); font-weight: 900; }
     .rules-box { 
@@ -297,19 +295,17 @@ elif st.session_state.estado == "lobby":
             
     st.divider()
 
-    # --- LEYES DE LA SANGRE (NUEVO BLOQUE VISUAL) ---
     st.markdown("""
         <div class="rules-box">
             <h3 style="text-align: center; color: #ff4b4b; text-transform: uppercase; letter-spacing: 2px; margin-top: 0; text-shadow: 0 0 10px rgba(255, 75, 75, 0.5);">⚠️ Las Leyes de la Arena</h3>
             <ul style="list-style-type: none; padding-left: 0; color: #ccc; font-size: 15px; line-height: 1.8;">
-                <li style="margin-bottom: 10px;">🟢 <span class="neon-green">CÓMO GANAR:</span> Escribe tu misión. Sobrevive hasta que el reloj llegue a cero sin salir de la aplicación. Te llevarás ELO, Monedas y el respeto de la Bóveda.</li>
-                <li style="margin-bottom: 10px;">🔴 <span class="neon-red">CÓMO PERDER:</span> Si cambias de pestaña, si minimizas el navegador o si te acobardas y pulsas "Me Rindo", tu C4 explota. Pierdes tu ELO de golpe.</li>
-                <li>⚔️ <strong style="color: #ffd700;">EL PACTO:</strong> Cumple la misión que has declarado. Si no trabajas de verdad, estarás engañando al sistema, pero nunca a ti mismo.</li>
+                <li style="margin-bottom: 10px;">🟢 <span class="neon-green">CÓMO GANAR:</span> Escribe tu misión. Sobrevive hasta que el reloj llegue a cero sin salir de la aplicación.</li>
+                <li style="margin-bottom: 10px;">🔴 <span class="neon-red">CÓMO PERDER:</span> Si cambias de pestaña, minimizas el navegador o pulsas "Me Rindo", tu C4 explota. Pierdes tu ELO.</li>
+                <li>⚔️ <strong style="color: #ffd700;">EL PACTO:</strong> Cumple la misión declarada. Si no trabajas, estarás engañando al sistema, pero nunca a ti mismo.</li>
             </ul>
         </div>
     """, unsafe_allow_html=True)
 
-    # --- PANEL DE CONFIGURACIÓN DE COMBATE ---
     st.markdown("<h3 style='text-align: center; color: #ff4b4b;'>🔥 DECLARACIÓN DE INTENCIONES</h3>", unsafe_allow_html=True)
     st.markdown("<p style='text-align: center; color: #888; font-size: 14px;'>Tu rival sabrá por qué estás luchando. No le decepciones.</p>", unsafe_allow_html=True)
     
@@ -341,7 +337,6 @@ elif st.session_state.estado == "lobby":
             st.session_state.estado = "buscando"
             st.rerun()
 
-    # --- BARRA DE NAVEGACIÓN INFERIOR ---
     st.markdown("<hr style='border: 1px solid #333; margin-top: 30px;'>", unsafe_allow_html=True)
     c1, c2, c3 = st.columns([1, 0.1, 1])
     with c1:
@@ -409,14 +404,20 @@ elif st.session_state.estado == "tienda":
 
 # --- EMPAREJAMIENTO MULTIJUGADOR ---
 elif st.session_state.estado == "buscando":
-    st.markdown(f"<h2 style='text-align: center; color: #ff4b4b; animation: pulse 1.5s infinite;'>📡 Rastreando la red (Modo {int(st.session_state.tiempo_combate/60)} Min)...</h2>", unsafe_allow_html=True)
+    tiempo_espera = time.time() - st.session_state.inicio_busqueda
+    st.markdown(f"<h2 style='text-align: center; color: #ff4b4b; animation: pulse 1.5s infinite;'>📡 Rastreando la red ({int(tiempo_espera)}s)...</h2>", unsafe_allow_html=True)
     
-    if time.time() - st.session_state.inicio_busqueda > 20:
+    # EL GUARDIÁN DESPIERTA A LOS 15 SEGUNDOS
+    if tiempo_espera > 15:
         if st.session_state.partida_id:
             supabase.table("partidas").delete().eq("id", st.session_state.partida_id).execute()
-        st.error("No se han encontrado guerreros de tu nivel Y tu duración de combate.")
-        time.sleep(2)
-        st.session_state.estado = "lobby"
+            st.session_state.partida_id = None
+            
+        st.session_state.rival_nombre = "EL GUARDIÁN"
+        st.session_state.rival_elo = st.session_state.puntos_elo + 15
+        st.session_state.rival_mision = "Quebrantar tu voluntad."
+        
+        st.session_state.estado = "duelo"
         st.rerun()
     
     if st.button("Cancelar Búsqueda", use_container_width=True):
@@ -483,7 +484,7 @@ elif st.session_state.estado == "buscando":
             st.session_state.estado = "duelo"
             st.rerun()
         else:
-            with st.spinner(f"Buscando un rival de {int(st.session_state.tiempo_combate/60)} Min ({st.session_state.puntos_elo} pts): {int(time.time() - st.session_state.inicio_busqueda)}s / 20s"):
+            with st.spinner(f"Buscando guerreros..."):
                 time.sleep(2)
                 st.rerun()
 
