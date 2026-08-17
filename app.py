@@ -132,7 +132,7 @@ st.markdown("""
         border: 2px solid #ff0000 !important; 
     }
     </style>
-""", unsafe_allow_html=True)
+""".replace('\n', ''), unsafe_allow_html=True)
 
 # --- CONEXIÓN A LA BÓVEDA ---
 @st.cache_resource
@@ -171,8 +171,6 @@ if 'inv_corona' not in st.session_state: st.session_state.inv_corona = False
 if 'boost_elo' not in st.session_state: st.session_state.boost_elo = None
 if 'boost_monedas' not in st.session_state: st.session_state.boost_monedas = None
 if 'rival_skin' not in st.session_state: st.session_state.rival_skin = 'default'
-
-# NUEVA MEMORIA PARA SALAS PRIVADAS
 if 'tipo_partida' not in st.session_state: st.session_state.tipo_partida = "publica"
 if 'codigo_sala' not in st.session_state: st.session_state.codigo_sala = ""
 
@@ -235,7 +233,7 @@ def generar_carta_html(nombre, elo, rango_i, rango_c, subtitulo, skin='default')
     clase_animacion = "anim-aura" if skin == 'aura' else "anim-float"
     efecto_sombra = "" if skin == 'aura' else f"box-shadow: 0 0 20px {color_borde}30;"
 
-    return f"""
+    html_bruto = f"""
     <div class="fut-card {clase_animacion}" style="background: linear-gradient(135deg, #161616 0%, #050505 100%); border: 2px solid {color_borde}; border-radius: 12px; width: 140px; margin: 10px; padding: 15px 10px; position: relative; {efecto_sombra} display: inline-block; text-align: center; transition: all 0.3s ease;">
         <div style="position: absolute; top: 8px; left: 12px; color: {color_borde}; font-weight: 900; font-size: 20px; font-family: monospace; text-shadow: 0 0 5px {color_borde};">{elo}</div>
         <div style="position: absolute; top: 8px; right: 12px; font-size: 20px; filter: drop-shadow(0 0 5px {color_borde});">{rango_i}</div>
@@ -249,33 +247,35 @@ def generar_carta_html(nombre, elo, rango_i, rango_c, subtitulo, skin='default')
         <div style="color: #666; font-size: 11px; margin-top: 5px; text-transform: uppercase; letter-spacing: 2px; font-weight: bold;">{subtitulo}</div>
     </div>
     """
+    # BLINDAJE ANTI-MARKDOWN: Elimina los saltos de línea para que Streamlit renderice HTML puro.
+    return html_bruto.replace("\n", "")
 
 def render_navbar(origen):
     st.markdown("<hr style='border: 1px solid #333; margin-top: 40px;'>", unsafe_allow_html=True)
     c1, c2, c3, c4, c5 = st.columns([1, 0.05, 1, 0.05, 1])
     
     with c1:
-        st.markdown("<div class='nav-btn'>", unsafe_allow_html=True)
+        st.markdown("<div class='nav-btn'>".replace('\n', ''), unsafe_allow_html=True)
         if st.button("🏠 LOBBY", use_container_width=True, key=f"nav_lobby_{origen}"): 
             st.session_state.estado = "lobby"
             st.rerun()
         st.markdown("</div>", unsafe_allow_html=True)
         
     with c2: 
-        st.markdown("<div style='border-left: 2px solid #333; height: 100%; margin: auto;'></div>", unsafe_allow_html=True)
+        st.markdown("<div style='border-left: 2px solid #333; height: 100%; margin: auto;'></div>".replace('\n', ''), unsafe_allow_html=True)
         
     with c3:
-        st.markdown("<div class='nav-btn'>", unsafe_allow_html=True)
+        st.markdown("<div class='nav-btn'>".replace('\n', ''), unsafe_allow_html=True)
         if st.button("🛒 TIENDA", use_container_width=True, key=f"nav_tienda_{origen}"): 
             st.session_state.estado = "tienda"
             st.rerun()
         st.markdown("</div>", unsafe_allow_html=True)
         
     with c4: 
-        st.markdown("<div style='border-left: 2px solid #333; height: 100%; margin: auto;'></div>", unsafe_allow_html=True)
+        st.markdown("<div style='border-left: 2px solid #333; height: 100%; margin: auto;'></div>".replace('\n', ''), unsafe_allow_html=True)
         
     with c5:
-        st.markdown("<div class='nav-btn'>", unsafe_allow_html=True)
+        st.markdown("<div class='nav-btn'>".replace('\n', ''), unsafe_allow_html=True)
         if st.button("🏛️ LEYENDAS", use_container_width=True, key=f"nav_salon_{origen}"): 
             st.session_state.estado = "salon"
             st.rerun()
@@ -297,7 +297,7 @@ if st.session_state.estado == "login":
             <span class='highlight'>Nosotros venimos a romper al 99%.</span><br>
             Forja tu disciplina. Aplasta a tus rivales. Haz que tu nombre importe.
         </div>
-    """, unsafe_allow_html=True)
+    """.replace('\n', ''), unsafe_allow_html=True)
     
     st.divider()
     
@@ -379,7 +379,7 @@ elif st.session_state.estado == "lobby":
     if tiene_boost_activo(st.session_state.boost_monedas): 
         boosts_html += "<span style='background:#ffd700; color:black; padding:2px 8px; border-radius:10px; font-size:12px; font-weight:bold;'>💰 x2 MONEDAS</span>"
         
-    st.markdown(f"<h3 style='text-align: center; color: white; text-transform: uppercase;'>Bienvenido, {st.session_state.nombre_guerra} <br><div style='margin-top:10px;'>{boosts_html}</div></h3>", unsafe_allow_html=True)
+    st.markdown(f"<h3 style='text-align: center; color: white; text-transform: uppercase;'>Bienvenido, {st.session_state.nombre_guerra} <br><div style='margin-top:10px;'>{boosts_html}</div></h3>".replace('\n', ''), unsafe_allow_html=True)
     
     with st.expander("⚙️ Ajustes de Perfil"):
         nuevo_nombre = st.text_input("Cambiar nombre de guerra", value=st.session_state.nombre_guerra)
@@ -393,7 +393,7 @@ elif st.session_state.estado == "lobby":
     st.divider()
     
     carta_propia = generar_carta_html(st.session_state.nombre_guerra, st.session_state.puntos_elo, rango_i, rango_c, "TU LEYENDA", st.session_state.skin_activa)
-    st.markdown(f"<div style='text-align: center; margin-bottom: 20px;'>{carta_propia}</div>", unsafe_allow_html=True)
+    st.markdown(f"<div style='text-align: center; margin-bottom: 20px;'>{carta_propia}</div>".replace('\n', ''), unsafe_allow_html=True)
     
     st.markdown(f"""
         <div style='display: flex; justify-content: space-around; text-align: center; background-color: #121212; padding: 25px; border-radius: 12px; border: 1px solid {rango_c}; box-shadow: 0 4px 20px {rango_c}40;'>
@@ -410,7 +410,7 @@ elif st.session_state.estado == "lobby":
                 <h2 style='margin: 0; color: #ffd700; text-shadow: 0 0 10px rgba(255,215,0,0.3);'>🪙 {st.session_state.monedas}</h2>
             </div>
         </div>
-    """, unsafe_allow_html=True)
+    """.replace('\n', ''), unsafe_allow_html=True)
     
     st.write("") 
     
@@ -422,7 +422,7 @@ elif st.session_state.estado == "lobby":
                 _, _, i_rank, c_rank = calcular_rango(jugador['elo'])
                 cartas_html += generar_carta_html(jugador['nombre'], jugador['elo'], i_rank, c_rank, f"TOP {i+1}", jugador.get('skin_activa', 'default'))
             cartas_html += "</div>"
-            st.markdown(cartas_html, unsafe_allow_html=True)
+            st.markdown(cartas_html.replace('\n', ''), unsafe_allow_html=True)
 
     with st.expander("📜 Historial de Guerra"):
         historial = supabase.table("historial").select("*").eq("jugador_id", st.session_state.usuario_id).order("fecha", desc=True).limit(5).execute()
@@ -449,7 +449,7 @@ elif st.session_state.estado == "lobby":
                 <li>⚔️ <strong style="color: #ffd700;">EL PACTO:</strong> Cumple la misión declarada. Si no trabajas, estarás engañando al sistema.</li>
             </ul>
         </div>
-    """, unsafe_allow_html=True)
+    """.replace('\n', ''), unsafe_allow_html=True)
 
     st.markdown("<h3 style='text-align: center; color: #ff4b4b;'>🔥 DECLARACIÓN DE INTENCIONES</h3>", unsafe_allow_html=True)
     mision_input = st.text_input("", placeholder="Ej: Terminar el ensayo de Filosofía...", label_visibility="collapsed")
@@ -489,7 +489,7 @@ elif st.session_state.estado == "lobby":
     st.markdown("<h3 style='text-align: center; color: #888; margin-top: 30px;'>🤝 DUELO PRIVADO (SALAS DE SANGRE)</h3>", unsafe_allow_html=True)
     c_p1, c_p2 = st.columns([2, 1])
     with c_p1:
-        codigo_input = st.text_input("", placeholder="Pega el código de un amigo o déjalo vacío para crear", label_visibility="collapsed", key="input_cod_priv")
+        codigo_input = st.text_input("", placeholder="Pega un código o déjalo vacío para crear", label_visibility="collapsed", key="input_cod_priv")
     with c_p2:
         if st.button("🚪 CREAR / UNIRSE", use_container_width=True):
             if not mision_input:
@@ -522,7 +522,7 @@ elif st.session_state.estado == "tienda":
             <p style='margin:0; color:#aaa; font-size:14px; text-transform:uppercase;'>Fondos Disponibles</p>
             <h2 style='margin:0; color:#ffd700; font-size:36px; text-shadow: 0 0 15px rgba(255,215,0,0.4);'>🪙 {st.session_state.monedas}</h2>
         </div>
-    """, unsafe_allow_html=True)
+    """.replace('\n', ''), unsafe_allow_html=True)
     
     st.markdown("### 🧬 BOOSTS DE RENDIMIENTO (24 Horas)")
     
@@ -534,7 +534,7 @@ elif st.session_state.estado == "tienda":
                 <p style='color:#888; font-size:12px;'>Multiplica tus ganancias de rango.</p>
                 <h3 style='color:#ffd700;'>🪙 150</h3>
             </div>
-        """, unsafe_allow_html=True)
+        """.replace('\n', ''), unsafe_allow_html=True)
         if st.button("COMPRAR BOOST ELO", key="b_elo", use_container_width=True):
             if st.session_state.monedas >= 150:
                 st.session_state.monedas -= 150
@@ -557,7 +557,7 @@ elif st.session_state.estado == "tienda":
                 <p style='color:#888; font-size:12px;'>Multiplica tus ingresos de victoria.</p>
                 <h3 style='color:#ffd700;'>🪙 200</h3>
             </div>
-        """, unsafe_allow_html=True)
+        """.replace('\n', ''), unsafe_allow_html=True)
         if st.button("COMPRAR BOOST ORO", key="b_oro", use_container_width=True):
             if st.session_state.monedas >= 200:
                 st.session_state.monedas -= 200
@@ -586,7 +586,7 @@ elif st.session_state.estado == "tienda":
                 <p style='color:#888; font-size:12px;'>Tu carta arderá en rojo perpetuo.</p>
                 <h3 style='color:#ffd700;'>🪙 500</h3>
             </div>
-        """, unsafe_allow_html=True)
+        """.replace('\n', ''), unsafe_allow_html=True)
         
         if st.session_state.inv_aura:
             if st.session_state.skin_activa == 'aura':
@@ -618,7 +618,7 @@ elif st.session_state.estado == "tienda":
                 <p style='color:#888; font-size:12px;'>Icono permanente en tu nombre.</p>
                 <h3 style='color:#ffd700;'>🪙 1500</h3>
             </div>
-        """, unsafe_allow_html=True)
+        """.replace('\n', ''), unsafe_allow_html=True)
         
         if st.session_state.inv_corona:
             if st.session_state.skin_activa == 'corona':
@@ -669,7 +669,7 @@ elif st.session_state.estado == "salon":
                 {dias}D : {horas}H
             </h1>
         </div>
-    """, unsafe_allow_html=True)
+    """.replace('\n', ''), unsafe_allow_html=True)
 
     st.markdown("<h3 style='text-align: center; color: #fff;'>🏆 ASPIRANTES A LEYENDA (TOP 3 ACTUAL)</h3>", unsafe_allow_html=True)
     
@@ -680,7 +680,7 @@ elif st.session_state.estado == "salon":
             _, _, i_rank, c_rank = calcular_rango(jugador['elo'])
             cartas_html += generar_carta_html(jugador['nombre'], jugador['elo'], i_rank, c_rank, f"ASPIRANTE #{i+1}", jugador.get('skin_activa', 'default'))
         cartas_html += "</div>"
-        st.markdown(cartas_html, unsafe_allow_html=True)
+        st.markdown(cartas_html.replace('\n', ''), unsafe_allow_html=True)
 
     st.markdown("<h3 style='text-align: center; color: #ffd700; margin-top: 40px;'>📜 LEYENDAS INMORTALES</h3>", unsafe_allow_html=True)
     
@@ -692,13 +692,13 @@ elif st.session_state.estado == "salon":
                     <h4 style='margin:0; color:white;'>Temporada {l['temporada']}: {l['nombre']}</h4>
                     <p style='margin:0; color:#888;'>{l['rango_icono']} {l['rango_nombre']} - {l['elo_final']} ELO Final</p>
                 </div>
-            """, unsafe_allow_html=True)
+            """.replace('\n', ''), unsafe_allow_html=True)
     else:
         st.markdown("""
             <div style='text-align:center; padding:30px; border:1px dashed #333;'>
                 <p style='color:#555; font-style:italic;'>Aún no ha terminado ninguna temporada. El pedestal está vacío.</p>
             </div>
-        """, unsafe_allow_html=True)
+        """.replace('\n', ''), unsafe_allow_html=True)
 
     render_navbar("salon")
 
@@ -807,7 +807,7 @@ elif st.session_state.estado == "buscando_privada":
             <p style='color: #888; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 5px;'>Pásale este código a tu rival</p>
             <h1 style='color: white; font-size: 60px; font-family: monospace; margin: 0; letter-spacing: 5px; text-shadow: 0 0 15px rgba(255,255,255,0.4);'>{st.session_state.codigo_sala}</h1>
         </div>
-    """, unsafe_allow_html=True)
+    """.replace('\n', ''), unsafe_allow_html=True)
     
     tiempo_espera = time.time() - st.session_state.inicio_busqueda
     st.markdown(f"<p style='text-align: center; color: #666;'>Esperando conexión... ({int(tiempo_espera)}s)</p>", unsafe_allow_html=True)
@@ -894,7 +894,7 @@ elif st.session_state.estado == "duelo":
             <h1 style='color: #ff4b4b; font-size: 50px; font-style: italic; text-shadow: 0 0 20px #ff4b4b;'>VS</h1>
             {carta_riv}
         </div>
-    """, unsafe_allow_html=True)
+    """.replace('\n', ''), unsafe_allow_html=True)
     
     st.markdown(f"""
         <div style='display: flex; justify-content: space-between; background-color: #111; border: 1px solid #333; padding: 15px; border-radius: 8px; margin-top: 15px;'>
@@ -908,14 +908,14 @@ elif st.session_state.estado == "duelo":
                 <p style='color: white; font-family: monospace; font-size: 14px; margin: 0;'>{st.session_state.rival_mision}</p>
             </div>
         </div>
-    """, unsafe_allow_html=True)
+    """.replace('\n', ''), unsafe_allow_html=True)
     
     st.markdown("""
         <div style='background-color: #0a0a0a; border: 2px solid #ff4b4b; border-radius: 15px; padding: 20px; margin: 30px 0; box-shadow: 0 0 30px rgba(255, 75, 75, 0.2);'>
             <div id='reloj-container' style='text-align: center; font-size: 80px; font-family: monospace; font-weight: bold; color: white;'>--:--</div>
             <div id='audio-container'></div>
         </div>
-    """, unsafe_allow_html=True)
+    """.replace('\n', ''), unsafe_allow_html=True)
     
     if st.button("💀 ME RINDO (Tocar el móvil)", type="primary", use_container_width=True):
         st.session_state.puntos_elo = max(0, st.session_state.puntos_elo - st.session_state.elo_castigo)
@@ -1037,7 +1037,7 @@ elif st.session_state.estado == "victoria":
             <p style='font-style: italic; font-size: 1.2em; color: #ddd;'>"{st.session_state.ultima_pildora['texto']}"</p>
             <p style='text-align: right; color: #00ff00; font-weight: bold;'>— {st.session_state.ultima_pildora['autor']}</p>
         </div>
-    """, unsafe_allow_html=True)
+    """.replace('\n', ''), unsafe_allow_html=True)
     
     if st.button("Reclamar y Volver", use_container_width=True): 
         st.session_state.estado = "lobby"
