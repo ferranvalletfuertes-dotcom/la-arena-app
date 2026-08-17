@@ -7,7 +7,7 @@ from supabase import create_client, Client
 
 st.set_page_config(page_title="Modo Combate | La Arena", layout="centered")
 
-# --- INYECCIÓN DE CSS (ARMADURA VISUAL Y ÉPICA) ---
+# --- INYECCIÓN DE CSS (MOTOR GRÁFICO Y ANIMACIONES) ---
 st.markdown("""
     <style>
     #MainMenu {visibility: hidden;}
@@ -75,11 +75,6 @@ st.markdown("""
         text-shadow: 0 0 5px rgba(255,255,255,0.3);
     }
     
-    .fut-card:hover {
-        transform: translateY(-5px);
-        filter: brightness(1.2);
-    }
-    
     .stTextInput > div > div > input {
         background-color: #111 !important;
         color: #00ff00 !important;
@@ -98,6 +93,34 @@ st.markdown("""
         margin-top: 25px; 
         margin-bottom: 25px; 
     }
+
+    /* ANIMACIONES DEL MOTOR GRÁFICO */
+    @keyframes float-card {
+        0% { transform: translateY(0px); }
+        50% { transform: translateY(-10px); }
+        100% { transform: translateY(0px); }
+    }
+    @keyframes pulse-aura {
+        0% { box-shadow: 0 0 15px #ff0000, 0 0 5px #ff0000 inset; }
+        50% { box-shadow: 0 0 35px #ff0000, 0 0 15px #ff0000 inset; }
+        100% { box-shadow: 0 0 15px #ff0000, 0 0 5px #ff0000 inset; }
+    }
+    
+    .fut-card {
+        transition: filter 0.3s ease;
+    }
+    .fut-card:hover { 
+        filter: brightness(1.2); 
+        cursor: pointer; 
+    }
+    
+    .anim-float {
+        animation: float-card 3.5s ease-in-out infinite;
+    }
+    .anim-aura {
+        animation: float-card 3.5s ease-in-out infinite, pulse-aura 2s infinite !important;
+        border: 2px solid #ff0000 !important;
+    }
     </style>
 """, unsafe_allow_html=True)
 
@@ -114,24 +137,55 @@ except Exception as e:
     st.error("❌ Fallo crítico: No se pudo conectar a la base de datos.")
     st.stop()
 
-# --- MEMORIA DEL JUGADOR ---
-if 'usuario_id' not in st.session_state: st.session_state.usuario_id = None
-if 'estado' not in st.session_state: st.session_state.estado = "login" 
-if 'puntos_elo' not in st.session_state: st.session_state.puntos_elo = 100 
-if 'racha' not in st.session_state: st.session_state.racha = 0
-if 'monedas' not in st.session_state: st.session_state.monedas = 0
-if 'nombre_guerra' not in st.session_state: st.session_state.nombre_guerra = ""
-if 'ultima_pildora' not in st.session_state: st.session_state.ultima_pildora = None
-if 'partida_id' not in st.session_state: st.session_state.partida_id = None
-if 'inicio_busqueda' not in st.session_state: st.session_state.inicio_busqueda = 0
-if 'rival_nombre' not in st.session_state: st.session_state.rival_nombre = "Desconocido"
-if 'rival_elo' not in st.session_state: st.session_state.rival_elo = 100 
-if 'monedas_ganadas_recientes' not in st.session_state: st.session_state.monedas_ganadas_recientes = 0
-if 'mision_actual' not in st.session_state: st.session_state.mision_actual = ""
-if 'rival_mision' not in st.session_state: st.session_state.rival_mision = "Desconocido"
-if 'tiempo_combate' not in st.session_state: st.session_state.tiempo_combate = 10
-if 'elo_premio' not in st.session_state: st.session_state.elo_premio = 0
-if 'elo_castigo' not in st.session_state: st.session_state.elo_castigo = 0
+# --- MEMORIA DEL JUGADOR (RESTAURADA A SU FORMA EXPANDIDA) ---
+if 'usuario_id' not in st.session_state: 
+    st.session_state.usuario_id = None
+if 'estado' not in st.session_state: 
+    st.session_state.estado = "login" 
+if 'puntos_elo' not in st.session_state: 
+    st.session_state.puntos_elo = 100 
+if 'racha' not in st.session_state: 
+    st.session_state.racha = 0
+if 'monedas' not in st.session_state: 
+    st.session_state.monedas = 0
+if 'nombre_guerra' not in st.session_state: 
+    st.session_state.nombre_guerra = ""
+if 'ultima_pildora' not in st.session_state: 
+    st.session_state.ultima_pildora = None
+if 'partida_id' not in st.session_state: 
+    st.session_state.partida_id = None
+if 'inicio_busqueda' not in st.session_state: 
+    st.session_state.inicio_busqueda = 0
+if 'rival_nombre' not in st.session_state: 
+    st.session_state.rival_nombre = "Desconocido"
+if 'rival_elo' not in st.session_state: 
+    st.session_state.rival_elo = 100 
+if 'monedas_ganadas_recientes' not in st.session_state: 
+    st.session_state.monedas_ganadas_recientes = 0
+if 'mision_actual' not in st.session_state: 
+    st.session_state.mision_actual = ""
+if 'rival_mision' not in st.session_state: 
+    st.session_state.rival_mision = "Desconocido"
+if 'tiempo_combate' not in st.session_state: 
+    st.session_state.tiempo_combate = 10
+if 'elo_premio' not in st.session_state: 
+    st.session_state.elo_premio = 0
+if 'elo_castigo' not in st.session_state: 
+    st.session_state.elo_castigo = 0
+
+# NUEVA MEMORIA: ECONOMÍA Y SKINS
+if 'skin_activa' not in st.session_state: 
+    st.session_state.skin_activa = 'default'
+if 'inv_aura' not in st.session_state: 
+    st.session_state.inv_aura = False
+if 'inv_corona' not in st.session_state: 
+    st.session_state.inv_corona = False
+if 'boost_elo' not in st.session_state: 
+    st.session_state.boost_elo = None
+if 'boost_monedas' not in st.session_state: 
+    st.session_state.boost_monedas = None
+if 'rival_skin' not in st.session_state: 
+    st.session_state.rival_skin = 'default'
 
 pildoras = [
     {"autor": "Marco Aurelio", "texto": "Tienes poder sobre tu mente, no sobre los acontecimientos externos. Date cuenta de esto."},
@@ -140,6 +194,7 @@ pildoras = [
     {"autor": "Séneca", "texto": "No es que tengamos poco tiempo, sino que perdemos mucho."}
 ]
 
+# --- MOTORES DE LÓGICA ---
 def calcular_rango(elo):
     if elo < 200: return "Hierro III", "Esclavo", "🪨", "#7a7a7a"
     elif elo < 300: return "Hierro II", "Distraído", "⛓️", "#8f8f8f"
@@ -148,6 +203,15 @@ def calcular_rango(elo):
     elif elo < 800: return "Plata", "Dueño del Tiempo", "🥈", "#c0c0c0"
     elif elo < 1000: return "Oro", "Élite", "🥇", "#ffd700"
     else: return "Diamante", "Intocable", "💎", "#00ffff"
+
+def tiene_boost_activo(fecha_str):
+    if not fecha_str: 
+        return False
+    try:
+        fecha_fin = datetime.fromisoformat(fecha_str.replace('Z', '+00:00'))
+        return datetime.now(timezone.utc) < fecha_fin
+    except:
+        return False
 
 def calcular_monedas_base(elo):
     if elo < 200: return 10
@@ -158,22 +222,41 @@ def calcular_monedas_base(elo):
     elif elo < 1000: return 75
     else: return 120
 
-def calcular_riesgo_recompensa(segundos, elo_actual):
+def calcular_riesgo_recompensa(segundos, elo_actual, boost_elo_str, boost_monedas_str):
     base_monedas = calcular_monedas_base(elo_actual)
-    if segundos == 10: return 5, 5, 1 
-    elif segundos == 1500: return 25, 20, base_monedas * 1 
-    elif segundos == 3000: return 55, 40, int(base_monedas * 2.5) 
-    elif segundos == 5400: return 100, 80, base_monedas * 5 
-    return 25, 25, base_monedas
+    
+    if segundos == 10: 
+        p_elo, c_elo, coins = 5, 5, 1 
+    elif segundos == 1500: 
+        p_elo, c_elo, coins = 25, 20, base_monedas * 1 
+    elif segundos == 3000: 
+        p_elo, c_elo, coins = 55, 40, int(base_monedas * 2.5) 
+    elif segundos == 5400: 
+        p_elo, c_elo, coins = 100, 80, base_monedas * 5 
+    else: 
+        p_elo, c_elo, coins = 25, 25, base_monedas
 
-def generar_carta_html(nombre, elo, rango_i, rango_c, subtitulo):
-    return f"""<div class="fut-card" style="background: linear-gradient(135deg, #161616 0%, #050505 100%); border: 2px solid {rango_c}; border-radius: 12px; width: 140px; margin: 10px; padding: 15px 10px; position: relative; box-shadow: 0 0 20px {rango_c}30; display: inline-block; text-align: center; transition: all 0.3s ease;">
-<div style="position: absolute; top: 8px; left: 12px; color: {rango_c}; font-weight: 900; font-size: 20px; font-family: monospace; text-shadow: 0 0 5px {rango_c};">{elo}</div>
-<div style="position: absolute; top: 8px; right: 12px; font-size: 20px; filter: drop-shadow(0 0 5px {rango_c});">{rango_i}</div>
+    if tiene_boost_activo(boost_elo_str): 
+        p_elo *= 2
+    if tiene_boost_activo(boost_monedas_str): 
+        coins *= 2
+        
+    return p_elo, c_elo, coins
+
+def generar_carta_html(nombre, elo, rango_i, rango_c, subtitulo, skin='default'):
+    display_name = f"👑 {nombre}" if skin == 'corona' else nombre
+    color_borde = "#ff0000" if skin == 'aura' else rango_c
+    
+    clase_animacion = "anim-aura" if skin == 'aura' else "anim-float"
+    efecto_sombra = "" if skin == 'aura' else f"box-shadow: 0 0 20px {color_borde}30;"
+
+    return f"""<div class="fut-card {clase_animacion}" style="background: linear-gradient(135deg, #161616 0%, #050505 100%); border: 2px solid {color_borde}; border-radius: 12px; width: 140px; margin: 10px; padding: 15px 10px; position: relative; {efecto_sombra} display: inline-block; text-align: center; transition: all 0.3s ease;">
+<div style="position: absolute; top: 8px; left: 12px; color: {color_borde}; font-weight: 900; font-size: 20px; font-family: monospace; text-shadow: 0 0 5px {color_borde};">{elo}</div>
+<div style="position: absolute; top: 8px; right: 12px; font-size: 20px; filter: drop-shadow(0 0 5px {color_borde});">{rango_i}</div>
 <div style="margin-top: 35px; margin-bottom: 10px;">
-<svg width="60" height="60" viewBox="0 0 24 24" fill="none" stroke="{rango_c}" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="opacity: 0.9; filter: drop-shadow(0 0 8px {rango_c});"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+<svg width="60" height="60" viewBox="0 0 24 24" fill="none" stroke="{color_borde}" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="opacity: 0.9; filter: drop-shadow(0 0 8px {color_borde});"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
 </div>
-<h4 style="color: white; margin: 0; font-size: 14px; text-transform: uppercase; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; letter-spacing: 1px;">{nombre}</h4>
+<h4 style="color: white; margin: 0; font-size: 14px; text-transform: uppercase; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; letter-spacing: 1px;">{display_name}</h4>
 <div style="color: #666; font-size: 11px; margin-top: 5px; text-transform: uppercase; letter-spacing: 2px; font-weight: bold;">{subtitulo}</div>
 </div>"""
 
@@ -203,10 +286,16 @@ if st.session_state.estado == "login":
                 
                 datos = supabase.table("jugadores").select("*").eq("id", user_id).execute()
                 if len(datos.data) > 0:
-                    st.session_state.puntos_elo = datos.data[0]['elo']
-                    st.session_state.racha = datos.data[0]['racha']
-                    st.session_state.monedas = datos.data[0].get('monedas') or 0
-                    st.session_state.nombre_guerra = datos.data[0].get('nombre') or "Guerrero"
+                    d = datos.data[0]
+                    st.session_state.puntos_elo = d.get('elo', 100)
+                    st.session_state.racha = d.get('racha', 0)
+                    st.session_state.monedas = d.get('monedas', 0)
+                    st.session_state.nombre_guerra = d.get('nombre', 'Guerrero')
+                    st.session_state.skin_activa = d.get('skin_activa', 'default')
+                    st.session_state.inv_aura = d.get('inventario_aura', False)
+                    st.session_state.inv_corona = d.get('inventario_corona', False)
+                    st.session_state.boost_elo = d.get('boost_elo_hasta')
+                    st.session_state.boost_monedas = d.get('boost_monedas_hasta')
                 else:
                     supabase.table("jugadores").insert({"id": user_id, "elo": 100, "racha": 0, "monedas": 0, "nombre": "Guerrero"}).execute()
                     st.session_state.puntos_elo = 100
@@ -242,7 +331,15 @@ elif st.session_state.estado == "lobby":
     rango_n, rango_s, rango_i, rango_c = calcular_rango(st.session_state.puntos_elo)
     
     st.markdown("<h1 style='text-align: center; color: #ff4b4b; letter-spacing: 2px;'>⚔️ MODO COMBATE</h1>", unsafe_allow_html=True)
-    st.markdown(f"<h3 style='text-align: center; color: white; text-transform: uppercase;'>Bienvenido, {st.session_state.nombre_guerra}</h3>", unsafe_allow_html=True)
+    
+    # INDICADORES DE BOOST ACTIVOS
+    boosts_html = ""
+    if tiene_boost_activo(st.session_state.boost_elo): 
+        boosts_html += "<span style='background:#ff4b4b; color:white; padding:2px 8px; border-radius:10px; font-size:12px; font-weight:bold; margin-right:5px;'>⚡ x2 ELO</span>"
+    if tiene_boost_activo(st.session_state.boost_monedas): 
+        boosts_html += "<span style='background:#ffd700; color:black; padding:2px 8px; border-radius:10px; font-size:12px; font-weight:bold;'>💰 x2 MONEDAS</span>"
+    
+    st.markdown(f"<h3 style='text-align: center; color: white; text-transform: uppercase;'>Bienvenido, {st.session_state.nombre_guerra} <br><div style='margin-top:10px;'>{boosts_html}</div></h3>", unsafe_allow_html=True)
     
     with st.expander("⚙️ Ajustes de Perfil"):
         nuevo_nombre = st.text_input("Cambiar nombre de guerra", value=st.session_state.nombre_guerra)
@@ -250,9 +347,14 @@ elif st.session_state.estado == "lobby":
             supabase.table("jugadores").update({"nombre": nuevo_nombre}).eq("id", st.session_state.usuario_id).execute()
             st.session_state.nombre_guerra = nuevo_nombre
             st.success("¡Nombre actualizado!")
-            time.sleep(1); st.rerun()
+            time.sleep(1)
+            st.rerun()
 
     st.divider()
+    
+    # CARTA FLOTANTE DEL JUGADOR EN EL LOBBY
+    carta_propia = generar_carta_html(st.session_state.nombre_guerra, st.session_state.puntos_elo, rango_i, rango_c, "TU LEYENDA", st.session_state.skin_activa)
+    st.markdown(f"<div style='text-align: center; margin-bottom: 20px;'>{carta_propia}</div>", unsafe_allow_html=True)
     
     st.markdown(f"""
     <div style='display: flex; justify-content: space-around; text-align: center; background-color: #121212; padding: 25px; border-radius: 12px; border: 1px solid {rango_c}; box-shadow: 0 4px 20px {rango_c}40;'>
@@ -274,12 +376,12 @@ elif st.session_state.estado == "lobby":
     st.write("") 
     
     with st.expander("🌍 Salón de la Élite (Top 5)", expanded=True):
-        ranking = supabase.table("jugadores").select("elo, nombre").order("elo", desc=True).limit(5).execute()
+        ranking = supabase.table("jugadores").select("elo, nombre, skin_activa").order("elo", desc=True).limit(5).execute()
         if ranking.data:
             cartas_html = "<div style='display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; padding: 10px 0;'>"
             for i, jugador in enumerate(ranking.data):
                 _, _, i_rank, c_rank = calcular_rango(jugador['elo'])
-                cartas_html += generar_carta_html(jugador['nombre'], jugador['elo'], i_rank, c_rank, f"TOP {i+1}")
+                cartas_html += generar_carta_html(jugador['nombre'], jugador['elo'], i_rank, c_rank, f"TOP {i+1}", jugador.get('skin_activa', 'default'))
             cartas_html += "</div>"
             st.markdown(cartas_html, unsafe_allow_html=True)
 
@@ -328,7 +430,7 @@ elif st.session_state.estado == "lobby":
             
             st.session_state.mision_actual = mision_input
             st.session_state.tiempo_combate = tiempo_opts[tiempo_str]
-            win_elo, lose_elo, coins = calcular_riesgo_recompensa(st.session_state.tiempo_combate, st.session_state.puntos_elo)
+            win_elo, lose_elo, coins = calcular_riesgo_recompensa(st.session_state.tiempo_combate, st.session_state.puntos_elo, st.session_state.boost_elo, st.session_state.boost_monedas)
             st.session_state.elo_premio = win_elo
             st.session_state.elo_castigo = lose_elo
             st.session_state.monedas_ganadas_recientes = coins
@@ -337,11 +439,13 @@ elif st.session_state.estado == "lobby":
             st.session_state.estado = "buscando"
             st.rerun()
 
+    # --- BARRA DE NAVEGACIÓN INFERIOR ---
     st.markdown("<hr style='border: 1px solid #333; margin-top: 30px;'>", unsafe_allow_html=True)
     c1, c2, c3 = st.columns([1, 0.1, 1])
     with c1:
         st.markdown("<div class='nav-btn'>", unsafe_allow_html=True)
-        if st.button("🏠 LOBBY", use_container_width=True): pass 
+        if st.button("🏠 LOBBY", use_container_width=True): 
+            pass 
         st.markdown("</div>", unsafe_allow_html=True)
     with c2:
         st.markdown("<div style='border-left: 2px solid #333; height: 100%; margin: auto;'></div>", unsafe_allow_html=True)
@@ -355,6 +459,8 @@ elif st.session_state.estado == "lobby":
 
 # --- LA TIENDA ---
 elif st.session_state.estado == "tienda":
+    _, _, tu_i, tu_c = calcular_rango(st.session_state.puntos_elo)
+    
     st.markdown("<h1 style='text-align: center; color: #ffd700; letter-spacing: 2px;'>🛒 EL MERCADO NEGRO</h1>", unsafe_allow_html=True)
     st.markdown("<h4 style='text-align: center; color: gray;'>Viste tu leyenda. Intimida al enemigo.</h4>", unsafe_allow_html=True)
     
@@ -365,26 +471,85 @@ elif st.session_state.estado == "tienda":
         </div>
     """, unsafe_allow_html=True)
     
-    st.markdown("### 🔥 SKINS DE ARENA (Próximamente)")
+    st.markdown("### 🧬 BOOSTS DE RENDIMIENTO (24 Horas)")
+    b1, b2 = st.columns(2)
+    with b1:
+        st.markdown("<div style='background:#121212; border:1px solid #333; padding:15px; text-align:center; border-radius:8px;'><h3>⚡ x2 ELO</h3><p style='color:#888; font-size:12px;'>Multiplica tus ganancias de rango.</p><h3 style='color:#ffd700;'>🪙 150</h3></div>", unsafe_allow_html=True)
+        if st.button("COMPRAR BOOST ELO", key="b_elo", use_container_width=True):
+            if st.session_state.monedas >= 150:
+                st.session_state.monedas -= 150
+                fin = (datetime.now(timezone.utc) + timedelta(hours=24)).isoformat()
+                st.session_state.boost_elo = fin
+                supabase.table("jugadores").update({"monedas": st.session_state.monedas, "boost_elo_hasta": fin}).eq("id", st.session_state.usuario_id).execute()
+                st.success("¡Boost ELO Activado!")
+                time.sleep(1)
+                st.rerun()
+            else: 
+                st.error("No tienes oro suficiente.")
+            
+    with b2:
+        st.markdown("<div style='background:#121212; border:1px solid #333; padding:15px; text-align:center; border-radius:8px;'><h3>💰 x2 MONEDAS</h3><p style='color:#888; font-size:12px;'>Multiplica tus ingresos de victoria.</p><h3 style='color:#ffd700;'>🪙 200</h3></div>", unsafe_allow_html=True)
+        if st.button("COMPRAR BOOST ORO", key="b_oro", use_container_width=True):
+            if st.session_state.monedas >= 200:
+                st.session_state.monedas -= 200
+                fin = (datetime.now(timezone.utc) + timedelta(hours=24)).isoformat()
+                st.session_state.boost_monedas = fin
+                supabase.table("jugadores").update({"monedas": st.session_state.monedas, "boost_monedas_hasta": fin}).eq("id", st.session_state.usuario_id).execute()
+                st.success("¡Boost Monedas Activado!")
+                time.sleep(1)
+                st.rerun()
+            else: 
+                st.error("Faltan fondos.")
+
+    st.markdown("### 🔥 SKINS DE ARENA")
     t1, t2 = st.columns(2)
+    
+    carta_aura = generar_carta_html(st.session_state.nombre_guerra, st.session_state.puntos_elo, tu_i, tu_c, "PREVIA", 'aura')
     with t1:
-        st.markdown("""
-        <div style='background-color: #121212; border: 1px solid #333; padding: 20px; text-align: center; border-radius: 8px;'>
-            <h1 style='margin:0;'>🩸</h1>
-            <h4 style='color: white;'>Aura Sanguinaria</h4>
-            <h3 style='color: #ffd700;'>🪙 500</h3>
-            <button disabled style='width:100%; padding:10px; background:#333; color:#777; border:none; border-radius:5px;'>BLOQUEADO</button>
-        </div>
-        """, unsafe_allow_html=True)
+        st.markdown(f"<div style='background:#121212; border:1px solid #ff4b4b; padding:15px; text-align:center; border-radius:8px;'>{carta_aura}<h4 style='margin-top:10px;'>Aura Sanguinaria</h4><p style='color:#888; font-size:12px;'>Tu carta arderá en rojo perpetuo.</p><h3 style='color:#ffd700;'>🪙 500</h3></div>", unsafe_allow_html=True)
+        if st.session_state.inv_aura:
+            if st.session_state.skin_activa == 'aura': 
+                st.info("EQUIPADA")
+            elif st.button("EQUIPAR AURA", use_container_width=True): 
+                st.session_state.skin_activa = 'aura'
+                supabase.table("jugadores").update({"skin_activa": "aura"}).eq("id", st.session_state.usuario_id).execute()
+                st.rerun()
+        else:
+            if st.button("COMPRAR AURA", use_container_width=True):
+                if st.session_state.monedas >= 500:
+                    st.session_state.monedas -= 500
+                    st.session_state.inv_aura = True
+                    supabase.table("jugadores").update({"monedas": st.session_state.monedas, "inventario_aura": True}).eq("id", st.session_state.usuario_id).execute()
+                    st.success("Desbloqueada")
+                    st.rerun()
+                else: 
+                    st.error("Necesitas más sangre y victorias.")
+                
+    carta_corona = generar_carta_html(st.session_state.nombre_guerra, st.session_state.puntos_elo, tu_i, tu_c, "PREVIA", 'corona')
     with t2:
-        st.markdown("""
-        <div style='background-color: #121212; border: 1px solid #333; padding: 20px; text-align: center; border-radius: 8px;'>
-            <h1 style='margin:0;'>👑</h1>
-            <h4 style='color: white;'>Corona del Rey</h4>
-            <h3 style='color: #ffd700;'>🪙 1500</h3>
-            <button disabled style='width:100%; padding:10px; background:#333; color:#777; border:none; border-radius:5px;'>BLOQUEADO</button>
-        </div>
-        """, unsafe_allow_html=True)
+        st.markdown(f"<div style='background:#121212; border:1px solid #ffd700; padding:15px; text-align:center; border-radius:8px;'>{carta_corona}<h4 style='margin-top:10px;'>Corona del Rey</h4><p style='color:#888; font-size:12px;'>Icono permanente en tu nombre.</p><h3 style='color:#ffd700;'>🪙 1500</h3></div>", unsafe_allow_html=True)
+        if st.session_state.inv_corona:
+            if st.session_state.skin_activa == 'corona': 
+                st.info("EQUIPADA")
+            elif st.button("EQUIPAR CORONA", use_container_width=True): 
+                st.session_state.skin_activa = 'corona'
+                supabase.table("jugadores").update({"skin_activa": "corona"}).eq("id", st.session_state.usuario_id).execute()
+                st.rerun()
+        else:
+            if st.button("COMPRAR CORONA", use_container_width=True):
+                if st.session_state.monedas >= 1500:
+                    st.session_state.monedas -= 1500
+                    st.session_state.inv_corona = True
+                    supabase.table("jugadores").update({"monedas": st.session_state.monedas, "inventario_corona": True}).eq("id", st.session_state.usuario_id).execute()
+                    st.success("El Rey ha sido coronado.")
+                    st.rerun()
+                else: 
+                    st.error("No eres digno aún.")
+                
+    if st.button("✖ QUITAR SKIN ACTUAL", use_container_width=True):
+        st.session_state.skin_activa = 'default'
+        supabase.table("jugadores").update({"skin_activa": "default"}).eq("id", st.session_state.usuario_id).execute()
+        st.rerun()
     
     st.markdown("<hr style='border: 1px solid #333; margin-top: 40px;'>", unsafe_allow_html=True)
     c1, c2, c3 = st.columns([1, 0.1, 1])
@@ -398,7 +563,8 @@ elif st.session_state.estado == "tienda":
         st.markdown("<div style='border-left: 2px solid #333; height: 100%; margin: auto;'></div>", unsafe_allow_html=True)
     with c3:
         st.markdown("<div class='nav-btn'>", unsafe_allow_html=True)
-        if st.button("🛒 TIENDA", use_container_width=True): pass
+        if st.button("🛒 TIENDA", use_container_width=True): 
+            pass
         st.markdown("</div>", unsafe_allow_html=True)
 
 
@@ -407,7 +573,6 @@ elif st.session_state.estado == "buscando":
     tiempo_espera = time.time() - st.session_state.inicio_busqueda
     st.markdown(f"<h2 style='text-align: center; color: #ff4b4b; animation: pulse 1.5s infinite;'>📡 Rastreando la red ({int(tiempo_espera)}s)...</h2>", unsafe_allow_html=True)
     
-    # EL GUARDIÁN DESPIERTA A LOS 15 SEGUNDOS
     if tiempo_espera > 15:
         if st.session_state.partida_id:
             supabase.table("partidas").delete().eq("id", st.session_state.partida_id).execute()
@@ -416,6 +581,7 @@ elif st.session_state.estado == "buscando":
         st.session_state.rival_nombre = "EL GUARDIÁN"
         st.session_state.rival_elo = st.session_state.puntos_elo + 15
         st.session_state.rival_mision = "Quebrantar tu voluntad."
+        st.session_state.rival_skin = 'aura' 
         
         st.session_state.estado = "duelo"
         st.rerun()
@@ -444,13 +610,15 @@ elif st.session_state.estado == "buscando":
                 "jugador2_mision": st.session_state.mision_actual
             }).eq("id", sala['id']).execute()
             
-            rival_db = supabase.table("jugadores").select("nombre, elo").eq("id", sala['jugador1']).execute()
+            rival_db = supabase.table("jugadores").select("nombre, elo, skin_activa").eq("id", sala['jugador1']).execute()
             if rival_db.data:
                 st.session_state.rival_nombre = rival_db.data[0]['nombre']
                 st.session_state.rival_elo = rival_db.data[0]['elo']
+                st.session_state.rival_skin = rival_db.data[0].get('skin_activa', 'default')
             else:
                 st.session_state.rival_nombre = "Anónimo"
                 st.session_state.rival_elo = 100
+                st.session_state.rival_skin = 'default'
                 
             st.session_state.rival_mision = sala.get('jugador1_mision', "Sobrevivir")
             st.session_state.estado = "duelo"
@@ -472,19 +640,21 @@ elif st.session_state.estado == "buscando":
         estado_sala = supabase.table("partidas").select("*").eq("id", st.session_state.partida_id).execute()
         if len(estado_sala.data) > 0 and estado_sala.data[0]['estado'] == 'luchando':
             sala = estado_sala.data[0]
-            rival_db = supabase.table("jugadores").select("nombre, elo").eq("id", sala['jugador2']).execute()
+            rival_db = supabase.table("jugadores").select("nombre, elo, skin_activa").eq("id", sala['jugador2']).execute()
             if rival_db.data:
                 st.session_state.rival_nombre = rival_db.data[0]['nombre']
                 st.session_state.rival_elo = rival_db.data[0]['elo']
+                st.session_state.rival_skin = rival_db.data[0].get('skin_activa', 'default')
             else:
                 st.session_state.rival_nombre = "Anónimo"
                 st.session_state.rival_elo = 100
+                st.session_state.rival_skin = 'default'
                 
             st.session_state.rival_mision = sala.get('jugador2_mision', "Sobrevivir")
             st.session_state.estado = "duelo"
             st.rerun()
         else:
-            with st.spinner(f"Buscando guerreros..."):
+            with st.spinner(f"Buscando un rival de {int(st.session_state.tiempo_combate/60)} Min ({st.session_state.puntos_elo} pts)..."):
                 time.sleep(2)
                 st.rerun()
 
@@ -495,8 +665,8 @@ elif st.session_state.estado == "duelo":
     _, _, tu_i, tu_c = calcular_rango(st.session_state.puntos_elo)
     _, _, riv_i, riv_c = calcular_rango(st.session_state.rival_elo)
     
-    carta_tu = generar_carta_html(st.session_state.nombre_guerra, st.session_state.puntos_elo, tu_i, tu_c, "TÚ")
-    carta_riv = generar_carta_html(st.session_state.rival_nombre, st.session_state.rival_elo, riv_i, riv_c, "ENEMIGO")
+    carta_tu = generar_carta_html(st.session_state.nombre_guerra, st.session_state.puntos_elo, tu_i, tu_c, "TÚ", st.session_state.skin_activa)
+    carta_riv = generar_carta_html(st.session_state.rival_nombre, st.session_state.rival_elo, riv_i, riv_c, "ENEMIGO", st.session_state.get('rival_skin', 'default'))
     
     st.markdown(f"""
         <div style='display: flex; justify-content: center; align-items: center; gap: 20px; flex-wrap: wrap; margin-top: 20px;'>
@@ -599,7 +769,8 @@ elif st.session_state.estado == "derrota":
     st.error(f"Abandonaste tu misión: *'{st.session_state.mision_actual}'*. **{st.session_state.rival_nombre}** se ha llevado la gloria por tu debilidad.")
     st.write("")
     if st.button("Tragar el orgullo y volver", use_container_width=True): 
-        st.session_state.estado = "lobby"; st.rerun()
+        st.session_state.estado = "lobby"
+        st.rerun()
         
 elif st.session_state.estado == "victoria":
     st.markdown("<h1 style='text-align: center; color: #00ff00; font-size: 4em; text-transform: uppercase; text-shadow: 0 0 20px rgba(0,255,0,0.4);'>🏆 VICTORIA</h1>", unsafe_allow_html=True)
@@ -617,4 +788,5 @@ elif st.session_state.estado == "victoria":
     """, unsafe_allow_html=True)
     
     if st.button("Reclamar y Volver", use_container_width=True): 
-        st.session_state.estado = "lobby"; st.rerun()
+        st.session_state.estado = "lobby"
+        st.rerun()
