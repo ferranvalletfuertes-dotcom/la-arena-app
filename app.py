@@ -6,7 +6,7 @@ from datetime import datetime, timedelta, timezone
 import streamlit.components.v1 as components
 from supabase import create_client, Client
 
-LOGO_URL = "https://github.com/ferranvalletfuertes-dotcom/la-arena-app/blob/bf3d6cbbefd8c607b74d0e6b3a7518308e2c6d9f/logo.png"
+LOGO_URL = "https://raw.githubusercontent.com/ferranvalletfuertes-dotcom/la-arena-app/main/logo.png"
 
 st.set_page_config(page_title="Modo Combate | La Arena", page_icon=LOGO_URL, layout="centered")
 
