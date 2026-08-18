@@ -174,6 +174,15 @@ if 'rival_skin' not in st.session_state: st.session_state.rival_skin = 'default'
 if 'tipo_partida' not in st.session_state: st.session_state.tipo_partida = "publica"
 if 'codigo_sala' not in st.session_state: st.session_state.codigo_sala = ""
 
+# VARIABLES DE MISIONES DIARIAS
+if 'ultima_fecha_misiones' not in st.session_state: st.session_state.ultima_fecha_misiones = ""
+if 'progreso_m1' not in st.session_state: st.session_state.progreso_m1 = 0
+if 'progreso_m2' not in st.session_state: st.session_state.progreso_m2 = 0
+if 'progreso_m3' not in st.session_state: st.session_state.progreso_m3 = 0
+if 'm1_reclamada' not in st.session_state: st.session_state.m1_reclamada = False
+if 'm2_reclamada' not in st.session_state: st.session_state.m2_reclamada = False
+if 'm3_reclamada' not in st.session_state: st.session_state.m3_reclamada = False
+
 pildoras = [
     {"autor": "Marco Aurelio", "texto": "Tienes poder sobre tu mente, no sobre los acontecimientos externos. Date cuenta de esto."},
     {"autor": "Naval Ravikant", "texto": "Si no puedes ver el lado positivo, estás mirando con los ojos del ego."},
@@ -247,8 +256,20 @@ def generar_carta_html(nombre, elo, rango_i, rango_c, subtitulo, skin='default')
         <div style="color: #666; font-size: 11px; margin-top: 5px; text-transform: uppercase; letter-spacing: 2px; font-weight: bold;">{subtitulo}</div>
     </div>
     """
-    # BLINDAJE ANTI-MARKDOWN: Elimina los saltos de línea para que Streamlit renderice HTML puro.
     return html_bruto.replace("\n", "")
+
+def generar_html_mision(titulo, desc, oro, completada):
+    color_borde = "#00ff00" if completada else "#333"
+    opacidad = "0.5" if completada else "1"
+    
+    html_mision = f"""
+    <div style="background-color: #121212; border: 1px solid {color_borde}; border-radius: 8px; padding: 15px; text-align: center; margin-bottom: 10px; opacity: {opacidad}; transition: all 0.3s ease; box-shadow: 0 0 10px {color_borde}40;">
+        <h4 style="color: white; margin: 0 0 5px 0; font-size: 14px; text-transform: uppercase;">{titulo}</h4>
+        <p style="color: #888; font-size: 11px; margin: 0 0 10px 0;">{desc}</p>
+        <h3 style="color: #ffd700; margin: 0; text-shadow: 0 0 5px rgba(255,215,0,0.5);">🪙 {oro}</h3>
+    </div>
+    """
+    return html_mision.replace("\n", "")
 
 def render_navbar(origen):
     st.markdown("<hr style='border: 1px solid #333; margin-top: 40px;'>", unsafe_allow_html=True)
@@ -325,18 +346,36 @@ if st.session_state.estado == "login":
                     st.session_state.inv_corona = d.get('inventario_corona', False)
                     st.session_state.boost_elo = d.get('boost_elo_hasta')
                     st.session_state.boost_monedas = d.get('boost_monedas_hasta')
+                    
+                    # CARGA Y RESETEO DE MISIONES DIARIAS
+                    fecha_db = d.get('ultima_fecha_misiones')
+                    hoy_str = datetime.now(timezone.utc).strftime('%Y-%m-%d')
+                    
+                    if fecha_db != hoy_str:
+                        # Es un nuevo día, reseteamos progreso
+                        supabase.table("jugadores").update({
+                            "ultima_fecha_misiones": hoy_str,
+                            "progreso_m1": 0, "progreso_m2": 0, "progreso_m3": 0,
+                            "m1_reclamada": False, "m2_reclamada": False, "m3_reclamada": False
+                        }).eq("id", user_id).execute()
+                        st.session_state.ultima_fecha_misiones = hoy_str
+                        st.session_state.progreso_m1 = 0
+                        st.session_state.progreso_m2 = 0
+                        st.session_state.progreso_m3 = 0
+                        st.session_state.m1_reclamada = False
+                        st.session_state.m2_reclamada = False
+                        st.session_state.m3_reclamada = False
+                    else:
+                        st.session_state.ultima_fecha_misiones = fecha_db
+                        st.session_state.progreso_m1 = d.get('progreso_m1', 0)
+                        st.session_state.progreso_m2 = d.get('progreso_m2', 0)
+                        st.session_state.progreso_m3 = d.get('progreso_m3', 0)
+                        st.session_state.m1_reclamada = d.get('m1_reclamada', False)
+                        st.session_state.m2_reclamada = d.get('m2_reclamada', False)
+                        st.session_state.m3_reclamada = d.get('m3_reclamada', False)
                 else:
-                    supabase.table("jugadores").insert({
-                        "id": user_id, 
-                        "elo": 100, 
-                        "racha": 0, 
-                        "monedas": 0, 
-                        "nombre": "Guerrero"
-                    }).execute()
-                    st.session_state.puntos_elo = 100
-                    st.session_state.racha = 0
-                    st.session_state.monedas = 0
-                    st.session_state.nombre_guerra = "Guerrero"
+                    st.error("No se encontraron los datos del guerrero.")
+                    st.stop()
                 
                 st.session_state.estado = "lobby"
                 st.rerun()
@@ -354,12 +393,14 @@ if st.session_state.estado == "login":
             else:
                 try:
                     auth_resp = supabase.auth.sign_up({"email": email_reg, "password": pass_reg})
+                    hoy_str = datetime.now(timezone.utc).strftime('%Y-%m-%d')
                     supabase.table("jugadores").insert({
                         "id": auth_resp.user.id, 
                         "elo": 100, 
                         "racha": 0, 
                         "monedas": 0, 
-                        "nombre": nombre_reg
+                        "nombre": nombre_reg,
+                        "ultima_fecha_misiones": hoy_str
                     }).execute()
                     st.success("¡Tu nombre está grabado en la piedra! Pasa a la pestaña de 'Entrar'.")
                 except Exception as e:
@@ -412,9 +453,68 @@ elif st.session_state.estado == "lobby":
         </div>
     """.replace('\n', ''), unsafe_allow_html=True)
     
+    # --- CONTRATOS MERCENARIOS (MISIONES DIARIAS) ---
+    st.markdown("<h3 style='text-align: center; color: #00ff00; margin-top: 40px; text-shadow: 0 0 10px rgba(0,255,0,0.4);'>📜 CONTRATOS MERCENARIOS</h3>", unsafe_allow_html=True)
+    
+    # Cálculo de la barra de progreso global
+    pasos_totales = 4 # (1 Primera + 2 Escaramuzas + 1 Titán)
+    pasos_actuales = min(st.session_state.progreso_m1, 1) + min(st.session_state.progreso_m2, 2) + min(st.session_state.progreso_m3, 1)
+    porcentaje = int((pasos_actuales / pasos_totales) * 100)
+    
+    st.markdown(f"""
+        <div style='width: 100%; background-color: #333; border-radius: 10px; margin-bottom: 20px;'>
+            <div style='width: {porcentaje}%; height: 15px; background: linear-gradient(90deg, #008000, #00ff00); border-radius: 10px; box-shadow: 0 0 10px #00ff00; transition: width 0.5s ease;'></div>
+        </div>
+        <p style='text-align: center; color: #888; font-size: 12px; margin-top: -10px;'>Progreso Diario: {porcentaje}%</p>
+    """.replace('\n', ''), unsafe_allow_html=True)
+    
+    c_m1, c_m2, c_m3 = st.columns(3)
+    
+    # Misión 1: Primer Sangrado
+    with c_m1:
+        st.markdown(generar_html_mision("Primer Sangrado", "Gana 1 combate de cualquier tipo", 50, st.session_state.m1_reclamada), unsafe_allow_html=True)
+        if st.session_state.m1_reclamada:
+            st.button("✅ RECLAMADO", disabled=True, key="btn_m1_d", use_container_width=True)
+        elif st.session_state.progreso_m1 >= 1:
+            if st.button("🎁 RECLAMAR", type="primary", key="btn_m1_c", use_container_width=True):
+                st.session_state.monedas += 50
+                st.session_state.m1_reclamada = True
+                supabase.table("jugadores").update({"monedas": st.session_state.monedas, "m1_reclamada": True}).eq("id", st.session_state.usuario_id).execute()
+                st.rerun()
+        else:
+            st.button(f"Falta 1", disabled=True, key="btn_m1_f", use_container_width=True)
+            
+    # Misión 2: Asesino a Sueldo
+    with c_m2:
+        st.markdown(generar_html_mision("Asesino a Sueldo", "Gana 2 escaramuzas (25 min)", 100, st.session_state.m2_reclamada), unsafe_allow_html=True)
+        if st.session_state.m2_reclamada:
+            st.button("✅ RECLAMADO", disabled=True, key="btn_m2_d", use_container_width=True)
+        elif st.session_state.progreso_m2 >= 2:
+            if st.button("🎁 RECLAMAR", type="primary", key="btn_m2_c", use_container_width=True):
+                st.session_state.monedas += 100
+                st.session_state.m2_reclamada = True
+                supabase.table("jugadores").update({"monedas": st.session_state.monedas, "m2_reclamada": True}).eq("id", st.session_state.usuario_id).execute()
+                st.rerun()
+        else:
+            st.button(f"Faltan {2 - st.session_state.progreso_m2}", disabled=True, key="btn_m2_f", use_container_width=True)
+            
+    # Misión 3: El Titán
+    with c_m3:
+        st.markdown(generar_html_mision("El Titán", "Sobrevive 1 asalto (90 min)", 300, st.session_state.m3_reclamada), unsafe_allow_html=True)
+        if st.session_state.m3_reclamada:
+            st.button("✅ RECLAMADO", disabled=True, key="btn_m3_d", use_container_width=True)
+        elif st.session_state.progreso_m3 >= 1:
+            if st.button("🎁 RECLAMAR", type="primary", key="btn_m3_c", use_container_width=True):
+                st.session_state.monedas += 300
+                st.session_state.m3_reclamada = True
+                supabase.table("jugadores").update({"monedas": st.session_state.monedas, "m3_reclamada": True}).eq("id", st.session_state.usuario_id).execute()
+                st.rerun()
+        else:
+            st.button(f"Falta 1", disabled=True, key="btn_m3_f", use_container_width=True)
+
     st.write("") 
     
-    with st.expander("🌍 Ranking Mundial (Top 5)", expanded=True):
+    with st.expander("🌍 Ranking Mundial (Top 5)"):
         ranking = supabase.table("jugadores").select("elo, nombre, skin_activa").order("elo", desc=True).limit(5).execute()
         if ranking.data:
             cartas_html = "<div style='display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; padding: 10px 0;'>"
@@ -944,10 +1044,20 @@ elif st.session_state.estado == "duelo":
         st.session_state.racha += 1
         st.session_state.monedas += st.session_state.monedas_ganadas_recientes
         
+        # PROCESAMIENTO DE MISIONES DIARIAS TRAS LA VICTORIA
+        st.session_state.progreso_m1 += 1  # 1 Combate cualquiera
+        if st.session_state.tiempo_combate == 1500: # Escaramuza 25 min
+            st.session_state.progreso_m2 += 1
+        elif st.session_state.tiempo_combate == 5400: # Titán 90 min
+            st.session_state.progreso_m3 += 1
+            
         supabase.table("jugadores").update({
             "elo": st.session_state.puntos_elo, 
             "racha": st.session_state.racha,
-            "monedas": st.session_state.monedas
+            "monedas": st.session_state.monedas,
+            "progreso_m1": st.session_state.progreso_m1,
+            "progreso_m2": st.session_state.progreso_m2,
+            "progreso_m3": st.session_state.progreso_m3
         }).eq("id", st.session_state.usuario_id).execute()
         
         supabase.table("historial").insert({
