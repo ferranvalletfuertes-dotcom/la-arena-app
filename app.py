@@ -6,7 +6,9 @@ from datetime import datetime, timedelta, timezone
 import streamlit.components.v1 as components
 from supabase import create_client, Client
 
-st.set_page_config(page_title="Modo Combate | La Arena", layout="centered")
+LOGO_URL = "https://i.imgur.com/UV7wAVV.png"
+
+st.set_page_config(page_title="Modo Combate | La Arena", page_icon=LOGO_URL, layout="centered")
 
 # --- INYECCIÓN DE CSS Y ANIMACIONES ---
 st.markdown("""
@@ -534,6 +536,7 @@ def generar_codigo_sala():
 
 # --- LA PUERTA DE SEGURIDAD ---
 if st.session_state.estado == "login":
+    st.markdown(f"<div style='text-align: center;'><img src='{LOGO_URL}' width='120' style='border-radius: 20px; box-shadow: 0 0 20px #ff4b4b; margin-bottom: 20px;'></div>", unsafe_allow_html=True)
     st.markdown("<h1 class='epic-title'>⚔️ LA ARENA</h1>", unsafe_allow_html=True)
     st.markdown("""
         <div class='manifesto'>
@@ -632,6 +635,7 @@ if st.session_state.estado == "login":
                         if len(reclutador_data.data) > 0:
                             reclutador_id = reclutador_data.data[0]['id']
                             reclutador_monedas = reclutador_data.data[0]['monedas']
+                            
                             supabase.table("jugadores").update({
                                 "monedas": reclutador_monedas + 1000
                             }).eq("id", reclutador_id).execute()
@@ -667,7 +671,8 @@ elif st.session_state.estado == "lobby":
     st.session_state.rival_nombre = "Desconocido"
     rango_n, rango_s, rango_i, rango_c = calcular_rango(st.session_state.puntos_elo)
     
-    st.markdown("<h1 style='text-align: center; color: #ff4b4b; letter-spacing: 2px;'>⚔️ MODO COMBATE</h1>", unsafe_allow_html=True)
+    st.markdown(f"<div style='text-align: center;'><img src='{LOGO_URL}' width='80' style='border-radius: 15px; box-shadow: 0 0 15px #ff4b4b; margin-bottom: 10px;'></div>", unsafe_allow_html=True)
+    st.markdown("<h1 style='text-align: center; color: #ff4b4b; letter-spacing: 2px; margin-top: 0;'>⚔️ MODO COMBATE</h1>", unsafe_allow_html=True)
     
     boosts_html = ""
     if tiene_boost_activo(st.session_state.boost_elo): 
@@ -731,7 +736,7 @@ elif st.session_state.estado == "lobby":
             st.button("Falta 1", disabled=True, key="btn_m1_f", use_container_width=True)
             
     with c_m2:
-        st.markdown(generar_html_mision("Asesino a Sueldo", "Gana 2 escaramuzas (25m)", 100, st.session_state.m2_reclamada), unsafe_allow_html=True)
+        st.markdown(generar_html_mision("Asesino a Sueldo", "Gana 2 escaramuzas", 100, st.session_state.m2_reclamada), unsafe_allow_html=True)
         if st.session_state.m2_reclamada: 
             st.button("✅ RECLAMADO", disabled=True, key="btn_m2_d", use_container_width=True)
         elif st.session_state.progreso_m2 >= 2:
@@ -748,7 +753,7 @@ elif st.session_state.estado == "lobby":
             st.button(f"Faltan {faltantes}", disabled=True, key="btn_m2_f", use_container_width=True)
             
     with c_m3:
-        st.markdown(generar_html_mision("El Titán", "Sobrevive 1 asalto (90m)", 300, st.session_state.m3_reclamada), unsafe_allow_html=True)
+        st.markdown(generar_html_mision("El Titán", "Sobrevive 1 asalto", 300, st.session_state.m3_reclamada), unsafe_allow_html=True)
         if st.session_state.m3_reclamada: 
             st.button("✅ RECLAMADO", disabled=True, key="btn_m3_d", use_container_width=True)
         elif st.session_state.progreso_m3 >= 1:
@@ -855,7 +860,6 @@ elif st.session_state.estado == "cuartel":
     st.markdown("<h1 style='text-align: center; color: #fff; letter-spacing: 2px;'>🛡️ CUARTEL GENERAL</h1>", unsafe_allow_html=True)
     st.markdown(f"<h4 style='text-align: center; color: {rango_c}; margin-bottom: 30px;'>Registro de Guerra de {st.session_state.nombre_guerra}</h4>", unsafe_allow_html=True)
     
-    # SISTEMA DE EMBAJADORES VISUAL
     st.markdown(f"""
         <div style='background-color: #111; border: 1px dashed #ffd700; border-radius: 8px; padding: 20px; text-align: center; margin-bottom: 30px;'>
             <h3 style='color: #ffd700; margin-top: 0; text-transform: uppercase;'>🤝 PROGRAMA DE EMBAJADORES</h3>
@@ -917,6 +921,15 @@ elif st.session_state.estado == "cuartel":
                 <p style='color: #555; font-size: 10px; margin: 0;'>Victorias Seguidas</p>
             </div>
         """.replace('\n', ''), unsafe_allow_html=True)
+
+    with st.expander("⚙️ Ajustes de Perfil"):
+        nuevo_nombre = st.text_input("Cambiar nombre de guerra (Aviso: cambiará tu código de reclutador)", value=st.session_state.nombre_guerra)
+        if st.button("ACTUALIZAR NOMBRE"):
+            supabase.table("jugadores").update({"nombre": nuevo_nombre}).eq("id", st.session_state.usuario_id).execute()
+            st.session_state.nombre_guerra = nuevo_nombre
+            st.success("¡Nombre actualizado!")
+            time.sleep(1)
+            st.rerun()
 
     render_navbar("cuartel")
 
@@ -1581,7 +1594,9 @@ elif st.session_state.estado == "victoria":
     st.markdown("<audio autoplay src='https://actions.google.com/sounds/v1/crowds/crowd_cheering.ogg'></audio>", unsafe_allow_html=True)
     st.markdown("<h1 style='text-align: center; color: #00ff00; font-size: 4em; text-transform: uppercase; text-shadow: 0 0 20px rgba(0,255,0,0.4);'>🏆 VICTORIA</h1>", unsafe_allow_html=True)
     st.markdown(f"<h2 style='text-align: center; color: #00ff00; font-size: 3em;'>+{st.session_state.elo_premio} ELO</h2>", unsafe_allow_html=True)
+    
     st.markdown(f"<h3 style='text-align: center; color: #ffd700; text-shadow: 0 0 10px rgba(255,215,0,0.4);'>🪙 +{st.session_state.monedas_ganadas_recientes} MONEDAS A LA BÓVEDA</h3>", unsafe_allow_html=True)
+    
     st.success(f"Misión Cumplida: *'{st.session_state.mision_actual}'*. Tu disciplina de hierro ha aplastado a **{st.session_state.rival_nombre}**.")
     
     st.markdown(f"""
