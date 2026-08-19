@@ -113,6 +113,34 @@ st.markdown("""
         100% { transform: scale(1); opacity: 1; }
     }
 
+    /* NUEVA ANIMACIÓN: RESPIRACIÓN DEL LOGO */
+    @keyframes breathe-logo {
+        0% { transform: translateY(0px) scale(1); box-shadow: 0 0 15px #ff4b4b; }
+        50% { transform: translateY(-8px) scale(1.02); box-shadow: 0 0 35px #ff0000; }
+        100% { transform: translateY(0px) scale(1); box-shadow: 0 0 15px #ff4b4b; }
+    }
+    .logo-breathe {
+        border-radius: 15px;
+        animation: breathe-logo 3.5s ease-in-out infinite;
+    }
+    
+    /* NUEVA ANIMACIÓN: EFECTO GLITCH BAUTISMO */
+    @keyframes glitch {
+        0% { text-shadow: 2px 0 0 #ff4b4b, -2px 0 0 #00ffff; }
+        5% { text-shadow: -2px 0 0 #ff4b4b, 2px 0 0 #00ffff; }
+        10% { text-shadow: 2px 0 0 #ff4b4b, -2px 0 0 #00ffff; }
+        15% { text-shadow: -2px 0 0 #ff4b4b, 2px 0 0 #00ffff; }
+        20% { text-shadow: none; }
+        100% { text-shadow: none; }
+    }
+    .glitch-text {
+        animation: glitch 2.5s infinite;
+        color: white;
+        font-family: monospace;
+        text-align: center;
+        letter-spacing: 2px;
+    }
+
     .fut-card { 
         transition: filter 0.3s ease; 
     }
@@ -185,7 +213,7 @@ except Exception as e:
     st.error("❌ Fallo crítico: No se pudo conectar a la base de datos.")
     st.stop()
 
-# --- MEMORIA ABSOLUTA Y EXPANDIDA (SIN RECORTES) ---
+# --- MEMORIA ABSOLUTA Y EXPANDIDA ---
 if 'usuario_id' not in st.session_state:
     st.session_state.usuario_id = None
 if 'estado' not in st.session_state:
@@ -276,6 +304,8 @@ if 'm3_reclamada' not in st.session_state:
 # ORÁCULO
 if 'input_mision_texto' not in st.session_state:
     st.session_state.input_mision_texto = ""
+if 'bautismo_visto' not in st.session_state:
+    st.session_state.bautismo_visto = False
 
 pildoras = [
     {"autor": "Marco Aurelio", "texto": "Tienes poder sobre tu mente, no sobre los acontecimientos externos. Date cuenta de esto."},
@@ -284,7 +314,7 @@ pildoras = [
     {"autor": "Séneca", "texto": "No es que tengamos poco tiempo, sino que perdemos mucho."}
 ]
 
-# RESTAURACIÓN ABSOLUTA DE LAS 100 MISIONES (SIN RECORTES)
+# RESTAURACIÓN ABSOLUTA DE LAS 100 MISIONES
 MISIONES_DESARROLLO = [
     "Bloque de Deep Work: 0 móvil, 0 distracciones. Solo la tarea más difícil.",
     "Leer 10 páginas de filosofía estoica o ensayo.", 
@@ -569,13 +599,12 @@ def generar_codigo_sala():
 
 # --- LA PUERTA DE SEGURIDAD (VERSIÓN SPLIT-SCREEN 1.0) ---
 if st.session_state.estado == "login":
-    st.write("") # Espaciador superior
+    st.write("") 
     
-    # Creamos dos columnas. Una ancha para vender la app, otra estrecha para el formulario.
     c_hero, c_espacio, c_login = st.columns([1.2, 0.1, 1])
     
     with c_hero:
-        st.markdown(f"<img src='{LOGO_URL}' width='100' style='border-radius: 15px; box-shadow: 0 0 15px #ff4b4b; margin-bottom: 15px;'>", unsafe_allow_html=True)
+        st.markdown(f"<div style='text-align: left;'><img src='{LOGO_URL}' width='150' class='logo-breathe' style='margin-bottom: 25px;'></div>", unsafe_allow_html=True)
         st.markdown("<h1 class='epic-title' style='text-align: left;'>LA ARENA</h1>", unsafe_allow_html=True)
         st.markdown("""
             <div class='manifesto' style='text-align: left; margin-bottom: 25px;'>
@@ -600,7 +629,7 @@ if st.session_state.estado == "login":
         """.replace('\n', ''), unsafe_allow_html=True)
 
     with c_login:
-        st.write("") # Empujar el cajón de login un poco hacia abajo
+        st.write("") 
         st.write("")
         
         tab1, tab2 = st.tabs(["🚪 ENTRAR AL COLISEO", "📝 FORJAR UNA LEYENDA"])
@@ -664,11 +693,17 @@ if st.session_state.estado == "login":
                             st.session_state.m1_reclamada = d.get('m1_reclamada', False)
                             st.session_state.m2_reclamada = d.get('m2_reclamada', False)
                             st.session_state.m3_reclamada = d.get('m3_reclamada', False)
+                            
+                        # ENRUTAMIENTO: EL BAUTISMO DE FUEGO
+                        if st.session_state.victorias == 0 and st.session_state.derrotas == 0 and not st.session_state.bautismo_visto:
+                            st.session_state.estado = "bautismo"
+                        else:
+                            st.session_state.estado = "lobby"
+                            
                     else:
                         st.error("No se encontraron los datos del guerrero.")
                         st.stop()
                         
-                    st.session_state.estado = "lobby"
                     st.rerun()
                 except Exception as e:
                     st.error("❌ El sistema no reconoce tus credenciales.")
@@ -715,6 +750,35 @@ if st.session_state.estado == "login":
                         st.success("¡Registrado! Ve a 'Entrar al Coliseo'.")
                     except Exception as e:
                         st.error(f"Fallo en el registro.")
+
+# --- EL BAUTISMO DE FUEGO (NUEVO ONBOARDING) ---
+elif st.session_state.estado == "bautismo":
+    st.markdown("<audio autoplay src='https://actions.google.com/sounds/v1/alarms/spaceship_alarm.ogg'></audio>", unsafe_allow_html=True)
+    st.markdown("<h1 class='glitch-text' style='font-size: 3em; color: #ff4b4b; margin-bottom: 0;'>⚠️ INICIANDO SECUENCIA ⚠️</h1>", unsafe_allow_html=True)
+    
+    st.markdown(f"""
+        <div style='background-color: #0a0a0a; border: 2px solid #ff4b4b; padding: 40px; border-radius: 10px; margin-top: 30px; box-shadow: 0 0 30px rgba(255,0,0,0.3);'>
+            <h2 style='color: white; text-align: center; text-transform: uppercase;'>Bienvenido a La Arena, <span style='color:#ff4b4b;'>{st.session_state.nombre_guerra}</span></h2>
+            <p style='color: #aaa; text-align: center; font-size: 1.2em;'>Has entrado porque tu disciplina es débil y necesitas que el sistema te castigue.</p>
+            
+            <hr style='border: 1px solid #333; margin: 30px 0;'>
+            
+            <h3 style='color: #ff4b4b; text-align: center; margin-bottom: 20px;'>📜 EL PACTO DE SANGRE</h3>
+            <ul style='color: #ddd; font-size: 1.1em; line-height: 2; list-style-type: none; padding-left: 0; text-align: center;'>
+                <li><b>REGLA 1:</b> Declara tu misión de estudio. No hay vuelta atrás.</li>
+                <li><b>REGLA 2:</b> Si cambias de pestaña, minimizas o tocas el móvil... <b style='color:#ff4b4b;'>tu bomba explota</b>.</li>
+                <li><b>REGLA 3:</b> Sobrevive para ganar Monedas y ELO. Falla, y todo el mundo verá cómo te hundes en el barro.</li>
+            </ul>
+        </div>
+    """.replace('\n', ''), unsafe_allow_html=True)
+    
+    st.write("")
+    st.write("")
+    
+    if st.button("🩸 ACEPTO LAS CONSECUENCIAS (ENTRAR AL LOBBY)", type="primary", use_container_width=True):
+        st.session_state.bautismo_visto = True
+        st.session_state.estado = "lobby"
+        st.rerun()
 
 # --- EL LOBBY ---
 elif st.session_state.estado == "lobby":
@@ -822,17 +886,6 @@ elif st.session_state.estado == "lobby":
     st.write("") 
     st.divider()
     
-    st.markdown("""
-        <div class="rules-box">
-            <h3 style="text-align: center; color: #ff4b4b; text-transform: uppercase; margin-top: 0;">⚠️ Las Leyes de la Arena</h3>
-            <ul style="list-style-type: none; padding-left: 0; color: #ccc; font-size: 15px; line-height: 1.8;">
-                <li style="margin-bottom: 10px;">🟢 <span class="neon-green">CÓMO GANAR:</span> Cumple la misión y sobrevive sin salir de la app.</li>
-                <li style="margin-bottom: 10px;">🔴 <span class="neon-red">CÓMO PERDER:</span> Si cambias de pestaña o pulsas "Me Rindo", tu C4 explota.</li>
-                <li>⚔️ <strong style="color: #ffd700;">EL PACTO:</strong> Si no trabajas, estarás engañando al sistema. Nunca a ti mismo.</li>
-            </ul>
-        </div>
-    """.replace('\n', ''), unsafe_allow_html=True)
-
     st.markdown("<h3 style='text-align: center; color: #ff4b4b;'>🔥 DECLARACIÓN DE INTENCIONES</h3>", unsafe_allow_html=True)
     
     c_texto, c_dado = st.columns([5, 1])
@@ -858,7 +911,7 @@ elif st.session_state.estado == "lobby":
     with c_pub:
         if st.button("🌍 BÚSQUEDA MUNDIAL", use_container_width=True, type="primary"):
             if not st.session_state.input_mision_texto: 
-                st.error("Declara tu misión o usa el dado 🎲.")
+                st.error("Un guerrero no entra sin propósito. Declara tu misión o usa el dado 🎲.")
             else:
                 limite_fantasmas = (datetime.now(timezone.utc) - timedelta(seconds=30)).isoformat()
                 supabase.table("partidas").delete().eq("estado", "esperando").lt("ultima_actividad", limite_fantasmas).execute()
