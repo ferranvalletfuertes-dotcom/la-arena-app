@@ -41,6 +41,7 @@ st.markdown("""
         border: 1px solid #333 !important;
         color: #888 !important; 
         box-shadow: none !important;
+        padding: 5px !important;
     }
     
     .nav-btn > button[data-baseweb="button"]:hover {
@@ -191,6 +192,15 @@ st.markdown("""
         margin: 20px 0; 
         text-shadow: 0 0 30px #ffd700; 
     }
+    
+    /* Scrollbar invisible para el feed */
+    .feed-box::-webkit-scrollbar {
+        display: none;
+    }
+    .feed-box {
+        -ms-overflow-style: none;
+        scrollbar-width: none;
+    }
     </style>
 """.replace('\n', ''), unsafe_allow_html=True)
 
@@ -207,7 +217,7 @@ except Exception as e:
     st.error("❌ Fallo crítico: No se pudo conectar a la base de datos.")
     st.stop()
 
-# --- MEMORIA ABSOLUTA Y EXPANDIDA ---
+# --- MEMORIA ABSOLUTA Y EXPANDIDA (DESCOMPRIMIDA) ---
 if 'usuario_id' not in st.session_state:
     st.session_state.usuario_id = None
 if 'estado' not in st.session_state:
@@ -295,7 +305,7 @@ if 'm2_reclamada' not in st.session_state:
 if 'm3_reclamada' not in st.session_state:
     st.session_state.m3_reclamada = False
 
-# ORÁCULO Y BAUTISMO
+# ORÁCULO E INTRO
 if 'input_mision_texto' not in st.session_state:
     st.session_state.input_mision_texto = ""
 if 'bautismo_visto' not in st.session_state:
@@ -308,7 +318,7 @@ pildoras = [
     {"autor": "Séneca", "texto": "No es que tengamos poco tiempo, sino que perdemos mucho."}
 ]
 
-# RESTAURACIÓN ABSOLUTA DE LAS 100 MISIONES
+# RESTAURACIÓN ABSOLUTA DE LAS 100 MISIONES (SIN RECORTES)
 MISIONES_DESARROLLO = [
     "Bloque de Deep Work: 0 móvil, 0 distracciones. Solo la tarea más difícil.",
     "Leer 10 páginas de filosofía estoica o ensayo.", 
@@ -412,7 +422,6 @@ MISIONES_DESARROLLO = [
     "Investigar la historia militar de Roma o Esparta para forjar carácter."
 ]
 
-# --- MOTORES MATEMÁTICOS DE RANGO Y ELO ---
 def get_rank_info(elo):
     if elo < 200: 
         return ("Hierro III", "Esclavo", "🪨", "#7a7a7a", 0, 200, 1)
@@ -543,9 +552,10 @@ def generar_html_mision(titulo, desc, oro, completada):
     """
     return html_mision.replace("\n", "")
 
+# 5 BOTONES EN LA BARRA DE NAVEGACIÓN
 def render_navbar(origen):
     st.markdown("<hr style='border: 1px solid #333; margin-top: 40px;'>", unsafe_allow_html=True)
-    c1, c2, c3, c4, c5, c6, c7 = st.columns([1, 0.05, 1, 0.05, 1, 0.05, 1])
+    c1, c2, c3, c4, c5, c6, c7, c8, c9 = st.columns([1, 0.02, 1, 0.02, 1, 0.02, 1, 0.02, 1])
     
     with c1:
         st.markdown("<div class='nav-btn'>".replace('\n', ''), unsafe_allow_html=True)
@@ -559,8 +569,8 @@ def render_navbar(origen):
         
     with c3:
         st.markdown("<div class='nav-btn'>".replace('\n', ''), unsafe_allow_html=True)
-        if st.button("🛒 TIENDA", use_container_width=True, key=f"nav_tienda_{origen}"): 
-            st.session_state.estado = "tienda"
+        if st.button("🌍 MUNDO", use_container_width=True, key=f"nav_mundo_{origen}"): 
+            st.session_state.estado = "mundo"
             st.rerun()
         st.markdown("</div>", unsafe_allow_html=True)
         
@@ -569,23 +579,30 @@ def render_navbar(origen):
         
     with c5:
         st.markdown("<div class='nav-btn'>".replace('\n', ''), unsafe_allow_html=True)
+        if st.button("🛒 TIENDA", use_container_width=True, key=f"nav_tienda_{origen}"): 
+            st.session_state.estado = "tienda"
+            st.rerun()
+        st.markdown("</div>", unsafe_allow_html=True)
+        
+    with c6: 
+        st.markdown("<div style='border-left: 2px solid #333; height: 100%; margin: auto;'></div>".replace('\n', ''), unsafe_allow_html=True)
+        
+    with c7:
+        st.markdown("<div class='nav-btn'>".replace('\n', ''), unsafe_allow_html=True)
         if st.button("🏛️ LEYENDAS", use_container_width=True, key=f"nav_salon_{origen}"): 
             st.session_state.estado = "salon"
             st.rerun()
         st.markdown("</div>", unsafe_allow_html=True)
-
-    with c6: 
+        
+    with c8: 
         st.markdown("<div style='border-left: 2px solid #333; height: 100%; margin: auto;'></div>".replace('\n', ''), unsafe_allow_html=True)
-
-    with c7:
+        
+    with c9:
         st.markdown("<div class='nav-btn'>".replace('\n', ''), unsafe_allow_html=True)
         if st.button("🛡️ CUARTEL", use_container_width=True, key=f"nav_cuartel_{origen}"): 
             st.session_state.estado = "cuartel"
             st.rerun()
         st.markdown("</div>", unsafe_allow_html=True)
-
-def generar_codigo_sala():
-    return ''.join(random.choices(string.ascii_uppercase + string.digits, k=4))
 
 # ==========================================================
 # RUTAS DE LA APLICACIÓN
@@ -722,7 +739,11 @@ if st.session_state.estado == "login":
                             if len(reclutador_data.data) > 0:
                                 r_id = reclutador_data.data[0]['id']
                                 r_monedas = reclutador_data.data[0]['monedas']
-                                supabase.table("jugadores").update({"monedas": r_monedas + 1000}).eq("id", r_id).execute()
+                                
+                                supabase.table("jugadores").update({
+                                    "monedas": r_monedas + 1000
+                                }).eq("id", r_id).execute()
+                                
                                 monedas_iniciales = 500
                                 st.success(f"¡Reclutado por {referido_reg}! Entras con 500 monedas extra.")
                             else:
@@ -774,8 +795,10 @@ elif st.session_state.estado == "bautismo":
     st.write("")
     
     if st.button("🩸 ACEPTO LAS CONSECUENCIAS (ENTRAR AL LOBBY)", type="primary", use_container_width=True):
-        # Guardamos en la base de datos que ya ha visto el bautismo para que nunca más vuelva a salir
-        supabase.table("jugadores").update({"bautismo_completado": True}).eq("id", st.session_state.usuario_id).execute()
+        supabase.table("jugadores").update({
+            "bautismo_completado": True
+        }).eq("id", st.session_state.usuario_id).execute()
+        
         st.session_state.bautismo_visto = True
         st.session_state.estado = "lobby"
         st.rerun()
@@ -965,6 +988,72 @@ elif st.session_state.estado == "lobby":
                 st.rerun()
 
     render_navbar("lobby")
+
+# --- LA PLAZA PÚBLICA (MUNDO) ---
+elif st.session_state.estado == "mundo":
+    st.markdown("<h1 style='text-align: center; color: #fff; letter-spacing: 2px;'>🌍 LA PLAZA PÚBLICA</h1>", unsafe_allow_html=True)
+    st.markdown("<h4 style='text-align: center; color: gray; margin-bottom: 30px;'>El mundo está observando.</h4>", unsafe_allow_html=True)
+    
+    c_feed, c_rank = st.columns([1.2, 1])
+    
+    with c_rank:
+        st.markdown("<h3 style='color: #ffd700; text-align: center;'>🏆 TOP GLOBAL</h3>", unsafe_allow_html=True)
+        st.markdown("<div style='background-color: #111; border: 1px solid #333; border-radius: 12px; padding: 15px;'>", unsafe_allow_html=True)
+        top_players = supabase.table("jugadores").select("nombre, elo, skin_activa").order("elo", desc=True).limit(10).execute()
+        
+        if top_players.data:
+            for idx, p in enumerate(top_players.data):
+                p_nombre = p['nombre']
+                p_elo = p['elo']
+                r_n, r_s, r_i, r_c = calcular_rango(p_elo)
+                color_pos = "#ffd700" if idx == 0 else "#c0c0c0" if idx == 1 else "#cd7f32" if idx == 2 else "#888"
+                
+                st.markdown(f"""
+                    <div style='display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #222; padding: 10px 0;'>
+                        <div style='display: flex; align-items: center; gap: 10px;'>
+                            <strong style='color: {color_pos}; font-size: 18px;'>#{idx+1}</strong>
+                            <span style='color: white; font-weight: bold;'>{p_nombre}</span>
+                        </div>
+                        <div style='text-align: right;'>
+                            <span style='color: {r_c}; font-size: 12px;'>{r_i} {p_elo} pts</span>
+                        </div>
+                    </div>
+                """.replace('\n', ''), unsafe_allow_html=True)
+        st.markdown("</div>", unsafe_allow_html=True)
+        
+    with c_feed:
+        st.markdown("<h3 style='color: #00aaff; text-align: center;'>📡 MURO DE LOS LAMENTOS</h3>", unsafe_allow_html=True)
+        st.markdown("<div class='feed-box' style='background-color: #0a0a0a; border: 1px solid #333; border-radius: 12px; padding: 15px; height: 450px; overflow-y: auto;'>", unsafe_allow_html=True)
+        
+        feed = supabase.table("historial").select("*").order("id", desc=True).limit(15).execute()
+        
+        if feed.data:
+            for f in feed.data:
+                res = f['resultado']
+                puntos = f['puntos_cambio']
+                j_nom = f.get('jugador_nombre', 'Un guerrero')
+                r_nom = f.get('rival_nombre', 'el Guardián')
+                
+                if res == "victoria":
+                    color = "#00ff00"
+                    icono = "🟢"
+                    texto = f"**{j_nom}** ha destrozado a **{r_nom}** y roba <span style='color:{color};'>+{puntos} ELO</span>."
+                else:
+                    color = "#ff4b4b"
+                    icono = "🔴"
+                    texto = f"El escudo de **{j_nom}** colapsó contra **{r_nom}**. Pierde <span style='color:{color};'>{puntos} ELO</span>."
+                    
+                st.markdown(f"""
+                    <div style='background-color: #111; border-left: 3px solid {color}; padding: 10px; margin-bottom: 8px; border-radius: 4px;'>
+                        <p style='color: #ccc; margin: 0; font-size: 13px;'>{icono} {texto}</p>
+                    </div>
+                """.replace('\n', ''), unsafe_allow_html=True)
+        else:
+            st.markdown("<p style='text-align: center; color: #555;'>El silencio reina en la arena...</p>", unsafe_allow_html=True)
+            
+        st.markdown("</div>", unsafe_allow_html=True)
+        
+    render_navbar("mundo")
 
 # --- EL CUARTEL GENERAL ---
 elif st.session_state.estado == "cuartel":
@@ -1561,7 +1650,8 @@ elif st.session_state.estado == "duelo":
         }).eq("id", st.session_state.usuario_id).execute()
         
         supabase.table("historial").insert({
-            "jugador_id": st.session_state.usuario_id, 
+            "jugador_id": st.session_state.usuario_id,
+            "jugador_nombre": st.session_state.nombre_guerra,
             "rival_nombre": st.session_state.rival_nombre, 
             "resultado": "derrota", 
             "puntos_cambio": -st.session_state.elo_castigo
@@ -1600,7 +1690,8 @@ elif st.session_state.estado == "duelo":
         }).eq("id", st.session_state.usuario_id).execute()
         
         supabase.table("historial").insert({
-            "jugador_id": st.session_state.usuario_id, 
+            "jugador_id": st.session_state.usuario_id,
+            "jugador_nombre": st.session_state.nombre_guerra,
             "rival_nombre": st.session_state.rival_nombre, 
             "resultado": "victoria", 
             "puntos_cambio": st.session_state.elo_premio
@@ -1673,7 +1764,7 @@ elif st.session_state.estado == "derrota":
     st.markdown("<audio autoplay src='https://actions.google.com/sounds/v1/alarms/alarm_clock.ogg'></audio>", unsafe_allow_html=True)
     st.markdown("<h1 style='text-align: center; color: #ff1a1a; font-size: 4em; text-transform: uppercase;'>💀 DERROTA</h1>", unsafe_allow_html=True)
     st.markdown(f"<h2 style='text-align: center; color: #ff4b4b; font-size: 3em;'>-{st.session_state.elo_castigo} ELO</h2>", unsafe_allow_html=True)
-    st.error(f"Abandonaste tu misión: *'{st.session_state.mision_actual}'*. **{st.session_state.rival_nombre}** se ha llevado la gloria por tu debilidad.")
+    st.error(f"Tu escudo colapsó. Has fracasado en tu misión: *'{st.session_state.mision_actual}'*. **{st.session_state.rival_nombre}** se lleva la gloria.")
     st.write("")
     
     if st.button("Tragar el orgullo y volver", use_container_width=True): 
@@ -1701,7 +1792,7 @@ elif st.session_state.estado == "victoria":
     st.markdown("<h1 style='text-align: center; color: #00ff00; font-size: 4em; text-transform: uppercase; text-shadow: 0 0 20px rgba(0,255,0,0.4);'>🏆 VICTORIA</h1>", unsafe_allow_html=True)
     st.markdown(f"<h2 style='text-align: center; color: #00ff00; font-size: 3em;'>+{st.session_state.elo_premio} ELO</h2>", unsafe_allow_html=True)
     st.markdown(f"<h3 style='text-align: center; color: #ffd700; text-shadow: 0 0 10px rgba(255,215,0,0.4);'>🪙 +{st.session_state.monedas_ganadas_recientes} MONEDAS A LA BÓVEDA</h3>", unsafe_allow_html=True)
-    st.success(f"Misión Cumplida: *'{st.session_state.mision_actual}'*. Tu disciplina de hierro ha aplastado a **{st.session_state.rival_nombre}**.")
+    st.success(f"Misión Cumplida: *'{st.session_state.mision_actual}'*. Tu disciplina ha destrozado a **{st.session_state.rival_nombre}**.")
     
     st.markdown(f"""
         <div style='background-color: #1a1a1a; padding: 20px; border-left: 5px solid #00ff00; margin: 20px 0;'>
