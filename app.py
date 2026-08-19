@@ -626,8 +626,8 @@ if st.session_state.estado == "login":
         
         st.markdown("""
             <div style='background: linear-gradient(90deg, #161616 0%, transparent 100%); border-left: 3px solid #ff4b4b; padding: 15px; margin-bottom: 15px; border-radius: 4px;'>
-                <h4 style='color: white; margin: 0; font-size: 15px; text-transform: uppercase;'>⚔️ Cero Excusas, Cero Distracciones</h4>
-                <p style='color: #888; margin: 0; font-size: 13px;'>Si abres otra pestaña o miras el móvil mientras trabajas, tu escudo colapsa y pierdes tu ELO.</p>
+                <h4 style='color: white; margin: 0; font-size: 15px; text-transform: uppercase;'>⚔️ La Cárcel para tu Móvil</h4>
+                <p style='color: #888; margin: 0; font-size: 13px;'>Abre la app en tu teléfono y déjalo en la mesa. Si sales de la pantalla para mirar redes sociales, tu escudo colapsa y pierdes ELO.</p>
             </div>
             <div style='background: linear-gradient(90deg, #161616 0%, transparent 100%); border-left: 3px solid #ffd700; padding: 15px; margin-bottom: 15px; border-radius: 4px;'>
                 <h4 style='color: white; margin: 0; font-size: 15px; text-transform: uppercase;'>🪙 Mercado Negro de Skins</h4>
@@ -775,7 +775,7 @@ elif st.session_state.estado == "bautismo":
     st.markdown("<audio autoplay src='https://actions.google.com/sounds/v1/alarms/spaceship_alarm.ogg'></audio>", unsafe_allow_html=True)
     st.markdown("<h1 class='glitch-text' style='font-size: 3em; color: #ff4b4b; margin-bottom: 0;'>⚠️ INICIANDO SECUENCIA ⚠️</h1>", unsafe_allow_html=True)
     
-    st.markdown(f"""
+   st.markdown(f"""
         <div style='background-color: #0a0a0a; border: 2px solid #ff4b4b; padding: 40px; border-radius: 10px; margin-top: 30px; box-shadow: 0 0 30px rgba(255,0,0,0.3);'>
             <h2 style='color: white; text-align: center; text-transform: uppercase;'>Bienvenido a La Arena, <span style='color:#ff4b4b;'>{st.session_state.nombre_guerra}</span></h2>
             <p style='color: #aaa; text-align: center; font-size: 1.2em;'>Has entrado porque tu disciplina es débil y necesitas que el sistema te marque el límite.</p>
@@ -784,9 +784,9 @@ elif st.session_state.estado == "bautismo":
             
             <h3 style='color: #ff4b4b; text-align: center; margin-bottom: 20px;'>📜 EL PACTO DE SANGRE</h3>
             <ul style='color: #ddd; font-size: 1.1em; line-height: 2; list-style-type: none; padding-left: 0; text-align: center;'>
-                <li><b>REGLA 1:</b> Declara tu misión de estudio. No hay vuelta atrás.</li>
-                <li><b>REGLA 2:</b> Si cambias de pestaña, minimizas o tocas el móvil... <b style='color:#ff4b4b;'>tu escudo colapsa y quedas eliminado</b>.</li>
-                <li><b>REGLA 3:</b> Sobrevive para ganar Monedas y ELO. Falla, y todo el mundo verá cómo caes en desgracia.</li>
+                <li><b>REGLA 1:</b> Abre esta app en tu <b>TELÉFONO MÓVIL</b>. Declara tu misión y el tiempo.</li>
+                <li><b>REGLA 2:</b> Deja el móvil en la mesa. Ve a hacer tu misión (ordenador, libros, físico).</li>
+                <li><b>REGLA 3:</b> Si coges el móvil y sales de esta pantalla para mirar otra cosa... <b style='color:#ff4b4b;'>tu escudo colapsa y quedas eliminado</b>.</li>
             </ul>
         </div>
     """.replace('\n', ''), unsafe_allow_html=True)
@@ -913,9 +913,9 @@ elif st.session_state.estado == "lobby":
         <div class="rules-box">
             <h3 style="text-align: center; color: #ff4b4b; text-transform: uppercase; margin-top: 0;">⚠️ Las Leyes de la Arena</h3>
             <ul style="list-style-type: none; padding-left: 0; color: #ccc; font-size: 15px; line-height: 1.8;">
-                <li style="margin-bottom: 10px;">🟢 <span class="neon-green">CÓMO GANAR:</span> Cumple la misión y sobrevive sin salir de la app.</li>
-                <li style="margin-bottom: 10px;">🔴 <span class="neon-red">CÓMO PERDER:</span> Si cambias de pestaña o pulsas "Me Rindo", tu misión fracasa al instante.</li>
-                <li>⚔️ <strong style="color: #ffd700;">EL PACTO:</strong> Si no trabajas, estarás engañando al sistema. Nunca a ti mismo.</li>
+                <li style="margin-bottom: 10px;">📱 <span class="neon-green">CÓMO SE JUEGA:</span> Abre esto en tu móvil, déjalo en la mesa y ve a trabajar en tu PC o en tus libros.</li>
+                <li style="margin-bottom: 10px;">🔴 <span class="neon-red">CÓMO PIERDES:</span> Si coges el móvil y cambias de app, tu misión fracasa al instante y pierdes ELO.</li>
+                <li>⚔️ <strong style="color: #ffd700;">EL PACTO:</strong> Convierte tu móvil en tu propio vigilante. No te engañes a ti mismo.</li>
             </ul>
         </div>
     """.replace('\n', ''), unsafe_allow_html=True)
