@@ -13,6 +13,7 @@ st.set_page_config(page_title="Modo Combate | La Arena", page_icon=LOGO_URL, lay
 # --- INYECCIÓN DE CSS Y ANIMACIONES ---
 st.markdown("""
     <style>
+    
     #MainMenu {visibility: hidden;}
     footer {visibility: hidden;}
     header {visibility: hidden;}
@@ -201,7 +202,7 @@ st.markdown("""
         scrollbar-width: none;
     }
     </style>
-""")
+""", unsafe_allow_html=True)
 
 # --- CONEXIÓN A LA BÓVEDA ---
 @st.cache_resource
