@@ -57,9 +57,8 @@ st.markdown("""
     }
     
     .epic-title { 
-        text-align: center; 
         color: #ff4b4b; 
-        font-size: 4em; 
+        font-size: 3.5em; 
         text-transform: uppercase; 
         letter-spacing: 4px; 
         text-shadow: 0 0 25px rgba(255,75,75,0.7); 
@@ -68,11 +67,9 @@ st.markdown("""
     
     .manifesto { 
         color: #a3a3a3; 
-        font-size: 1.2em; 
-        text-align: center; 
+        font-size: 1.1em; 
         font-style: italic; 
         margin-top: 10px; 
-        margin-bottom: 40px; 
         line-height: 1.6; 
     }
     
@@ -110,38 +107,6 @@ st.markdown("""
         100% { transform: translateY(0px); }
     }
     
-    @keyframes pulse-aura {
-        0% { box-shadow: 0 0 15px #ff0000, 0 0 5px #ff0000 inset; }
-        50% { box-shadow: 0 0 35px #ff0000, 0 0 15px #ff0000 inset; }
-        100% { box-shadow: 0 0 15px #ff0000, 0 0 5px #ff0000 inset; }
-    }
-    
-    @keyframes pulse-fuego {
-        0% { box-shadow: 0 0 15px #aa00ff, 0 0 5px #aa00ff inset; }
-        50% { box-shadow: 0 0 35px #aa00ff, 0 0 15px #aa00ff inset; }
-        100% { box-shadow: 0 0 15px #aa00ff, 0 0 5px #aa00ff inset; }
-    }
-    
-    @keyframes pulse-sombra {
-        0% { box-shadow: 0 0 15px #00aaff, 0 0 5px #00aaff inset; }
-        50% { box-shadow: 0 0 35px #00aaff, 0 0 15px #00aaff inset; }
-        100% { box-shadow: 0 0 15px #00aaff, 0 0 5px #00aaff inset; }
-    }
-    
-    @keyframes chest-shake {
-        0% { transform: translate(1px, 1px) rotate(0deg); }
-        10% { transform: translate(-1px, -2px) rotate(-1deg); }
-        20% { transform: translate(-3px, 0px) rotate(1deg); }
-        30% { transform: translate(3px, 2px) rotate(0deg); }
-        40% { transform: translate(1px, -1px) rotate(1deg); }
-        50% { transform: translate(-1px, 2px) rotate(-1deg); }
-        60% { transform: translate(-3px, 1px) rotate(0deg); }
-        70% { transform: translate(3px, 1px) rotate(-1deg); }
-        80% { transform: translate(-1px, -1px) rotate(1deg); }
-        90% { transform: translate(1px, 2px) rotate(0deg); }
-        100% { transform: translate(1px, -2px) rotate(-1deg); }
-    }
-    
     @keyframes rank-up-pop {
         0% { transform: scale(0.5); opacity: 0; }
         70% { transform: scale(1.05); opacity: 1; }
@@ -162,20 +127,37 @@ st.markdown("""
     }
     
     .anim-aura { 
-        animation: float-card 3.5s ease-in-out infinite, pulse-aura 2s infinite !important; 
+        animation: float-card 3.5s ease-in-out infinite; 
         border: 2px solid #ff0000 !important; 
+        box-shadow: 0 0 15px #ff0000, 0 0 5px #ff0000 inset !important;
     }
     
     .anim-fuego { 
-        animation: float-card 3.5s ease-in-out infinite, pulse-fuego 2s infinite !important; 
+        animation: float-card 3.5s ease-in-out infinite; 
         border: 2px solid #aa00ff !important; 
+        box-shadow: 0 0 15px #aa00ff, 0 0 5px #aa00ff inset !important;
     }
     
     .anim-sombra { 
-        animation: float-card 3.5s ease-in-out infinite, pulse-sombra 2s infinite !important; 
+        animation: float-card 3.5s ease-in-out infinite; 
         border: 2px solid #00aaff !important; 
+        box-shadow: 0 0 15px #00aaff, 0 0 5px #00aaff inset !important;
     }
-    
+
+    @keyframes chest-shake {
+        0% { transform: translate(1px, 1px) rotate(0deg); }
+        10% { transform: translate(-1px, -2px) rotate(-1deg); }
+        20% { transform: translate(-3px, 0px) rotate(1deg); }
+        30% { transform: translate(3px, 2px) rotate(0deg); }
+        40% { transform: translate(1px, -1px) rotate(1deg); }
+        50% { transform: translate(-1px, 2px) rotate(-1deg); }
+        60% { transform: translate(-3px, 1px) rotate(0deg); }
+        70% { transform: translate(3px, 1px) rotate(-1deg); }
+        80% { transform: translate(-1px, -1px) rotate(1deg); }
+        90% { transform: translate(1px, 2px) rotate(0deg); }
+        100% { transform: translate(1px, -2px) rotate(-1deg); }
+    }
+
     .chest-anim { 
         font-size: 100px; 
         animation: chest-shake 0.5s infinite; 
@@ -203,7 +185,7 @@ except Exception as e:
     st.error("❌ Fallo crítico: No se pudo conectar a la base de datos.")
     st.stop()
 
-# --- MEMORIA ABSOLUTA Y EXPANDIDA ---
+# --- MEMORIA ABSOLUTA Y EXPANDIDA (SIN RECORTES) ---
 if 'usuario_id' not in st.session_state:
     st.session_state.usuario_id = None
 if 'estado' not in st.session_state:
@@ -302,57 +284,108 @@ pildoras = [
     {"autor": "Séneca", "texto": "No es que tengamos poco tiempo, sino que perdemos mucho."}
 ]
 
+# RESTAURACIÓN ABSOLUTA DE LAS 100 MISIONES (SIN RECORTES)
 MISIONES_DESARROLLO = [
-    "Bloque de Deep Work: 0 móvil, 0 distracciones. Solo la tarea más difícil.", "Leer 10 páginas de filosofía estoica o ensayo.", 
-    "Hacer 100 flexiones estrictas (divide en series si es necesario).", "Limpiar y organizar el espacio de trabajo como un quirófano.",
-    "Sesión de meditación de 15 minutos en silencio absoluto.", "Escribir 500 palabras sobre tus objetivos a 5 años.",
-    "Estirar todo el cuerpo durante 20 minutos sin interrupciones.", "Aprender un concepto nuevo de tu sector industrial.",
-    "Barrer, fregar y ordenar una habitación de tu casa al 100%.", "Hacer 50 sentadillas y 50 abdominales explosivas.",
-    "Planificar tu semana entera hora por hora en el calendario.", "Leer 15 páginas de un libro técnico o financiero.",
-    "Vaciar la bandeja de entrada del correo a Cero (Inbox Zero).", "Escribir en papel 3 cosas por las que estás agradecido.",
-    "Hacer una rutina de Yoga o Movilidad de 30 minutos.", "Avanzar en ese proyecto que llevas procrastinando 1 mes.",
-    "Practicar un idioma extranjero de forma intensiva.", "Escuchar un podcast de desarrollo personal tomando notas.",
-    "Diseñar tu menú de comidas saludables para los próximos 3 días.", "Hacer 200 saltos de comba o jumping jacks.",
-    "Revisar tus finanzas: ingresos, gastos y ahorro del mes.", "Visualización activa: Imaginar tu fracaso si no trabajas hoy.",
-    "Beber 1 litro de agua e hidratar el cerebro antes de seguir.", "Desinstalar o bloquear una app tóxica de tu móvil.",
-    "Llamar a un familiar o mentor que te inspire respeto.", "Estudiar la biografía de un líder histórico.",
-    "Hacer una caminata rápida o correr 3km sin música.", "Tomar una ducha de agua fría extrema.",
-    "Identificar tu mayor debilidad actual y trazar un plan para matarla.", "Practicar respiración Wim Hof (3 rondas completas).",
-    "No quejarte de nada ni de nadie durante todo el día de hoy.", "Redactar tu 'Antivisión': en quién te convertirás si eres vago.",
-    "Trabajar de pie durante los próximos 45 minutos.", "Hacer una sesión de 100 burpees.",
-    "Optimizar tu currículum o perfil profesional de LinkedIn.", "Aprender los atajos de teclado del programa que más usas.",
-    "Eliminar archivos inútiles de tu ordenador (limpieza digital).", "Hacer 5 series al fallo de dominadas o flexiones.",
-    "Investigar cómo diversificar tus fuentes de ingresos.", "Anotar 5 ideas de negocio o mejoras para tu trabajo.",
-    "Practicar el silencio: no hablar a menos que sea 100% necesario.", "Aprender sobre inversión pasiva o fondos indexados.",
-    "Limpiar la cocina a fondo, dejando el fregadero impecable.", "Repasar tus metas anuales y tachar lo irrelevante.",
-    "Trabajar ininterrumpidamente hasta que duela el cerebro.", "Analizar tus rutinas de sueño y planear cómo dormir 8h reales.",
-    "Hacer un ayuno intermitente o saltarte la comida basura hoy.", "Ver un documental técnico y hacer un resumen escrito.",
-    "Ordenar tu armario y desechar la ropa que ya no usas.", "Leer sobre inteligencia emocional y aplicar un concepto hoy.",
-    "Trazar el organigrama mental de tu vida y tus pilares.", "Hacer 15 minutos de planchas (planks) acumulados.",
-    "Evitar el azúcar y los procesados al 100% durante 24 horas.", "Escribirle a alguien que admires pidiéndole un consejo.",
-    "Reflexionar sobre la muerte (Memento Mori) y la urgencia de vivir.", "Leer un artículo sobre física cuántica o astronomía.",
-    "No usar redes sociales hasta que caiga el sol.", "Crear una base de datos para organizar tus conocimientos (Notion/Obsidian).",
-    "Realizar ejercicios de Kegel o core avanzado.", "Automatizar una tarea repetitiva que odies hacer.",
-    "Preparar la ropa y los objetivos de mañana antes de dormir.", "Leer 20 páginas de la biografía de Elon Musk o Steve Jobs.",
-    "Buscar 3 formas de ahorrar dinero esta semana.", "Hacer un entrenamiento de fuerza con tu peso corporal.",
-    "Aprender a usar la terminal/consola de tu ordenador.", "Crear una copia de seguridad de todos tus datos importantes.",
-    "Tener una conversación difícil que has estado evitando.", "Eliminar suscripciones o gastos hormiga de tus tarjetas.",
-    "Consumir contenido exclusivo de matemáticas o lógica.", "Escribir tu propio manifiesto de guerra personal.",
-    "Realizar una sesión de alta intensidad HIIT de 20 minutos.", "Aprender los fundamentos de la programación en Python/SQL.",
-    "Organizar los cables y la limpieza física de tu set-up.", "Analizar tu lenguaje corporal en el espejo y mejorarlo.",
-    "Dedicar tiempo a entender el mercado cripto/blockchain.", "Hacer 100 sentadillas búlgaras (50 por pierna).",
-    "Planear un fin de semana de desconexión total en la naturaleza.", "Aprender a cocinar un plato altamente nutritivo y barato.",
-    "Escribir un ensayo crítico sobre una opinión impopular que tengas.", "Desuscribirte de correos publicitarios (limpiar newsletter).",
-    "Pasar 30 minutos al sol sin distracciones tecnológicas.", "Aprender técnicas de persuasión y ventas.",
-    "Evaluar a tus 5 amigos más cercanos: ¿Te suman o te restan?", "Leer sobre economía austriaca o macroeconomía básica.",
-    "Escribir un diario de errores: fallos recientes y cómo no repetirlos.", "Practicar mecanografía para aumentar tus pulsaciones por minuto.",
-    "No consumir pornografía ni contenido basura. Dopamina limpia.", "Mejorar la seguridad de tus contraseñas usando un gestor.",
-    "Aprender sobre inteligencia artificial y automatización de IA.", "Hacer 10 series de sprints cuesta arriba.",
-    "Ver un TED Talk sobre psicología humana o neurociencia.", "Diseñar una rutina matutina inquebrantable de 60 minutos.",
-    "Auditar tu postura en la silla y corregirla conscientemente.", "Identificar qué tarea te da el 80% de tus resultados (Ley de Pareto).",
-    "Hacer una lista de los peores escenarios posibles y prepararte para ellos.", "Aprender primeros auxilios básicos o maniobra de Heimlich.",
-    "Construir tu propia página web o portafolio personal.", "Renunciar a la cafeína durante todo el día para resetear receptores.",
-    "Memorizar frases clave en latín estoico (Amor Fati, Veni Vidi Vici).", "Investigar la historia militar de Roma o Esparta para forjar carácter."
+    "Bloque de Deep Work: 0 móvil, 0 distracciones. Solo la tarea más difícil.",
+    "Leer 10 páginas de filosofía estoica o ensayo.", 
+    "Hacer 100 flexiones estrictas (divide en series si es necesario).",
+    "Limpiar y organizar el espacio de trabajo como un quirófano.",
+    "Sesión de meditación de 15 minutos en silencio absoluto.",
+    "Escribir 500 palabras sobre tus objetivos a 5 años.",
+    "Estirar todo el cuerpo durante 20 minutos sin interrupciones.",
+    "Aprender un concepto nuevo de tu sector industrial.",
+    "Barrer, fregar y ordenar una habitación de tu casa al 100%.",
+    "Hacer 50 sentadillas y 50 abdominales explosivas.",
+    "Planificar tu semana entera hora por hora en el calendario.",
+    "Leer 15 páginas de un libro técnico o financiero.",
+    "Vaciar la bandeja de entrada del correo a Cero (Inbox Zero).",
+    "Escribir en papel 3 cosas por las que estás agradecido.",
+    "Hacer una rutina de Yoga o Movilidad de 30 minutos.",
+    "Avanzar en ese proyecto que llevas procrastinando 1 mes.",
+    "Practicar un idioma extranjero de forma intensiva.",
+    "Escuchar un podcast de desarrollo personal tomando notas.",
+    "Diseñar tu menú de comidas saludables para los próximos 3 días.",
+    "Hacer 200 saltos de comba o jumping jacks.",
+    "Revisar tus finanzas: ingresos, gastos y ahorro del mes.",
+    "Visualización activa: Imaginar tu fracaso si no trabajas hoy.",
+    "Beber 1 litro de agua e hidratar el cerebro antes de seguir.",
+    "Desinstalar o bloquear una app tóxica de tu móvil.",
+    "Llamar a un familiar o mentor que te inspire respeto.",
+    "Estudiar la biografía de un líder histórico.",
+    "Hacer una caminata rápida o correr 3km sin música.",
+    "Tomar una ducha de agua fría extrema.",
+    "Identificar tu mayor debilidad actual y trazar un plan para matarla.",
+    "Practicar respiración Wim Hof (3 rondas completas).",
+    "No quejarte de nada ni de nadie durante todo el día de hoy.",
+    "Redactar tu 'Antivisión': en quién te convertirás si eres vago.",
+    "Trabajar de pie durante los próximos 45 minutos.",
+    "Hacer una sesión de 100 burpees.",
+    "Optimizar tu currículum o perfil profesional de LinkedIn.",
+    "Aprender los atajos de teclado del programa que más usas.",
+    "Eliminar archivos inútiles de tu ordenador (limpieza digital).",
+    "Hacer 5 series al fallo de dominadas o flexiones.",
+    "Investigar cómo diversificar tus fuentes de ingresos.",
+    "Anotar 5 ideas de negocio o mejoras para tu trabajo.",
+    "Practicar el silencio: no hablar a menos que sea 100% necesario.",
+    "Aprender sobre inversión pasiva o fondos indexados.",
+    "Limpiar la cocina a fondo, dejando el fregadero impecable.",
+    "Repasar tus metas anuales y tachar lo irrelevante.",
+    "Trabajar ininterrumpidamente hasta que duela el cerebro.",
+    "Analizar tus rutinas de sueño y planear cómo dormir 8h reales.",
+    "Hacer un ayuno intermitente o saltarte la comida basura hoy.",
+    "Ver un documental técnico y hacer un resumen escrito.",
+    "Ordenar tu armario y desechar la ropa que ya no usas.",
+    "Leer sobre inteligencia emocional y aplicar un concepto hoy.",
+    "Trazar el organigrama mental de tu vida y tus pilares.",
+    "Hacer 15 minutos de planchas (planks) acumulados.",
+    "Evitar el azúcar y los procesados al 100% durante 24 horas.",
+    "Escribirle a alguien que admires pidiéndole un consejo.",
+    "Reflexionar sobre la muerte (Memento Mori) y la urgencia de vivir.",
+    "Leer un artículo sobre física cuántica o astronomía.",
+    "No usar redes sociales hasta que caiga el sol.",
+    "Crear una base de datos para organizar tus conocimientos (Notion/Obsidian).",
+    "Realizar ejercicios de Kegel o core avanzado.",
+    "Automatizar una tarea repetitiva que odies hacer.",
+    "Preparar la ropa y los objetivos de mañana antes de dormir.",
+    "Leer 20 páginas de la biografía de Elon Musk o Steve Jobs.",
+    "Buscar 3 formas de ahorrar dinero esta semana.",
+    "Hacer un entrenamiento de fuerza con tu peso corporal.",
+    "Aprender a usar la terminal/consola de tu ordenador.",
+    "Crear una copia de seguridad de todos tus datos importantes.",
+    "Tener una conversación difícil que has estado evitando.",
+    "Eliminar suscripciones o gastos hormiga de tus tarjetas.",
+    "Consumir contenido exclusivo de matemáticas o lógica.",
+    "Escribir tu propio manifiesto de guerra personal.",
+    "Realizar una sesión de alta intensidad HIIT de 20 minutos.",
+    "Aprender los fundamentos de la programación en Python/SQL.",
+    "Organizar los cables y la limpieza física de tu set-up.",
+    "Analizar tu lenguaje corporal en el espejo y mejorarlo.",
+    "Dedicar tiempo a entender el mercado cripto/blockchain.",
+    "Hacer 100 sentadillas búlgaras (50 por pierna).",
+    "Planear un fin de semana de desconexión total en la naturaleza.",
+    "Aprender a cocinar un plato altamente nutritivo y barato.",
+    "Escribir un ensayo crítico sobre una opinión impopular que tengas.",
+    "Desuscribirte de correos publicitarios (limpiar newsletter).",
+    "Pasar 30 minutos al sol sin distracciones tecnológicas.",
+    "Aprender técnicas de persuasión y ventas.",
+    "Evaluar a tus 5 amigos más cercanos: ¿Te suman o te restan?",
+    "Leer sobre economía austriaca o macroeconomía básica.",
+    "Escribir un diario de errores: fallos recientes y cómo no repetirlos.",
+    "Practicar mecanografía para aumentar tus pulsaciones por minuto.",
+    "No consumir pornografía ni contenido basura. Dopamina limpia.",
+    "Mejorar la seguridad de tus contraseñas usando un gestor.",
+    "Aprender sobre inteligencia artificial y automatización de IA.",
+    "Hacer 10 series de sprints cuesta arriba.",
+    "Ver un TED Talk sobre psicología humana o neurociencia.",
+    "Diseñar una rutina matutina inquebrantable de 60 minutos.",
+    "Auditar tu postura en la silla y corregirla conscientemente.",
+    "Identificar qué tarea te da el 80% de tus resultados (Ley de Pareto).",
+    "Hacer una lista de los peores escenarios posibles y prepararte para ellos.",
+    "Aprender primeros auxilios básicos o maniobra de Heimlich.",
+    "Construir tu propia página web o portafolio personal.",
+    "Renunciar a la cafeína durante todo el día para resetear receptores.",
+    "Memorizar frases clave en latín estoico (Amor Fati, Veni Vidi Vici).",
+    "Investigar la historia militar de Roma o Esparta para forjar carácter."
 ]
 
 # --- MOTORES MATEMÁTICOS DE RANGO Y ELO ---
@@ -534,136 +567,154 @@ def generar_codigo_sala():
 # RUTAS DE LA APLICACIÓN
 # ==========================================================
 
-# --- LA PUERTA DE SEGURIDAD ---
+# --- LA PUERTA DE SEGURIDAD (VERSIÓN SPLIT-SCREEN 1.0) ---
 if st.session_state.estado == "login":
-    st.markdown(f"<div style='text-align: center;'><img src='{LOGO_URL}' width='120' style='border-radius: 20px; box-shadow: 0 0 20px #ff4b4b; margin-bottom: 20px;'></div>", unsafe_allow_html=True)
-    st.markdown("<h1 class='epic-title'>⚔️ LA ARENA</h1>", unsafe_allow_html=True)
-    st.markdown("""
-        <div class='manifesto'>
-            El mundo está lleno de gente que abandona cuando duele.<br>
-            <span class='highlight'>Nosotros venimos a romper al 99%.</span><br>
-            Forja tu disciplina. Aplasta a tus rivales. Haz que tu nombre importe.
-        </div>
-    """.replace('\n', ''), unsafe_allow_html=True)
+    st.write("") # Espaciador superior
     
-    st.divider()
+    # Creamos dos columnas. Una ancha para vender la app, otra estrecha para el formulario.
+    c_hero, c_espacio, c_login = st.columns([1.2, 0.1, 1])
     
-    tab1, tab2 = st.tabs(["🚪 ENTRAR AL COLISEO", "📝 FORJAR UNA LEYENDA"])
-    
-    with tab1:
-        email_log = st.text_input("Correo electrónico", key="log_email")
-        pass_log = st.text_input("Contraseña", type="password", key="log_pass")
+    with c_hero:
+        st.markdown(f"<img src='{LOGO_URL}' width='100' style='border-radius: 15px; box-shadow: 0 0 15px #ff4b4b; margin-bottom: 15px;'>", unsafe_allow_html=True)
+        st.markdown("<h1 class='epic-title' style='text-align: left;'>LA ARENA</h1>", unsafe_allow_html=True)
+        st.markdown("""
+            <div class='manifesto' style='text-align: left; margin-bottom: 25px;'>
+                El mundo está lleno de gente que abandona cuando duele.<br>
+                <span class='highlight'>Nosotros venimos a romper al 99%.</span>
+            </div>
+        """.replace('\n', ''), unsafe_allow_html=True)
         
-        if st.button("ACCEDER", type="primary", use_container_width=True):
-            try:
-                respuesta = supabase.auth.sign_in_with_password({"email": email_log, "password": pass_log})
-                user_id = respuesta.user.id
-                st.session_state.usuario_id = user_id
-                
-                datos = supabase.table("jugadores").select("*").eq("id", user_id).execute()
-                
-                if len(datos.data) > 0:
-                    d = datos.data[0]
-                    st.session_state.puntos_elo = d.get('elo', 100)
-                    st.session_state.racha = d.get('racha', 0)
-                    st.session_state.monedas = d.get('monedas', 0)
-                    st.session_state.nombre_guerra = d.get('nombre', 'Guerrero')
-                    st.session_state.skin_activa = d.get('skin_activa', 'default')
-                    st.session_state.inv_aura = d.get('inventario_aura', False)
-                    st.session_state.inv_corona = d.get('inventario_corona', False)
-                    st.session_state.inv_sombra = d.get('inv_sombra', False)
-                    st.session_state.inv_fuego = d.get('inv_fuego', False)
-                    st.session_state.boost_elo = d.get('boost_elo_hasta')
-                    st.session_state.boost_monedas = d.get('boost_monedas_hasta')
-                    
-                    st.session_state.victorias = d.get('victorias', 0)
-                    st.session_state.derrotas = d.get('derrotas', 0)
-                    st.session_state.minutos_focus = d.get('minutos_focus', 0)
-                    
-                    fecha_db = d.get('ultima_fecha_misiones')
-                    hoy_str = datetime.now(timezone.utc).strftime('%Y-%m-%d')
-                    
-                    if fecha_db != hoy_str:
-                        supabase.table("jugadores").update({
-                            "ultima_fecha_misiones": hoy_str, 
-                            "progreso_m1": 0, 
-                            "progreso_m2": 0, 
-                            "progreso_m3": 0, 
-                            "m1_reclamada": False, 
-                            "m2_reclamada": False, 
-                            "m3_reclamada": False
-                        }).eq("id", user_id).execute()
-                        
-                        st.session_state.ultima_fecha_misiones = hoy_str
-                        st.session_state.progreso_m1 = 0
-                        st.session_state.progreso_m2 = 0
-                        st.session_state.progreso_m3 = 0
-                        st.session_state.m1_reclamada = False
-                        st.session_state.m2_reclamada = False
-                        st.session_state.m3_reclamada = False
-                    else:
-                        st.session_state.ultima_fecha_misiones = fecha_db
-                        st.session_state.progreso_m1 = d.get('progreso_m1', 0)
-                        st.session_state.progreso_m2 = d.get('progreso_m2', 0)
-                        st.session_state.progreso_m3 = d.get('progreso_m3', 0)
-                        st.session_state.m1_reclamada = d.get('m1_reclamada', False)
-                        st.session_state.m2_reclamada = d.get('m2_reclamada', False)
-                        st.session_state.m3_reclamada = d.get('m3_reclamada', False)
-                else:
-                    st.error("No se encontraron los datos del guerrero.")
-                    st.stop()
-                    
-                st.session_state.estado = "lobby"
-                st.rerun()
-            except Exception as e:
-                st.error("❌ El sistema no reconoce tus credenciales. ¿Te has acobardado?")
-                
-    with tab2:
-        email_reg = st.text_input("Correo electrónico", key="reg_email")
-        nombre_reg = st.text_input("¿Bajo qué nombre derramarás sangre? (Será tu Código de Embajador)", key="reg_nombre")
-        pass_reg = st.text_input("Contraseña (El candado de tu mente)", type="password", key="reg_pass")
-        referido_reg = st.text_input("¿Quién te ha reclutado? (Introduce su nombre de guerra, opcional)", key="reg_ref")
+        st.markdown("""
+            <div style='background: linear-gradient(90deg, #161616 0%, transparent 100%); border-left: 3px solid #ff4b4b; padding: 15px; margin-bottom: 15px; border-radius: 4px;'>
+                <h4 style='color: white; margin: 0; font-size: 15px; text-transform: uppercase;'>⚔️ Cero Excusas, Cero Distracciones</h4>
+                <p style='color: #888; margin: 0; font-size: 13px;'>Si abres otra pestaña o miras el móvil mientras trabajas, tu C4 explota y pierdes tu ELO.</p>
+            </div>
+            <div style='background: linear-gradient(90deg, #161616 0%, transparent 100%); border-left: 3px solid #ffd700; padding: 15px; margin-bottom: 15px; border-radius: 4px;'>
+                <h4 style='color: white; margin: 0; font-size: 15px; text-transform: uppercase;'>🪙 Mercado Negro de Skins</h4>
+                <p style='color: #888; margin: 0; font-size: 13px;'>Sobrevive a tus sesiones de estudio para ganar monedas. Abre cofres y equipa auras y neones.</p>
+            </div>
+            <div style='background: linear-gradient(90deg, #161616 0%, transparent 100%); border-left: 3px solid #00ff00; padding: 15px; border-radius: 4px;'>
+                <h4 style='color: white; margin: 0; font-size: 15px; text-transform: uppercase;'>🏆 Ranking Mundial y Temporadas</h4>
+                <p style='color: #888; margin: 0; font-size: 13px;'>Sube desde Hierro III hasta Diamante. Solo los más disciplinados alcanzan el Salón de los Dioses.</p>
+            </div>
+        """.replace('\n', ''), unsafe_allow_html=True)
+
+    with c_login:
+        st.write("") # Empujar el cajón de login un poco hacia abajo
+        st.write("")
         
-        if st.button("JURAR LEALTAD A LA ARENA", type="primary", use_container_width=True):
-            if not nombre_reg:
-                st.error("Necesitas un nombre de guerra para que puedan recordarte.")
-            else:
+        tab1, tab2 = st.tabs(["🚪 ENTRAR AL COLISEO", "📝 FORJAR UNA LEYENDA"])
+        
+        with tab1:
+            email_log = st.text_input("Correo electrónico", key="log_email")
+            pass_log = st.text_input("Contraseña", type="password", key="log_pass")
+            
+            if st.button("ACCEDER", type="primary", use_container_width=True):
                 try:
-                    monedas_iniciales = 0
-                    if referido_reg:
-                        reclutador_data = supabase.table("jugadores").select("id, monedas").eq("nombre", referido_reg.strip()).execute()
-                        if len(reclutador_data.data) > 0:
-                            reclutador_id = reclutador_data.data[0]['id']
-                            reclutador_monedas = reclutador_data.data[0]['monedas']
-                            
+                    respuesta = supabase.auth.sign_in_with_password({"email": email_log, "password": pass_log})
+                    user_id = respuesta.user.id
+                    st.session_state.usuario_id = user_id
+                    
+                    datos = supabase.table("jugadores").select("*").eq("id", user_id).execute()
+                    
+                    if len(datos.data) > 0:
+                        d = datos.data[0]
+                        st.session_state.puntos_elo = d.get('elo', 100)
+                        st.session_state.racha = d.get('racha', 0)
+                        st.session_state.monedas = d.get('monedas', 0)
+                        st.session_state.nombre_guerra = d.get('nombre', 'Guerrero')
+                        st.session_state.skin_activa = d.get('skin_activa', 'default')
+                        st.session_state.inv_aura = d.get('inventario_aura', False)
+                        st.session_state.inv_corona = d.get('inventario_corona', False)
+                        st.session_state.inv_sombra = d.get('inv_sombra', False)
+                        st.session_state.inv_fuego = d.get('inv_fuego', False)
+                        st.session_state.boost_elo = d.get('boost_elo_hasta')
+                        st.session_state.boost_monedas = d.get('boost_monedas_hasta')
+                        
+                        st.session_state.victorias = d.get('victorias', 0)
+                        st.session_state.derrotas = d.get('derrotas', 0)
+                        st.session_state.minutos_focus = d.get('minutos_focus', 0)
+                        
+                        fecha_db = d.get('ultima_fecha_misiones')
+                        hoy_str = datetime.now(timezone.utc).strftime('%Y-%m-%d')
+                        
+                        if fecha_db != hoy_str:
                             supabase.table("jugadores").update({
-                                "monedas": reclutador_monedas + 1000
-                            }).eq("id", reclutador_id).execute()
+                                "ultima_fecha_misiones": hoy_str, 
+                                "progreso_m1": 0, 
+                                "progreso_m2": 0, 
+                                "progreso_m3": 0, 
+                                "m1_reclamada": False, 
+                                "m2_reclamada": False, 
+                                "m3_reclamada": False
+                            }).eq("id", user_id).execute()
                             
-                            monedas_iniciales = 500
-                            st.success(f"¡Has sido reclutado por {referido_reg}! Empiezas con 500 monedas extra.")
+                            st.session_state.ultima_fecha_misiones = hoy_str
+                            st.session_state.progreso_m1 = 0
+                            st.session_state.progreso_m2 = 0
+                            st.session_state.progreso_m3 = 0
+                            st.session_state.m1_reclamada = False
+                            st.session_state.m2_reclamada = False
+                            st.session_state.m3_reclamada = False
                         else:
-                            st.warning("El código de reclutador no existe. Entras sin bonus.")
-                            
-                    auth_resp = supabase.auth.sign_up({"email": email_reg, "password": pass_reg})
-                    hoy_str = datetime.now(timezone.utc).strftime('%Y-%m-%d')
-                    
-                    supabase.table("jugadores").insert({
-                        "id": auth_resp.user.id, 
-                        "elo": 100, 
-                        "racha": 0, 
-                        "monedas": monedas_iniciales, 
-                        "nombre": nombre_reg, 
-                        "ultima_fecha_misiones": hoy_str,
-                        "victorias": 0,
-                        "derrotas": 0,
-                        "minutos_focus": 0,
-                        "referido_por": referido_reg if referido_reg else None
-                    }).execute()
-                    
-                    st.success("¡Tu nombre está grabado en la piedra! Pasa a la pestaña de 'Entrar'.")
+                            st.session_state.ultima_fecha_misiones = fecha_db
+                            st.session_state.progreso_m1 = d.get('progreso_m1', 0)
+                            st.session_state.progreso_m2 = d.get('progreso_m2', 0)
+                            st.session_state.progreso_m3 = d.get('progreso_m3', 0)
+                            st.session_state.m1_reclamada = d.get('m1_reclamada', False)
+                            st.session_state.m2_reclamada = d.get('m2_reclamada', False)
+                            st.session_state.m3_reclamada = d.get('m3_reclamada', False)
+                    else:
+                        st.error("No se encontraron los datos del guerrero.")
+                        st.stop()
+                        
+                    st.session_state.estado = "lobby"
+                    st.rerun()
                 except Exception as e:
-                    st.error(f"Fallo en el registro. Quizás el correo ya está en uso.")
+                    st.error("❌ El sistema no reconoce tus credenciales.")
+                    
+        with tab2:
+            email_reg = st.text_input("Correo electrónico", key="reg_email")
+            nombre_reg = st.text_input("Nombre de guerra (Tu Código)", key="reg_nombre")
+            pass_reg = st.text_input("Contraseña", type="password", key="reg_pass")
+            referido_reg = st.text_input("¿Quién te ha reclutado? (Opcional)", key="reg_ref")
+            
+            if st.button("JURAR LEALTAD", type="primary", use_container_width=True):
+                if not nombre_reg:
+                    st.error("Necesitas un nombre de guerra.")
+                else:
+                    try:
+                        monedas_iniciales = 0
+                        if referido_reg:
+                            reclutador_data = supabase.table("jugadores").select("id, monedas").eq("nombre", referido_reg.strip()).execute()
+                            if len(reclutador_data.data) > 0:
+                                r_id = reclutador_data.data[0]['id']
+                                r_monedas = reclutador_data.data[0]['monedas']
+                                supabase.table("jugadores").update({"monedas": r_monedas + 1000}).eq("id", r_id).execute()
+                                monedas_iniciales = 500
+                                st.success(f"¡Reclutado por {referido_reg}! Entras con 500 monedas extra.")
+                            else:
+                                st.warning("Código de embajador no existe.")
+                                
+                        auth_resp = supabase.auth.sign_up({"email": email_reg, "password": pass_reg})
+                        hoy_str = datetime.now(timezone.utc).strftime('%Y-%m-%d')
+                        
+                        supabase.table("jugadores").insert({
+                            "id": auth_resp.user.id, 
+                            "elo": 100, 
+                            "racha": 0, 
+                            "monedas": monedas_iniciales, 
+                            "nombre": nombre_reg, 
+                            "ultima_fecha_misiones": hoy_str, 
+                            "victorias": 0, 
+                            "derrotas": 0,
+                            "minutos_focus": 0, 
+                            "referido_por": referido_reg if referido_reg else None
+                        }).execute()
+                        
+                        st.success("¡Registrado! Ve a 'Entrar al Coliseo'.")
+                    except Exception as e:
+                        st.error(f"Fallo en el registro.")
 
 # --- EL LOBBY ---
 elif st.session_state.estado == "lobby":
@@ -773,9 +824,9 @@ elif st.session_state.estado == "lobby":
     
     st.markdown("""
         <div class="rules-box">
-            <h3 style="text-align: center; color: #ff4b4b; text-transform: uppercase; margin-top: 0; text-shadow: 0 0 10px rgba(255, 75, 75, 0.5);">⚠️ Las Leyes de la Arena</h3>
+            <h3 style="text-align: center; color: #ff4b4b; text-transform: uppercase; margin-top: 0;">⚠️ Las Leyes de la Arena</h3>
             <ul style="list-style-type: none; padding-left: 0; color: #ccc; font-size: 15px; line-height: 1.8;">
-                <li style="margin-bottom: 10px;">🟢 <span class="neon-green">CÓMO GANAR:</span> Cumple la misión y sobrevive sin salir de la aplicación.</li>
+                <li style="margin-bottom: 10px;">🟢 <span class="neon-green">CÓMO GANAR:</span> Cumple la misión y sobrevive sin salir de la app.</li>
                 <li style="margin-bottom: 10px;">🔴 <span class="neon-red">CÓMO PERDER:</span> Si cambias de pestaña o pulsas "Me Rindo", tu C4 explota.</li>
                 <li>⚔️ <strong style="color: #ffd700;">EL PACTO:</strong> Si no trabajas, estarás engañando al sistema. Nunca a ti mismo.</li>
             </ul>
@@ -787,7 +838,7 @@ elif st.session_state.estado == "lobby":
     c_texto, c_dado = st.columns([5, 1])
     with c_dado:
         st.write("")
-        if st.button("🎲", help="¿No sabes qué hacer? Deja que el Oráculo decida tu destino.", use_container_width=True):
+        if st.button("🎲", help="Deja que el Oráculo decida tu destino.", use_container_width=True):
             st.session_state.input_mision_texto = random.choice(MISIONES_DESARROLLO)
             st.rerun()
             
@@ -807,7 +858,7 @@ elif st.session_state.estado == "lobby":
     with c_pub:
         if st.button("🌍 BÚSQUEDA MUNDIAL", use_container_width=True, type="primary"):
             if not st.session_state.input_mision_texto: 
-                st.error("Un guerrero no entra sin propósito. Declara tu misión o usa el dado 🎲.")
+                st.error("Declara tu misión o usa el dado 🎲.")
             else:
                 limite_fantasmas = (datetime.now(timezone.utc) - timedelta(seconds=30)).isoformat()
                 supabase.table("partidas").delete().eq("estado", "esperando").lt("ultima_actividad", limite_fantasmas).execute()
@@ -826,15 +877,14 @@ elif st.session_state.estado == "lobby":
                 st.session_state.estado = "buscando"
                 st.rerun()
 
-    st.markdown("<h3 style='text-align: center; color: #888; margin-top: 30px;'>🤝 DUELO PRIVADO (SALAS DE SANGRE)</h3>", unsafe_allow_html=True)
-    
+    st.markdown("<h3 style='text-align: center; color: #888; margin-top: 30px;'>🤝 DUELO PRIVADO</h3>", unsafe_allow_html=True)
     c_p1, c_p2 = st.columns([2, 1])
     with c_p1: 
-        codigo_input = st.text_input("", placeholder="Pega un código o déjalo vacío para crear", label_visibility="collapsed", key="input_cod_priv")
+        codigo_input = st.text_input("", placeholder="Pega código o vacío para crear", label_visibility="collapsed", key="input_cod_priv")
     with c_p2:
         if st.button("🚪 CREAR / UNIRSE", use_container_width=True):
             if not st.session_state.input_mision_texto: 
-                st.error("Declara tu misión primero o usa el dado 🎲.")
+                st.error("Declara tu misión primero.")
             else:
                 st.session_state.mision_actual = st.session_state.input_mision_texto
                 st.session_state.tiempo_combate = tiempo_opts[tiempo_str]
@@ -852,7 +902,7 @@ elif st.session_state.estado == "lobby":
 
     render_navbar("lobby")
 
-# --- EL CUARTEL GENERAL (PERFIL Y ESTADÍSTICAS) ---
+# --- EL CUARTEL GENERAL ---
 elif st.session_state.estado == "cuartel":
     info_rango = get_rank_info(st.session_state.puntos_elo)
     rango_n, rango_s, rango_i, rango_c, elo_min, elo_max, rango_nivel = info_rango
@@ -862,10 +912,10 @@ elif st.session_state.estado == "cuartel":
     
     st.markdown(f"""
         <div style='background-color: #111; border: 1px dashed #ffd700; border-radius: 8px; padding: 20px; text-align: center; margin-bottom: 30px;'>
-            <h3 style='color: #ffd700; margin-top: 0; text-transform: uppercase;'>🤝 PROGRAMA DE EMBAJADORES</h3>
-            <p style='color: #888; font-size: 14px;'>Tu Código de Reclutamiento es tu propio nombre de guerra:</p>
+            <h3 style='color: #ffd700; margin-top: 0;'>🤝 PROGRAMA DE EMBAJADORES</h3>
+            <p style='color: #888; font-size: 14px;'>Tu Código de Reclutamiento:</p>
             <h2 style='color: white; font-family: monospace; letter-spacing: 2px;'>{st.session_state.nombre_guerra}</h2>
-            <p style='color: #555; font-size: 12px; margin-bottom: 0;'>Pásale la app a un amigo. Si pone tu nombre al registrarse, tú ganas 🪙 1000 y él 🪙 500.</p>
+            <p style='color: #555; font-size: 12px; margin-bottom: 0;'>Si un amigo usa tu nombre al registrarse, tú ganas 🪙 1000 y él 🪙 500.</p>
         </div>
     """.replace('\n', ''), unsafe_allow_html=True)
 
@@ -879,10 +929,10 @@ elif st.session_state.estado == "cuartel":
         texto_progreso = f"{st.session_state.puntos_elo} / {elo_max} ELO para el siguiente rango"
 
     st.markdown(f"""
-        <div style='background-color: #111; border: 1px solid {rango_c}; border-radius: 12px; padding: 20px; text-align: center; margin-bottom: 30px; box-shadow: 0 0 15px {rango_c}30;'>
-            <h3 style='color: white; margin-top: 0; text-transform: uppercase;'>PROGRESO DE LIGA: {rango_i} {rango_n}</h3>
+        <div style='background-color: #111; border: 1px solid {rango_c}; border-radius: 12px; padding: 20px; text-align: center; margin-bottom: 30px;'>
+            <h3 style='color: white; margin-top: 0;'>PROGRESO DE LIGA: {rango_i} {rango_n}</h3>
             <div style='width: 100%; background-color: #333; border-radius: 10px; margin: 15px 0;'>
-                <div style='width: {porcentaje_elo}%; height: 20px; background: linear-gradient(90deg, #111, {rango_c}); border-radius: 10px; box-shadow: 0 0 10px {rango_c}; transition: width 0.5s ease;'></div>
+                <div style='width: {porcentaje_elo}%; height: 20px; background: linear-gradient(90deg, #111, {rango_c}); border-radius: 10px; transition: width 0.5s ease;'></div>
             </div>
             <p style='color: #888; font-size: 14px; font-weight: bold; margin: 0;'>{texto_progreso} ({porcentaje_elo}%)</p>
         </div>
@@ -897,62 +947,61 @@ elif st.session_state.estado == "cuartel":
     horas_focus = round(st.session_state.minutos_focus / 60, 1)
 
     c1, c2, c3 = st.columns(3)
-    with c1:
+    with c1: 
         st.markdown(f"""
             <div style='background-color: #161616; border: 1px solid #333; border-radius: 8px; padding: 15px; text-align: center;'>
-                <p style='color: #888; font-size: 12px; text-transform: uppercase; margin: 0;'>Winrate</p>
+                <p style='color: #888; font-size: 12px; margin: 0;'>Winrate</p>
                 <h2 style='color: #00ff00; margin: 5px 0;'>{winrate}%</h2>
                 <p style='color: #555; font-size: 10px; margin: 0;'>{st.session_state.victorias} V / {st.session_state.derrotas} D</p>
             </div>
         """.replace('\n', ''), unsafe_allow_html=True)
-    with c2:
+    with c2: 
         st.markdown(f"""
             <div style='background-color: #161616; border: 1px solid #333; border-radius: 8px; padding: 15px; text-align: center;'>
-                <p style='color: #888; font-size: 12px; text-transform: uppercase; margin: 0;'>Tiempo Profundo</p>
+                <p style='color: #888; font-size: 12px; margin: 0;'>Tiempo Profundo</p>
                 <h2 style='color: #00aaff; margin: 5px 0;'>{horas_focus}h</h2>
-                <p style='color: #555; font-size: 10px; margin: 0;'>{st.session_state.minutos_focus} Minutos Totales</p>
+                <p style='color: #555; font-size: 10px; margin: 0;'>{st.session_state.minutos_focus} Min. Totales</p>
             </div>
         """.replace('\n', ''), unsafe_allow_html=True)
-    with c3:
+    with c3: 
         st.markdown(f"""
             <div style='background-color: #161616; border: 1px solid #333; border-radius: 8px; padding: 15px; text-align: center;'>
-                <p style='color: #888; font-size: 12px; text-transform: uppercase; margin: 0;'>Mejor Racha</p>
+                <p style='color: #888; font-size: 12px; margin: 0;'>Mejor Racha</p>
                 <h2 style='color: #ff4b4b; margin: 5px 0;'>🔥 {st.session_state.racha}</h2>
-                <p style='color: #555; font-size: 10px; margin: 0;'>Victorias Seguidas</p>
+                <p style='color: #555; font-size: 10px; margin: 0;'>Seguidas</p>
             </div>
         """.replace('\n', ''), unsafe_allow_html=True)
 
     with st.expander("⚙️ Ajustes de Perfil"):
-        nuevo_nombre = st.text_input("Cambiar nombre de guerra (Aviso: cambiará tu código de reclutador)", value=st.session_state.nombre_guerra)
+        nuevo_nombre = st.text_input("Cambiar nombre (cambiará tu código)", value=st.session_state.nombre_guerra)
         if st.button("ACTUALIZAR NOMBRE"):
             supabase.table("jugadores").update({"nombre": nuevo_nombre}).eq("id", st.session_state.usuario_id).execute()
             st.session_state.nombre_guerra = nuevo_nombre
-            st.success("¡Nombre actualizado!")
+            st.success("¡Actualizado!")
             time.sleep(1)
             st.rerun()
 
     render_navbar("cuartel")
 
-# --- LA TIENDA (EL CASINO) ---
+# --- LA TIENDA ---
 elif st.session_state.estado == "tienda":
     _, _, tu_i, tu_c = calcular_rango(st.session_state.puntos_elo)
     
     st.markdown("<h1 style='text-align: center; color: #ffd700; letter-spacing: 2px;'>🛒 EL MERCADO NEGRO</h1>", unsafe_allow_html=True)
-    st.markdown("<h4 style='text-align: center; color: gray;'>La avaricia es el motor del imperio.</h4>", unsafe_allow_html=True)
     
     st.markdown(f"""
         <div style='background-color: #1a1a1a; border: 1px solid #ffd700; border-radius: 10px; padding: 15px; text-align: center; margin-bottom: 30px;'>
-            <p style='margin:0; color:#aaa; font-size:14px; text-transform:uppercase;'>Fondos Disponibles</p>
-            <h2 style='margin:0; color:#ffd700; font-size:36px; text-shadow: 0 0 15px rgba(255,215,0,0.4);'>🪙 {st.session_state.monedas}</h2>
+            <p style='margin:0; color:#aaa; font-size:14px;'>Fondos Disponibles</p>
+            <h2 style='margin:0; color:#ffd700; font-size:36px;'>🪙 {st.session_state.monedas}</h2>
         </div>
     """.replace('\n', ''), unsafe_allow_html=True)
     
-    st.markdown("### 🎲 EL COFRE DEL GLADIADOR (GACHA)")
+    st.markdown("### 🎲 EL COFRE DEL GLADIADOR")
     st.markdown(f"""
-        <div style='background:#121212; border:2px solid #ffd700; padding:20px; text-align:center; border-radius:8px; box-shadow: 0 0 20px rgba(255,215,0,0.2);'>
+        <div style='background:#121212; border:2px solid #ffd700; padding:20px; text-align:center; border-radius:8px;'>
             <h1 style='font-size: 80px; margin:0;'>🧰</h1>
             <h3 style='color: white; margin-top: 10px;'>Cofre Misterioso</h3>
-            <p style='color: #888; font-size: 12px;'>Probabilidades: 🟦 Raro (70%) | 🟪 Épico (20%) | 🟥 Mítico (9%) | 🟨 Legendario (1%)</p>
+            <p style='color: #888; font-size: 12px;'>🟦 70% | 🟪 20% | 🟥 9% | 🟨 1%</p>
             <h2 style='color:#ffd700; margin-bottom: 20px;'>🪙 1000</h2>
         </div>
     """.replace('\n', ''), unsafe_allow_html=True)
@@ -963,22 +1012,23 @@ elif st.session_state.estado == "tienda":
             supabase.table("jugadores").update({
                 "monedas": st.session_state.monedas
             }).eq("id", st.session_state.usuario_id).execute()
+            
             st.session_state.estado = "cofre_animacion"
             st.rerun()
-        else:
+        else: 
             st.error("No tienes fondos para el azar.")
     
-    st.markdown("### 🧬 BOOSTS DIRECTOS (24 Horas)")
+    st.markdown("### 🧬 BOOSTS DIRECTOS (24H)")
     b1, b2 = st.columns(2)
     with b1:
         st.markdown("""
             <div style='background:#121212; border:1px solid #333; padding:15px; text-align:center; border-radius:8px;'>
                 <h3>⚡ x2 ELO</h3>
-                <p style='color:#888; font-size:12px;'>Multiplica tus ganancias de rango.</p>
                 <h3 style='color:#ffd700;'>🪙 150</h3>
             </div>
         """.replace('\n', ''), unsafe_allow_html=True)
-        if st.button("COMPRAR BOOST ELO", key="b_elo", use_container_width=True):
+        
+        if st.button("COMPRAR ELO", key="b_elo", use_container_width=True):
             if st.session_state.monedas >= 150:
                 st.session_state.monedas -= 150
                 fin = (datetime.now(timezone.utc) + timedelta(hours=24)).isoformat()
@@ -987,37 +1037,38 @@ elif st.session_state.estado == "tienda":
                     "monedas": st.session_state.monedas, 
                     "boost_elo_hasta": fin
                 }).eq("id", st.session_state.usuario_id).execute()
-                st.success("¡Boost ELO Activado!")
+                st.success("¡Boost ELO!")
                 time.sleep(1)
                 st.rerun()
-            else:
-                st.error("No tienes oro suficiente.")
-            
+            else: 
+                st.error("No tienes oro.")
+                
     with b2:
         st.markdown("""
             <div style='background:#121212; border:1px solid #333; padding:15px; text-align:center; border-radius:8px;'>
-                <h3>💰 x2 MONEDAS</h3>
-                <p style='color:#888; font-size:12px;'>Multiplica tus ingresos de victoria.</p>
+                <h3>💰 x2 ORO</h3>
                 <h3 style='color:#ffd700;'>🪙 200</h3>
             </div>
         """.replace('\n', ''), unsafe_allow_html=True)
-        if st.button("COMPRAR BOOST ORO", key="b_oro", use_container_width=True):
+        
+        if st.button("COMPRAR ORO", key="b_oro", use_container_width=True):
             if st.session_state.monedas >= 200:
                 st.session_state.monedas -= 200
                 fin = (datetime.now(timezone.utc) + timedelta(hours=24)).isoformat()
                 st.session_state.boost_monedas = fin
+                
                 supabase.table("jugadores").update({
                     "monedas": st.session_state.monedas, 
                     "boost_monedas_hasta": fin
                 }).eq("id", st.session_state.usuario_id).execute()
-                st.success("¡Boost Monedas Activado!")
+                
+                st.success("¡Boost ORO!")
                 time.sleep(1)
                 st.rerun()
-            else:
-                st.error("Faltan fondos.")
+            else: 
+                st.error("No tienes oro.")
 
-    st.markdown("### 🔥 COMPRA DIRECTA (INFLACIÓN APLICADA)")
-    
+    st.markdown("### 🔥 COMPRA DIRECTA")
     t1, t2 = st.columns(2)
     
     carta_aura = generar_carta_html(st.session_state.nombre_guerra, st.session_state.puntos_elo, tu_i, tu_c, "PREVIA", 'aura')
@@ -1026,12 +1077,13 @@ elif st.session_state.estado == "tienda":
             <div style='background:#121212; border:1px solid #ff4b4b; padding:15px; text-align:center; border-radius:8px;'>
                 {carta_aura}
                 <h4 style='margin-top:10px;'>Aura Sanguinaria</h4>
-                <p style='color:#ff4b4b;'>Rareza: Mítica</p>
+                <p style='color:#ff4b4b;'>Mítica</p>
                 <h3 style='color:#ffd700;'>🪙 5000</h3>
             </div>
         """.replace('\n', ''), unsafe_allow_html=True)
+        
         if st.session_state.inv_aura:
-            if st.session_state.skin_activa == 'aura':
+            if st.session_state.skin_activa == 'aura': 
                 st.info("EQUIPADA")
             elif st.button("EQUIPAR", key="eq_aura", use_container_width=True): 
                 st.session_state.skin_activa = 'aura'
@@ -1039,17 +1091,16 @@ elif st.session_state.estado == "tienda":
                 st.rerun()
         else:
             if st.button("COMPRAR", key="cp_aura", use_container_width=True):
-                if st.session_state.monedas >= 5000:
+                if st.session_state.monedas >= 5000: 
                     st.session_state.monedas -= 5000
                     st.session_state.inv_aura = True
                     supabase.table("jugadores").update({
                         "monedas": st.session_state.monedas, 
                         "inventario_aura": True
                     }).eq("id", st.session_state.usuario_id).execute()
-                    st.success("Desbloqueada")
                     st.rerun()
-                else:
-                    st.error("Ahorra, pobre.")
+                else: 
+                    st.error("Ahorra.")
                 
     carta_corona = generar_carta_html(st.session_state.nombre_guerra, st.session_state.puntos_elo, tu_i, tu_c, "PREVIA", 'corona')
     with t2:
@@ -1057,12 +1108,13 @@ elif st.session_state.estado == "tienda":
             <div style='background:#121212; border:1px solid #ffd700; padding:15px; text-align:center; border-radius:8px;'>
                 {carta_corona}
                 <h4 style='margin-top:10px;'>Corona del Rey</h4>
-                <p style='color:#ffd700;'>Rareza: Legendaria</p>
+                <p style='color:#ffd700;'>Legendaria</p>
                 <h3 style='color:#ffd700;'>🪙 10000</h3>
             </div>
         """.replace('\n', ''), unsafe_allow_html=True)
+        
         if st.session_state.inv_corona:
-            if st.session_state.skin_activa == 'corona':
+            if st.session_state.skin_activa == 'corona': 
                 st.info("EQUIPADA")
             elif st.button("EQUIPAR", key="eq_cor", use_container_width=True): 
                 st.session_state.skin_activa = 'corona'
@@ -1070,20 +1122,17 @@ elif st.session_state.estado == "tienda":
                 st.rerun()
         else:
             if st.button("COMPRAR", key="cp_cor", use_container_width=True):
-                if st.session_state.monedas >= 10000:
+                if st.session_state.monedas >= 10000: 
                     st.session_state.monedas -= 10000
                     st.session_state.inv_corona = True
                     supabase.table("jugadores").update({
                         "monedas": st.session_state.monedas, 
                         "inventario_corona": True
                     }).eq("id", st.session_state.usuario_id).execute()
-                    st.success("El Rey.")
                     st.rerun()
-                else:
-                    st.error("Sigue peleando.")
-                
-    st.markdown("### 🌀 COMPRA SECUNDARIA")
-    
+                else: 
+                    st.error("Ahorra.")
+
     t3, t4 = st.columns(2)
     
     carta_sombra = generar_carta_html(st.session_state.nombre_guerra, st.session_state.puntos_elo, tu_i, tu_c, "PREVIA", 'sombra')
@@ -1092,12 +1141,13 @@ elif st.session_state.estado == "tienda":
             <div style='background:#121212; border:1px solid #00aaff; padding:15px; text-align:center; border-radius:8px;'>
                 {carta_sombra}
                 <h4 style='margin-top:10px;'>Sombra Persistente</h4>
-                <p style='color:#00aaff;'>Rareza: Rara</p>
+                <p style='color:#00aaff;'>Rara</p>
                 <h3 style='color:#ffd700;'>🪙 1500</h3>
             </div>
         """.replace('\n', ''), unsafe_allow_html=True)
+        
         if st.session_state.inv_sombra:
-            if st.session_state.skin_activa == 'sombra':
+            if st.session_state.skin_activa == 'sombra': 
                 st.info("EQUIPADA")
             elif st.button("EQUIPAR", key="eq_som", use_container_width=True): 
                 st.session_state.skin_activa = 'sombra'
@@ -1105,7 +1155,7 @@ elif st.session_state.estado == "tienda":
                 st.rerun()
         else:
             if st.button("COMPRAR", key="cp_som", use_container_width=True):
-                if st.session_state.monedas >= 1500:
+                if st.session_state.monedas >= 1500: 
                     st.session_state.monedas -= 1500
                     st.session_state.inv_sombra = True
                     supabase.table("jugadores").update({
@@ -1113,7 +1163,7 @@ elif st.session_state.estado == "tienda":
                         "inv_sombra": True
                     }).eq("id", st.session_state.usuario_id).execute()
                     st.rerun()
-                else:
+                else: 
                     st.error("Ahorra.")
 
     carta_fuego = generar_carta_html(st.session_state.nombre_guerra, st.session_state.puntos_elo, tu_i, tu_c, "PREVIA", 'fuego')
@@ -1122,12 +1172,13 @@ elif st.session_state.estado == "tienda":
             <div style='background:#121212; border:1px solid #aa00ff; padding:15px; text-align:center; border-radius:8px;'>
                 {carta_fuego}
                 <h4 style='margin-top:10px;'>Fuego Fatuo</h4>
-                <p style='color:#aa00ff;'>Rareza: Épica</p>
+                <p style='color:#aa00ff;'>Épica</p>
                 <h3 style='color:#ffd700;'>🪙 2500</h3>
             </div>
         """.replace('\n', ''), unsafe_allow_html=True)
+        
         if st.session_state.inv_fuego:
-            if st.session_state.skin_activa == 'fuego':
+            if st.session_state.skin_activa == 'fuego': 
                 st.info("EQUIPADA")
             elif st.button("EQUIPAR", key="eq_fue", use_container_width=True): 
                 st.session_state.skin_activa = 'fuego'
@@ -1135,7 +1186,7 @@ elif st.session_state.estado == "tienda":
                 st.rerun()
         else:
             if st.button("COMPRAR", key="cp_fue", use_container_width=True):
-                if st.session_state.monedas >= 2500:
+                if st.session_state.monedas >= 2500: 
                     st.session_state.monedas -= 2500
                     st.session_state.inv_fuego = True
                     supabase.table("jugadores").update({
@@ -1143,17 +1194,17 @@ elif st.session_state.estado == "tienda":
                         "inv_fuego": True
                     }).eq("id", st.session_state.usuario_id).execute()
                     st.rerun()
-                else:
+                else: 
                     st.error("Ahorra.")
 
     if st.button("✖ QUITAR SKIN ACTUAL", use_container_width=True):
         st.session_state.skin_activa = 'default'
         supabase.table("jugadores").update({"skin_activa": "default"}).eq("id", st.session_state.usuario_id).execute()
         st.rerun()
-    
+        
     render_navbar("tienda")
 
-# --- ANIMACIÓN DEL COFRE MISTERIOSO ---
+# --- ANIMACIÓN DEL COFRE ---
 elif st.session_state.estado == "cofre_animacion":
     st.markdown("<audio autoplay src='https://actions.google.com/sounds/v1/foley/creaky_door_open.ogg'></audio>", unsafe_allow_html=True)
     st.markdown("<h2 style='text-align:center; color:#ffd700;'>FORZANDO LA CERRADURA...</h2>", unsafe_allow_html=True)
@@ -1174,21 +1225,21 @@ elif st.session_state.estado == "cofre_animacion":
             st.session_state.premio_cofre = "fuego"
             if st.session_state.inv_fuego: 
                 st.session_state.premio_duplicado = True
-            else:
+            else: 
                 st.session_state.inv_fuego = True
                 supabase.table("jugadores").update({"inv_fuego": True}).eq("id", st.session_state.usuario_id).execute()
         elif tirada <= 99: 
             st.session_state.premio_cofre = "aura"
             if st.session_state.inv_aura: 
                 st.session_state.premio_duplicado = True
-            else:
+            else: 
                 st.session_state.inv_aura = True
                 supabase.table("jugadores").update({"inventario_aura": True}).eq("id", st.session_state.usuario_id).execute()
         else: 
             st.session_state.premio_cofre = "corona"
             if st.session_state.inv_corona: 
                 st.session_state.premio_duplicado = True
-            else:
+            else: 
                 st.session_state.inv_corona = True
                 supabase.table("jugadores").update({"inventario_corona": True}).eq("id", st.session_state.usuario_id).execute()
         
@@ -1223,21 +1274,20 @@ elif st.session_state.estado == "cofre_resultado":
         </div>
     """.replace('\n', ''), unsafe_allow_html=True)
     
-    if st.session_state.premio_duplicado:
-        st.warning("⚠️ Ya tenías esta skin en tu inventario. El sistema la ha fundido en 300 Monedas a tu favor.")
-    else:
-        st.success("¡Skin añadida a tu inventario para siempre!")
+    if st.session_state.premio_duplicado: 
+        st.warning("⚠️ Ya tenías esta skin. Recibes 300 Monedas a cambio.")
+    else: 
+        st.success("¡Skin añadida a tu inventario!")
         
-    if st.button("Volver a la Tienda", use_container_width=True):
+    if st.button("Volver a la Tienda", use_container_width=True): 
         st.session_state.estado = "tienda"
         st.rerun()
 
-# --- EL SALÓN DE LOS DIOSES (TEMPORADAS) ---
+# --- EL SALÓN DE LOS DIOSES ---
 elif st.session_state.estado == "salon":
-    st.markdown("<h1 style='text-align: center; color: #ffd700; letter-spacing: 2px; text-shadow: 0 0 20px rgba(255,215,0,0.5);'>🏛️ SALÓN DE LOS DIOSES</h1>", unsafe_allow_html=True)
-    st.markdown("<h4 style='text-align: center; color: gray;'>Las leyendas nunca mueren. Solo trascienden.</h4>", unsafe_allow_html=True)
+    st.markdown("<h1 style='text-align: center; color: #ffd700; letter-spacing: 2px;'>🏛️ SALÓN DE LOS DIOSES</h1>", unsafe_allow_html=True)
     st.divider()
-
+    
     fecha_fin_temporada = datetime(2026, 9, 1, 0, 0, 0, tzinfo=timezone.utc)
     ahora = datetime.now(timezone.utc)
     diferencia = fecha_fin_temporada - ahora
@@ -1247,17 +1297,15 @@ elif st.session_state.estado == "salon":
 
     st.markdown(f"""
         <div style='background-color: #111; border: 1px solid #333; border-radius: 12px; padding: 20px; text-align: center; margin-bottom: 30px;'>
-            <h3 style='color: #ff4b4b; margin-top: 0; text-transform: uppercase;'>⏳ CIERRE DE LA TEMPORADA 1</h3>
-            <p style='color: #888; font-size: 14px;'>Al llegar a cero, el ELO se reseteará. Solo los 3 mejores serán grabados en la piedra eterna.</p>
-            <h1 style='color: white; font-family: monospace; font-size: 45px; margin: 10px 0; text-shadow: 0 0 10px rgba(255,255,255,0.3);'>
-                {dias}D : {horas}H
-            </h1>
+            <h3 style='color: #ff4b4b; margin-top: 0;'>⏳ CIERRE TEMPORADA 1</h3>
+            <p style='color: #888; font-size: 14px;'>Solo los 3 mejores serán grabados en la piedra eterna.</p>
+            <h1 style='color: white; font-family: monospace; font-size: 45px; margin: 10px 0;'>{dias}D : {horas}H</h1>
         </div>
     """.replace('\n', ''), unsafe_allow_html=True)
 
-    st.markdown("<h3 style='text-align: center; color: #fff;'>🏆 ASPIRANTES A LEYENDA (TOP 3 ACTUAL)</h3>", unsafe_allow_html=True)
-    
+    st.markdown("<h3 style='text-align: center; color: #fff;'>🏆 ASPIRANTES A LEYENDA (TOP 3)</h3>", unsafe_allow_html=True)
     ranking = supabase.table("jugadores").select("elo, nombre, skin_activa").order("elo", desc=True).limit(3).execute()
+    
     if ranking.data:
         cartas_html = "<div style='display: flex; flex-wrap: wrap; justify-content: center; gap: 15px; padding: 10px 0;'>"
         for i, jugador in enumerate(ranking.data):
@@ -1267,29 +1315,28 @@ elif st.session_state.estado == "salon":
         st.markdown(cartas_html.replace('\n', ''), unsafe_allow_html=True)
 
     st.markdown("<h3 style='text-align: center; color: #ffd700; margin-top: 40px;'>📜 LEYENDAS INMORTALES</h3>", unsafe_allow_html=True)
-    
     leyendas = supabase.table("leyendas").select("*").order("temporada", desc=True).execute()
+    
     if leyendas.data:
         for l in leyendas.data:
             st.markdown(f"""
                 <div style='background:#1a1a1a; border-left:4px solid {l['rango_color']}; padding:15px; margin-bottom:10px;'>
                     <h4 style='margin:0; color:white;'>Temporada {l['temporada']}: {l['nombre']}</h4>
-                    <p style='margin:0; color:#888;'>{l['rango_icono']} {l['rango_nombre']} - {l['elo_final']} ELO Final</p>
+                    <p style='margin:0; color:#888;'>{l['rango_icono']} {l['rango_nombre']} - {l['elo_final']} ELO</p>
                 </div>
             """.replace('\n', ''), unsafe_allow_html=True)
-    else:
+    else: 
         st.markdown("""
             <div style='text-align:center; padding:30px; border:1px dashed #333;'>
                 <p style='color:#555; font-style:italic;'>El pedestal está vacío.</p>
             </div>
         """.replace('\n', ''), unsafe_allow_html=True)
-
+        
     render_navbar("salon")
 
 # --- EMPAREJAMIENTO MULTIJUGADOR ---
 elif st.session_state.estado == "buscando" or st.session_state.estado == "buscando_privada":
     st.markdown("<audio autoplay loop src='https://actions.google.com/sounds/v1/alarms/beep_short.ogg'></audio>", unsafe_allow_html=True)
-    
     tiempo_espera = time.time() - st.session_state.inicio_busqueda
     
     if st.session_state.estado == "buscando":
@@ -1299,25 +1346,25 @@ elif st.session_state.estado == "buscando" or st.session_state.estado == "buscan
         st.markdown(f"""
             <div style='background-color: #111; border: 2px dashed #ff4b4b; padding: 20px; text-align: center; margin: 20px 0; border-radius: 10px;'>
                 <p style='color: #888; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 5px;'>Pásale este código a tu rival</p>
-                <h1 style='color: white; font-size: 60px; font-family: monospace; margin: 0; letter-spacing: 5px; text-shadow: 0 0 15px rgba(255,255,255,0.4);'>{st.session_state.codigo_sala}</h1>
+                <h1 style='color: white; font-size: 60px; font-family: monospace; margin: 0; letter-spacing: 5px;'>{st.session_state.codigo_sala}</h1>
             </div>
         """.replace('\n', ''), unsafe_allow_html=True)
         st.markdown(f"<p style='text-align: center; color: #666;'>Esperando conexión... ({int(tiempo_espera)}s)</p>", unsafe_allow_html=True)
     
     if st.session_state.estado == "buscando" and tiempo_espera > 15:
-        if st.session_state.partida_id:
+        if st.session_state.partida_id: 
             supabase.table("partidas").delete().eq("id", st.session_state.partida_id).execute()
         st.session_state.partida_id = None
         st.session_state.rival_nombre = "EL GUARDIÁN"
         st.session_state.rival_elo = st.session_state.puntos_elo + 15
         st.session_state.rival_mision = "Quebrantar tu voluntad."
-        st.session_state.rival_skin = 'aura' 
+        st.session_state.rival_skin = 'aura'
         st.session_state.estado = "duelo"
         st.rerun()
     
     texto_boton = "Cancelar Búsqueda" if st.session_state.estado == "buscando" else "Destruir Sala y Volver"
     if st.button(texto_boton, use_container_width=True):
-        if st.session_state.partida_id:
+        if st.session_state.partida_id: 
             supabase.table("partidas").delete().eq("id", st.session_state.partida_id).execute()
         st.session_state.estado = "lobby"
         st.rerun()
@@ -1327,7 +1374,7 @@ elif st.session_state.estado == "buscando" or st.session_state.estado == "buscan
             rango_min = st.session_state.puntos_elo - 150
             rango_max = st.session_state.puntos_elo + 150
             disponibles = supabase.table("partidas").select("*").eq("estado", "esperando").eq("tipo", "publica").eq("tiempo_batalla", st.session_state.tiempo_combate).neq("jugador1", st.session_state.usuario_id).gte("jugador1_elo", rango_min).lte("jugador1_elo", rango_max).execute()
-        else:
+        else: 
             disponibles = supabase.table("partidas").select("*").eq("estado", "esperando").eq("tipo", "privada").eq("codigo_sala", st.session_state.codigo_sala).neq("jugador1", st.session_state.usuario_id).execute()
             
         if len(disponibles.data) > 0:
@@ -1343,11 +1390,11 @@ elif st.session_state.estado == "buscando" or st.session_state.estado == "buscan
             }).eq("id", sala['id']).execute()
             
             rival_db = supabase.table("jugadores").select("nombre, elo, skin_activa").eq("id", sala['jugador1']).execute()
-            if rival_db.data:
+            if rival_db.data: 
                 st.session_state.rival_nombre = rival_db.data[0]['nombre']
                 st.session_state.rival_elo = rival_db.data[0]['elo']
                 st.session_state.rival_skin = rival_db.data[0].get('skin_activa', 'default')
-            else:
+            else: 
                 st.session_state.rival_nombre = "Anónimo"
                 st.session_state.rival_elo = 100
                 st.session_state.rival_skin = 'default'
@@ -1358,7 +1405,6 @@ elif st.session_state.estado == "buscando" or st.session_state.estado == "buscan
         else:
             tipo_p = "publica" if st.session_state.estado == "buscando" else "privada"
             cod_s = "" if st.session_state.estado == "buscando" else st.session_state.codigo_sala
-            
             nueva = supabase.table("partidas").insert({
                 "jugador1": st.session_state.usuario_id, 
                 "estado": "esperando", 
@@ -1368,25 +1414,22 @@ elif st.session_state.estado == "buscando" or st.session_state.estado == "buscan
                 "tiempo_batalla": st.session_state.tiempo_combate, 
                 "jugador1_mision": st.session_state.mision_actual
             }).execute()
-            
             st.session_state.partida_id = nueva.data[0]['id']
             st.rerun()
     else:
         ahora = datetime.now(timezone.utc).isoformat()
-        supabase.table("partidas").update({
-            "ultima_actividad": ahora
-        }).eq("id", st.session_state.partida_id).execute()
-        
+        supabase.table("partidas").update({"ultima_actividad": ahora}).eq("id", st.session_state.partida_id).execute()
         estado_sala = supabase.table("partidas").select("*").eq("id", st.session_state.partida_id).execute()
         
         if len(estado_sala.data) > 0 and estado_sala.data[0]['estado'] == 'luchando':
             sala = estado_sala.data[0]
             rival_db = supabase.table("jugadores").select("nombre, elo, skin_activa").eq("id", sala['jugador2']).execute()
-            if rival_db.data:
+            
+            if rival_db.data: 
                 st.session_state.rival_nombre = rival_db.data[0]['nombre']
                 st.session_state.rival_elo = rival_db.data[0]['elo']
                 st.session_state.rival_skin = rival_db.data[0].get('skin_activa', 'default')
-            else:
+            else: 
                 st.session_state.rival_nombre = "Anónimo"
                 st.session_state.rival_elo = 100
                 st.session_state.rival_skin = 'default'
@@ -1396,7 +1439,7 @@ elif st.session_state.estado == "buscando" or st.session_state.estado == "buscan
             st.rerun()
         else:
             texto_carga = "Rastreando..." if st.session_state.estado == "buscando" else "Vigilando la puerta..."
-            with st.spinner(texto_carga):
+            with st.spinner(texto_carga): 
                 time.sleep(2)
                 st.rerun()
 
@@ -1414,7 +1457,7 @@ elif st.session_state.estado == "duelo":
     st.markdown(f"""
         <div style='display: flex; justify-content: center; align-items: center; gap: 20px; flex-wrap: wrap; margin-top: 20px;'>
             {carta_tu}
-            <h1 style='color: #ff4b4b; font-size: 50px; font-style: italic; text-shadow: 0 0 20px #ff4b4b;'>VS</h1>
+            <h1 style='color: #ff4b4b; font-size: 50px; font-style: italic;'>VS</h1>
             {carta_riv}
         </div>
     """.replace('\n', ''), unsafe_allow_html=True)
@@ -1448,8 +1491,8 @@ elif st.session_state.estado == "duelo":
         
         supabase.table("jugadores").update({
             "elo": st.session_state.puntos_elo, 
-            "racha": st.session_state.racha,
-            "derrotas": st.session_state.derrotas,
+            "racha": st.session_state.racha, 
+            "derrotas": st.session_state.derrotas, 
             "minutos_focus": st.session_state.minutos_focus
         }).eq("id", st.session_state.usuario_id).execute()
         
@@ -1460,7 +1503,7 @@ elif st.session_state.estado == "duelo":
             "puntos_cambio": -st.session_state.elo_castigo
         }).execute()
         
-        if st.session_state.partida_id:
+        if st.session_state.partida_id: 
             supabase.table("partidas").delete().eq("id", st.session_state.partida_id).execute()
             
         st.session_state.estado = "derrota"
@@ -1487,8 +1530,8 @@ elif st.session_state.estado == "duelo":
             "monedas": st.session_state.monedas, 
             "progreso_m1": st.session_state.progreso_m1, 
             "progreso_m2": st.session_state.progreso_m2, 
-            "progreso_m3": st.session_state.progreso_m3,
-            "victorias": st.session_state.victorias,
+            "progreso_m3": st.session_state.progreso_m3, 
+            "victorias": st.session_state.victorias, 
             "minutos_focus": st.session_state.minutos_focus
         }).eq("id", st.session_state.usuario_id).execute()
         
@@ -1499,18 +1542,17 @@ elif st.session_state.estado == "duelo":
             "puntos_cambio": st.session_state.elo_premio
         }).execute()
         
-        if st.session_state.partida_id:
+        if st.session_state.partida_id: 
             supabase.table("partidas").delete().eq("id", st.session_state.partida_id).execute()
             
         st.session_state.ultima_pildora = random.choice(pildoras)
         
-        # MOTOR DE ASCENSO
         nuevo_rango = get_rank_info(st.session_state.puntos_elo)
-        if nuevo_rango[6] > viejo_rango_idx:
+        if nuevo_rango[6] > viejo_rango_idx: 
             st.session_state.rango_alcanzado_nombre = f"{nuevo_rango[2]} {nuevo_rango[0]} - {nuevo_rango[1]}"
             st.session_state.rango_alcanzado_color = nuevo_rango[3]
             st.session_state.estado = "ascenso"
-        else:
+        else: 
             st.session_state.estado = "victoria"
             
         st.rerun()
@@ -1527,21 +1569,21 @@ elif st.session_state.estado == "duelo":
             let latidoReproducido = false;
             
             function actualizarReloj() {{
-                let m = Math.floor(tiempoRestante / 60);
-                let s = tiempoRestante % 60;
+                let m = Math.floor(tiempoRestante / 60); 
+                let s = tiempoRestante % 60; 
                 let fmt = (m < 10 ? "0" : "") + m + ":" + (s < 10 ? "0" : "") + s;
                 parentDoc.getElementById('reloj-container').innerText = fmt;
                 
-                if (tiempoRestante <= 5 && tiempoRestante > 0 && !latidoReproducido) {{
-                    parentDoc.getElementById('audio-container').innerHTML = "<audio autoplay src='https://actions.google.com/sounds/v1/alarms/digital_watch_alarm_long.ogg'></audio>";
-                    latidoReproducido = true;
+                if (tiempoRestante <= 5 && tiempoRestante > 0 && !latidoReproducido) {{ 
+                    parentDoc.getElementById('audio-container').innerHTML = "<audio autoplay src='https://actions.google.com/sounds/v1/alarms/digital_watch_alarm_long.ogg'></audio>"; 
+                    latidoReproducido = true; 
                 }}
             }}
             
             actualizarReloj();
             
             const intervalo = setInterval(function() {{
-                tiempoRestante--;
+                tiempoRestante--; 
                 actualizarReloj();
                 if (tiempoRestante <= 0) {{ 
                     clearInterval(intervalo); 
@@ -1579,14 +1621,14 @@ elif st.session_state.estado == "ascenso":
     color = st.session_state.rango_alcanzado_color
     
     st.markdown(f"""
-        <div class="rank-up-box" style="background-color: #111; border: 4px solid {color}; border-radius: 20px; padding: 40px; text-align: center; margin: 40px 0; box-shadow: 0 0 50px {color};">
-            <h1 style="color: white; font-size: 3em; margin: 0; text-transform: uppercase; letter-spacing: 2px;">¡ASCENSO CONSEGUIDO!</h1>
-            <p style="color: #aaa; font-size: 1.2em; margin-top: 10px;">Has roto tus límites y cruzado a la siguiente liga.</p>
-            <h1 style="color: {color}; font-size: 4em; margin: 20px 0; text-shadow: 0 0 20px {color};">{st.session_state.rango_alcanzado_nombre}</h1>
+        <div class='rank-up-box' style='background-color: #111; border: 4px solid {color}; border-radius: 20px; padding: 40px; text-align: center; margin: 40px 0; box-shadow: 0 0 50px {color};'>
+            <h1 style='color: white; font-size: 3em; margin: 0; text-transform: uppercase; letter-spacing: 2px;'>¡ASCENSO CONSEGUIDO!</h1>
+            <p style='color: #aaa; font-size: 1.2em; margin-top: 10px;'>Has roto tus límites y cruzado a la siguiente liga.</p>
+            <h1 style='color: {color}; font-size: 4em; margin: 20px 0; text-shadow: 0 0 20px {color};'>{st.session_state.rango_alcanzado_nombre}</h1>
         </div>
     """.replace('\n', ''), unsafe_allow_html=True)
     
-    if st.button("ACEPTAR MI NUEVO PODER", type="primary", use_container_width=True):
+    if st.button("ACEPTAR MI NUEVO PODER", type="primary", use_container_width=True): 
         st.session_state.estado = "victoria"
         st.rerun()
         
@@ -1594,9 +1636,7 @@ elif st.session_state.estado == "victoria":
     st.markdown("<audio autoplay src='https://actions.google.com/sounds/v1/crowds/crowd_cheering.ogg'></audio>", unsafe_allow_html=True)
     st.markdown("<h1 style='text-align: center; color: #00ff00; font-size: 4em; text-transform: uppercase; text-shadow: 0 0 20px rgba(0,255,0,0.4);'>🏆 VICTORIA</h1>", unsafe_allow_html=True)
     st.markdown(f"<h2 style='text-align: center; color: #00ff00; font-size: 3em;'>+{st.session_state.elo_premio} ELO</h2>", unsafe_allow_html=True)
-    
     st.markdown(f"<h3 style='text-align: center; color: #ffd700; text-shadow: 0 0 10px rgba(255,215,0,0.4);'>🪙 +{st.session_state.monedas_ganadas_recientes} MONEDAS A LA BÓVEDA</h3>", unsafe_allow_html=True)
-    
     st.success(f"Misión Cumplida: *'{st.session_state.mision_actual}'*. Tu disciplina de hierro ha aplastado a **{st.session_state.rival_nombre}**.")
     
     st.markdown(f"""
