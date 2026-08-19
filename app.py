@@ -193,7 +193,6 @@ st.markdown("""
         text-shadow: 0 0 30px #ffd700; 
     }
     
-    /* Scrollbar invisible para el feed */
     .feed-box::-webkit-scrollbar {
         display: none;
     }
@@ -202,7 +201,7 @@ st.markdown("""
         scrollbar-width: none;
     }
     </style>
-""".replace('\n', ''), unsafe_allow_html=True)
+""")
 
 # --- CONEXIÓN A LA BÓVEDA ---
 @st.cache_resource
@@ -217,7 +216,7 @@ except Exception as e:
     st.error("❌ Fallo crítico: No se pudo conectar a la base de datos.")
     st.stop()
 
-# --- MEMORIA ABSOLUTA Y EXPANDIDA (DESCOMPRIMIDA) ---
+# --- MEMORIA ABSOLUTA Y EXPANDIDA ---
 if 'usuario_id' not in st.session_state:
     st.session_state.usuario_id = None
 if 'estado' not in st.session_state:
@@ -318,7 +317,7 @@ pildoras = [
     {"autor": "Séneca", "texto": "No es que tengamos poco tiempo, sino que perdemos mucho."}
 ]
 
-# RESTAURACIÓN ABSOLUTA DE LAS 100 MISIONES (SIN RECORTES)
+# RESTAURACIÓN ABSOLUTA DE LAS 100 MISIONES
 MISIONES_DESARROLLO = [
     "Bloque de Deep Work: 0 móvil, 0 distracciones. Solo la tarea más difícil.",
     "Leer 10 páginas de filosofía estoica o ensayo.", 
@@ -775,7 +774,7 @@ elif st.session_state.estado == "bautismo":
     st.markdown("<audio autoplay src='https://actions.google.com/sounds/v1/alarms/spaceship_alarm.ogg'></audio>", unsafe_allow_html=True)
     st.markdown("<h1 class='glitch-text' style='font-size: 3em; color: #ff4b4b; margin-bottom: 0;'>⚠️ INICIANDO SECUENCIA ⚠️</h1>", unsafe_allow_html=True)
     
-   st.markdown(f""
+    st.markdown(f"""
         <div style='background-color: #0a0a0a; border: 2px solid #ff4b4b; padding: 40px; border-radius: 10px; margin-top: 30px; box-shadow: 0 0 30px rgba(255,0,0,0.3);'>
             <h2 style='color: white; text-align: center; text-transform: uppercase;'>Bienvenido a La Arena, <span style='color:#ff4b4b;'>{st.session_state.nombre_guerra}</span></h2>
             <p style='color: #aaa; text-align: center; font-size: 1.2em;'>Has entrado porque tu disciplina es débil y necesitas que el sistema te marque el límite.</p>
@@ -1055,7 +1054,7 @@ elif st.session_state.estado == "mundo":
         
     render_navbar("mundo")
 
-# --- EL CUARTEL GENERAL ---
+# --- EL CUARTEL GENERAL (CON SISTEMA DE AMIGOS) ---
 elif st.session_state.estado == "cuartel":
     info_rango = get_rank_info(st.session_state.puntos_elo)
     rango_n, rango_s, rango_i, rango_c, elo_min, elo_max, rango_nivel = info_rango
@@ -1124,6 +1123,52 @@ elif st.session_state.estado == "cuartel":
                 <p style='color: #555; font-size: 10px; margin: 0;'>Seguidas</p>
             </div>
         """.replace('\n', ''), unsafe_allow_html=True)
+
+    # NUEVA SECCIÓN: HERMANOS DE SANGRE
+    st.markdown("<h3 style='text-align: center; color: #fff; margin-top: 40px;'>👥 HERMANOS DE SANGRE</h3>", unsafe_allow_html=True)
+    
+    col_am_1, col_am_2 = st.columns([3, 1])
+    with col_am_1:
+        amigo_input = st.text_input("Añadir guerrero por nombre", placeholder="Introduce su nombre de guerra exacto", label_visibility="collapsed")
+    with col_am_2:
+        if st.button("➕ AÑADIR", use_container_width=True):
+            if amigo_input.strip() == st.session_state.nombre_guerra:
+                st.error("No puedes añadirte a ti mismo.")
+            elif amigo_input:
+                try:
+                    comprobar = supabase.table("jugadores").select("id").eq("nombre", amigo_input.strip()).execute()
+                    if len(comprobar.data) > 0:
+                        supabase.table("amigos").insert({
+                            "jugador_id": st.session_state.usuario_id,
+                            "amigo_nombre": amigo_input.strip()
+                        }).execute()
+                        st.success(f"¡{amigo_input} añadido a tus filas!")
+                        time.sleep(1)
+                        st.rerun()
+                    else:
+                        st.error("Ese guerrero no existe en la base de datos.")
+                except Exception as e:
+                    st.error("Error al añadir amigo. Asegúrate de haber ejecutado el código SQL en Supabase.")
+    
+    # MOSTRAR LISTA DE AMIGOS
+    try:
+        mis_amigos = supabase.table("amigos").select("amigo_nombre").eq("jugador_id", st.session_state.usuario_id).execute()
+        if len(mis_amigos.data) > 0:
+            nombres_amigos = [a['amigo_nombre'] for a in mis_amigos.data]
+            
+            datos_amigos = supabase.table("jugadores").select("nombre, elo, skin_activa").in_("nombre", nombres_amigos).order("elo", desc=True).execute()
+            
+            if datos_amigos.data:
+                cartas_amigos = "<div style='display: flex; flex-wrap: wrap; justify-content: center; gap: 15px; margin-top: 15px;'>"
+                for am in datos_amigos.data:
+                    am_n, am_s, am_i, am_c = calcular_rango(am['elo'])
+                    cartas_amigos += generar_carta_html(am['nombre'], am['elo'], am_i, am_c, "ALIADO", am.get('skin_activa', 'default'))
+                cartas_amigos += "</div>"
+                st.markdown(cartas_amigos.replace('\n', ''), unsafe_allow_html=True)
+        else:
+            st.markdown("<p style='text-align: center; color: #555; margin-top: 20px;'>Peleas solo. Añade a tus aliados para ver su rango.</p>", unsafe_allow_html=True)
+    except Exception as e:
+        st.markdown("<p style='text-align: center; color: #ff4b4b; margin-top: 20px;'>⚠️ Tabla de amigos no configurada en la base de datos aún.</p>", unsafe_allow_html=True)
 
     with st.expander("⚙️ Ajustes de Perfil"):
         nuevo_nombre = st.text_input("Cambiar nombre (cambiará tu código)", value=st.session_state.nombre_guerra)
