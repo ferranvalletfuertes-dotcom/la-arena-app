@@ -92,6 +92,7 @@ if 'gremio_m4' not in st.session_state: st.session_state.gremio_m4 = False
 
 # --- RADIO DE COMBATE ---
 if 'musica_fondo' not in st.session_state: st.session_state.musica_fondo = "Lo-Fi (Concentración)"
+if 'volumen' not in st.session_state: st.session_state.volumen = 0.2
 
 CINTAS_AUDIO = {
     "Silencio Total": "",
@@ -147,6 +148,8 @@ if st.session_state.estado == "login":
                         st.session_state.racha = d.get('racha', 0)
                         st.session_state.monedas = d.get('monedas', 0)
                         st.session_state.nombre_guerra = d.get('nombre', 'Guerrero')
+                        st.session_state.musica_fondo = d.get('musica') if d.get('musica') else 'Lo-Fi (Concentración)'
+                        st.session_state.volumen = d.get('volumen') if d.get('volumen') is not None else 0.2
                         st.session_state.skin_activa = d.get('skin_activa', 'default')
                         st.session_state.inv_aura = d.get('inventario_aura', False)
                         st.session_state.inv_corona = d.get('inventario_corona', False)
@@ -608,17 +611,25 @@ elif st.session_state.estado == "cuartel":
         else: st.markdown("<p style='text-align: center; color: #555; margin-top: 20px;'>Peleas solo. Añade a tus aliados.</p>", unsafe_allow_html=True)
     except Exception as e: st.markdown("<p style='text-align: center; color: #ff4b4b; margin-top: 20px;'>⚠️ Tabla de amigos no configurada aún.</p>", unsafe_allow_html=True)
 
-    with st.expander("⚙️ Ajustes de Perfil"):
-        nuevo_nombre = st.text_input("Cambiar nombre (cambiará tu código)", value=st.session_state.nombre_guerra)
-        nueva_musica = st.selectbox("Radio de Combate (Música para los duelos)", list(CINTAS_AUDIO.keys()), index=list(CINTAS_AUDIO.keys()).index(st.session_state.musica_fondo))
-        
-        if st.button("ACTUALIZAR AJUSTES"):
-            supabase.table("jugadores").update({"nombre": nuevo_nombre}).eq("id", st.session_state.usuario_id).execute()
-            st.session_state.nombre_guerra = nuevo_nombre
-            st.session_state.musica_fondo = nueva_musica
-            st.success("¡Base de datos actualizada!")
-            time.sleep(1)
-            st.rerun()
+  with st.expander("⚙️ Ajustes de Perfil"):
+        with st.form("form_ajustes"):
+            nuevo_nombre = st.text_input("Cambiar nombre (cambiará tu código)", value=st.session_state.nombre_guerra)
+            nueva_musica = st.selectbox("Radio de Combate (Música para los duelos)", list(CINTAS_AUDIO.keys()), index=list(CINTAS_AUDIO.keys()).index(st.session_state.get('musica_fondo', 'Lo-Fi (Concentración)')))
+            nuevo_volumen = st.slider("Volumen de la Radio (0.0 Mudo - 1.0 Máx)", min_value=0.0, max_value=1.0, value=float(st.session_state.get('volumen', 0.2)), step=0.1)
+            
+            if st.form_submit_button("ACTUALIZAR AJUSTES"):
+                supabase.table("jugadores").update({
+                    "nombre": nuevo_nombre,
+                    "musica": nueva_musica,
+                    "volumen": nuevo_volumen
+                }).eq("id", st.session_state.usuario_id).execute()
+                
+                st.session_state.nombre_guerra = nuevo_nombre
+                st.session_state.musica_fondo = nueva_musica
+                st.session_state.volumen = nuevo_volumen
+                st.success("¡Base de datos actualizada!")
+                time.sleep(1)
+                st.rerun()
             
     render_navbar("cuartel")
 elif st.session_state.estado == "cofre_animacion":
@@ -723,16 +734,25 @@ elif st.session_state.estado == "duelo":
     st.markdown("<div style='background-color: #0a0a0a; border: 2px solid #ff4b4b; border-radius: 15px; padding: 20px; margin: 30px 0; box-shadow: 0 0 30px rgba(255, 75, 75, 0.2);'><div id='reloj-container' style='text-align: center; font-size: 80px; font-family: monospace; font-weight: bold; color: white;'>--:--</div><div id='audio-container'></div></div>".replace('\n', ''), unsafe_allow_html=True)
     
     # 2. AQUÍ INYECTAMOS EL NUEVO MÓDULO DE RADIO DE COMBATE VISIBLE
-    pista_actual = CINTAS_AUDIO[st.session_state.musica_fondo]
+  # MÓDULO DE RADIO DE COMBATE CON LIMITADOR
+    pista_actual = CINTAS_AUDIO[st.session_state.get('musica_fondo', 'Lo-Fi (Concentración)')]
+    vol = st.session_state.get('volumen', 0.2)
+    
     if pista_actual != "":
         st.markdown(f"""
             <div style='text-align: center; margin-bottom: 20px; padding: 10px; background-color: #111; border-radius: 8px; border: 1px solid #333;'>
                 <p style='color: #00ff00; font-family: monospace; font-size: 12px; margin-bottom: 5px;'>📻 RADIO ACTIVADA: {st.session_state.musica_fondo}</p>
-                <audio controls autoplay loop style='height: 35px; width: 100%; border-radius: 4px; outline: none;'>
+                <audio id="radio-combate" controls autoplay loop style='height: 35px; width: 100%; border-radius: 4px; outline: none;' oncanplay="this.volume={vol};">
                     <source src="{pista_actual}" type="audio/mpeg">
                 </audio>
-                <p style='color: #888; font-size: 10px; margin-top: 5px; margin-bottom: 0;'>* Móvil: Si no suena automático, pulsa el Play para saltar la seguridad.</p>
+                <p style='color: #888; font-size: 10px; margin-top: 5px; margin-bottom: 0;'>* Móvil: Si no suena, pulsa Play. Regula el volumen desde el Cuartel.</p>
             </div>
+            <script>
+                // Seguro extra de Javascript para inyectar el volumen
+                const pDoc = window.parent.document;
+                const audioEl = pDoc.getElementById('radio-combate');
+                if(audioEl) {{ audioEl.volume = {vol}; }}
+            </script>
         """, unsafe_allow_html=True)
 
     if st.button("💀 ME RINDO (Tocar el móvil)", type="primary", use_container_width=True):
