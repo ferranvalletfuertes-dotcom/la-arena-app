@@ -1,3 +1,4 @@
+from idiomas import DIC
 import streamlit as st
 
 def cargar_css():
@@ -88,31 +89,46 @@ def generar_html_mision(titulo, desc, oro, completada):
     """
     return html_mision.replace("\n", "")
 
+from idiomas import DIC
+
+# (Mantén tus funciones cargar_css, generar_carta_html, etc. intactas arriba)
+
+def render_top_bar():
+    # Botón flotante superior derecho para cambiar idioma instantáneamente
+    lang = st.session_state.get('idioma', 'es')
+    c1, c2 = st.columns([8, 1.5])
+    with c2:
+        if st.button(DIC[lang]["lang_btn"], use_container_width=True):
+            st.session_state.idioma = 'en' if lang == 'es' else 'es'
+            st.rerun()
+
 def render_navbar(origen):
+    lang = st.session_state.get('idioma', 'es')
     st.markdown("<hr style='border: 1px solid #333; margin-top: 40px;'>", unsafe_allow_html=True)
     c1, c2, c3, c4, c5, c6, c7, c8, c9 = st.columns([1, 0.02, 1, 0.02, 1, 0.02, 1, 0.02, 1])
     
     with c1:
         st.markdown("<div class='nav-btn'>".replace('\n', ''), unsafe_allow_html=True)
-        if st.button("🏠 LOBBY", use_container_width=True, key=f"nav_lobby_{origen}"): st.session_state.estado = "lobby"; st.rerun()
+        if st.button(DIC[lang]["nav_lobby"], use_container_width=True, key=f"nav_lobby_{origen}"): st.session_state.estado = "lobby"; st.rerun()
         st.markdown("</div>", unsafe_allow_html=True)
     with c2: st.markdown("<div style='border-left: 2px solid #333; height: 100%; margin: auto;'></div>".replace('\n', ''), unsafe_allow_html=True)
     with c3:
         st.markdown("<div class='nav-btn'>".replace('\n', ''), unsafe_allow_html=True)
-        if st.button("⚔️ GREMIO", use_container_width=True, key=f"nav_gremio_{origen}"): st.session_state.estado = "gremio"; st.rerun()
+        if st.button(DIC[lang]["nav_gremio"], use_container_width=True, key=f"nav_gremio_{origen}"): st.session_state.estado = "gremio"; st.rerun()
         st.markdown("</div>", unsafe_allow_html=True)
     with c4: st.markdown("<div style='border-left: 2px solid #333; height: 100%; margin: auto;'></div>".replace('\n', ''), unsafe_allow_html=True)
     with c5:
         st.markdown("<div class='nav-btn'>".replace('\n', ''), unsafe_allow_html=True)
-        if st.button("🌍 MUNDO", use_container_width=True, key=f"nav_mundo_{origen}"): st.session_state.estado = "mundo"; st.rerun()
+        if st.button(DIC[lang]["nav_mundo"], use_container_width=True, key=f"nav_mundo_{origen}"): st.session_state.estado = "mundo"; st.rerun()
         st.markdown("</div>", unsafe_allow_html=True)
     with c6: st.markdown("<div style='border-left: 2px solid #333; height: 100%; margin: auto;'></div>".replace('\n', ''), unsafe_allow_html=True)
     with c7:
         st.markdown("<div class='nav-btn'>".replace('\n', ''), unsafe_allow_html=True)
-        if st.button("🛒 TIENDA", use_container_width=True, key=f"nav_tienda_{origen}"): st.session_state.estado = "tienda"; st.rerun()
+        if st.button(DIC[lang]["nav_tienda"], use_container_width=True, key=f"nav_tienda_{origen}"): st.session_state.estado = "tienda"; st.rerun()
         st.markdown("</div>", unsafe_allow_html=True)
     with c8: st.markdown("<div style='border-left: 2px solid #333; height: 100%; margin: auto;'></div>".replace('\n', ''), unsafe_allow_html=True)
     with c9:
         st.markdown("<div class='nav-btn'>".replace('\n', ''), unsafe_allow_html=True)
-        if st.button("🛡️ CUARTEL", use_container_width=True, key=f"nav_cuartel_{origen}"): st.session_state.estado = "cuartel"; st.rerun()
+        if st.button(DIC[lang]["nav_cuartel"], use_container_width=True, key=f"nav_cuartel_{origen}"): st.session_state.estado = "cuartel"; st.rerun()
         st.markdown("</div>", unsafe_allow_html=True)
+        
