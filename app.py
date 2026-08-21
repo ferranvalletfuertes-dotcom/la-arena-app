@@ -6,7 +6,7 @@ import streamlit.components.v1 as components
 from supabase import create_client, Client
 
 # --- IMPORTACIONES MODULARES (TU NUEVO EJÉRCITO) ---
-from datos import pildoras, MISIONES_DESARROLLO
+from datos import pildoras, MISIONES_DESARROLLO, MISIONES_FISICAS, MISIONES_SOCIALES, MISIONES_MENTALES, MISIONES_ORDEN
 from motor import get_rank_info, calcular_rango, calcular_riesgo_recompensa, generar_codigo_sala, tiene_boost_activo
 from idiomas import DIC
 from interfaz import cargar_css, generar_carta_html, generar_html_mision, render_navbar, render_top_bar
