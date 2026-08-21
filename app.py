@@ -115,9 +115,10 @@ if st.session_state.estado == "login":
         """.replace('\n', ''), unsafe_allow_html=True)
 
 # --- LA PUERTA DE SEGURIDAD (SPLIT-SCREEN) ---
+# --- LA PUERTA DE SEGURIDAD (SPLIT-SCREEN Y BILINGÜE) ---
 if st.session_state.estado == "login":
-    render_top_bar() # Dibuja el botón de idioma arriba
-    lang = st.session_state.idioma # Leemos qué idioma quiere el usuario
+    render_top_bar() 
+    lang = st.session_state.idioma 
     
     st.write("") 
     c_hero, c_espacio, c_login = st.columns([1.2, 0.1, 1])
@@ -150,7 +151,6 @@ if st.session_state.estado == "login":
             email_log = st.text_input(DIC[lang]['ph_email'], key="log_email")
             pass_log = st.text_input(DIC[lang]['ph_pass'], type="password", key="log_pass")
             if st.button(DIC[lang]['btn_acceder'], type="primary", use_container_width=True):
-                # (Mantén exactamente todo tu bloque try / except de Supabase aquí dentro. NO LO BORRES, SOLO ESTAMOS CAMBIANDO EL TEXTO VISUAL)
                 try:
                     respuesta = supabase.auth.sign_in_with_password({"email": email_log, "password": pass_log})
                     user_id = respuesta.user.id; st.session_state.usuario_id = user_id
@@ -159,13 +159,41 @@ if st.session_state.estado == "login":
                     if len(datos.data) > 0:
                         d = datos.data[0]
                         st.session_state.puntos_elo = d.get('elo', 100)
-                        # ... (Todo tu código de cargar datos de memoria se queda IGUAL) ...
-                        st.session_state.estado = "lobby"
-                    else: st.error("No data found."); st.stop()
+                        st.session_state.racha = d.get('racha', 0)
+                        st.session_state.monedas = d.get('monedas', 0)
+                        st.session_state.nombre_guerra = d.get('nombre', 'Guerrero')
+                        st.session_state.skin_activa = d.get('skin_activa', 'default')
+                        st.session_state.inv_aura = d.get('inventario_aura', False)
+                        st.session_state.inv_corona = d.get('inventario_corona', False)
+                        st.session_state.inv_sombra = d.get('inv_sombra', False)
+                        st.session_state.inv_fuego = d.get('inv_fuego', False)
+                        st.session_state.boost_elo = d.get('boost_elo_hasta')
+                        st.session_state.boost_monedas = d.get('boost_monedas_hasta')
+                        st.session_state.victorias = d.get('victorias', 0)
+                        st.session_state.derrotas = d.get('derrotas', 0)
+                        st.session_state.minutos_focus = d.get('minutos_focus', 0)
+                        st.session_state.bautismo_visto = d.get('bautismo_completado', False)
+                        
+                        st.session_state.gremio_fecha = d.get('gremio_fecha', "")
+                        st.session_state.gremio_m1 = d.get('gremio_m1', False)
+                        st.session_state.gremio_m2 = d.get('gremio_m2', False)
+                        st.session_state.gremio_m3 = d.get('gremio_m3', False)
+                        st.session_state.gremio_m4 = d.get('gremio_m4', False)
+                        
+                        fecha_db = d.get('ultima_fecha_misiones'); hoy_str = datetime.now(timezone.utc).strftime('%Y-%m-%d')
+                        if fecha_db != hoy_str:
+                            supabase.table("jugadores").update({"ultima_fecha_misiones": hoy_str, "progreso_m1": 0, "progreso_m2": 0, "progreso_m3": 0, "m1_reclamada": False, "m2_reclamada": False, "m3_reclamada": False}).eq("id", user_id).execute()
+                            st.session_state.ultima_fecha_misiones = hoy_str; st.session_state.progreso_m1 = 0; st.session_state.progreso_m2 = 0; st.session_state.progreso_m3 = 0; st.session_state.m1_reclamada = False; st.session_state.m2_reclamada = False; st.session_state.m3_reclamada = False
+                        else:
+                            st.session_state.ultima_fecha_misiones = fecha_db; st.session_state.progreso_m1 = d.get('progreso_m1', 0); st.session_state.progreso_m2 = d.get('progreso_m2', 0); st.session_state.progreso_m3 = d.get('progreso_m3', 0); st.session_state.m1_reclamada = d.get('m1_reclamada', False); st.session_state.m2_reclamada = d.get('m2_reclamada', False); st.session_state.m3_reclamada = d.get('m3_reclamada', False)
+                            
+                        if not st.session_state.bautismo_visto: st.session_state.estado = "bautismo"
+                        else: st.session_state.estado = "lobby"
+                    else: st.error("No se encontraron los datos del guerrero."); st.stop()
                     st.rerun()
-                except Exception as e: st.error("Login failed.")
+                except Exception as e: st.error("❌ El sistema no reconoce tus credenciales.")
                     
-      with tab2:
+        with tab2:
             email_reg = st.text_input(DIC[lang]['ph_email'], key="reg_email")
             nombre_reg = st.text_input(DIC[lang]['ph_name'], key="reg_nombre")
             pass_reg = st.text_input(DIC[lang]['ph_pass'], type="password", key="reg_pass")
@@ -198,26 +226,6 @@ if st.session_state.estado == "login":
                         st.success("¡Registrado! Ve a 'Entrar al Coliseo'.")
                     except Exception as e: 
                         st.error("Fallo en el registro.")
-elif st.session_state.estado == "bautismo":
-    st.markdown("<audio autoplay src='https://actions.google.com/sounds/v1/alarms/spaceship_alarm.ogg'></audio>", unsafe_allow_html=True)
-    st.markdown("<h1 class='glitch-text' style='font-size: 3em; color: #ff4b4b; margin-bottom: 0;'>⚠️ INICIANDO SECUENCIA ⚠️</h1>", unsafe_allow_html=True)
-    st.markdown(f"""
-        <div style='background-color: #0a0a0a; border: 2px solid #ff4b4b; padding: 40px; border-radius: 10px; margin-top: 30px; box-shadow: 0 0 30px rgba(255,0,0,0.3);'>
-            <h2 style='color: white; text-align: center; text-transform: uppercase;'>Bienvenido a La Arena, <span style='color:#ff4b4b;'>{st.session_state.nombre_guerra}</span></h2>
-            <p style='color: #aaa; text-align: center; font-size: 1.2em;'>Has entrado porque tu disciplina es débil y necesitas que el sistema te marque el límite.</p>
-            <hr style='border: 1px solid #333; margin: 30px 0;'>
-            <h3 style='color: #ff4b4b; text-align: center; margin-bottom: 20px;'>📜 EL PACTO DE SANGRE</h3>
-            <ul style='color: #ddd; font-size: 1.1em; line-height: 2; list-style-type: none; padding-left: 0; text-align: center;'>
-                <li><b>REGLA 1:</b> Abre esta app en tu <b>TELÉFONO MÓVIL</b>. Declara tu misión y el tiempo.</li>
-                <li><b>REGLA 2:</b> Deja el móvil en la mesa. Ve a hacer tu misión (ordenador, libros, físico).</li>
-                <li><b>REGLA 3:</b> Si coges el móvil y sales de esta pantalla para mirar otra cosa... <b style='color:#ff4b4b;'>tu escudo colapsa y quedas eliminado</b>.</li>
-            </ul>
-        </div>
-    """.replace('\n', ''), unsafe_allow_html=True)
-    st.write(""); st.write("")
-    if st.button("🩸 ACEPTO LAS CONSECUENCIAS (ENTRAR AL LOBBY)", type="primary", use_container_width=True):
-        supabase.table("jugadores").update({"bautismo_completado": True}).eq("id", st.session_state.usuario_id).execute()
-        st.session_state.bautismo_visto = True; st.session_state.estado = "lobby"; st.rerun()
 
 elif st.session_state.estado == "lobby":
     st.session_state.partida_id = None; st.session_state.rival_nombre = "Desconocido"
