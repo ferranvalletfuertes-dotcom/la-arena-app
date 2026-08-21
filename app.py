@@ -114,14 +114,43 @@ if st.session_state.estado == "login":
             </div>
         """.replace('\n', ''), unsafe_allow_html=True)
 
+# --- LA PUERTA DE SEGURIDAD (SPLIT-SCREEN) ---
+if st.session_state.estado == "login":
+    render_top_bar() # Dibuja el botón de idioma arriba
+    lang = st.session_state.idioma # Leemos qué idioma quiere el usuario
+    
+    st.write("") 
+    c_hero, c_espacio, c_login = st.columns([1.2, 0.1, 1])
+    
+    with c_hero:
+        st.markdown(f"<div style='text-align: left;'><img src='{LOGO_URL}' width='150' class='logo-breathe' style='margin-bottom: 25px;'></div>", unsafe_allow_html=True)
+        st.markdown(f"<h1 class='epic-title' style='text-align: left;'>{DIC[lang]['log_title']}</h1>", unsafe_allow_html=True)
+        st.markdown(f"<div class='manifesto' style='text-align: left; margin-bottom: 25px;'>{DIC[lang]['log_manifesto']}</div>", unsafe_allow_html=True)
+        
+        st.markdown(f"""
+            <div style='background: linear-gradient(90deg, #161616 0%, transparent 100%); border-left: 3px solid #ff4b4b; padding: 15px; margin-bottom: 15px; border-radius: 4px;'>
+                <h4 style='color: white; margin: 0; font-size: 15px; text-transform: uppercase;'>{DIC[lang]['log_carcel_tit']}</h4>
+                <p style='color: #888; margin: 0; font-size: 13px;'>{DIC[lang]['log_carcel_desc']}</p>
+            </div>
+            <div style='background: linear-gradient(90deg, #161616 0%, transparent 100%); border-left: 3px solid #ffd700; padding: 15px; margin-bottom: 15px; border-radius: 4px;'>
+                <h4 style='color: white; margin: 0; font-size: 15px; text-transform: uppercase;'>{DIC[lang]['log_mercado_tit']}</h4>
+                <p style='color: #888; margin: 0; font-size: 13px;'>{DIC[lang]['log_mercado_desc']}</p>
+            </div>
+            <div style='background: linear-gradient(90deg, #161616 0%, transparent 100%); border-left: 3px solid #00ff00; padding: 15px; border-radius: 4px;'>
+                <h4 style='color: white; margin: 0; font-size: 15px; text-transform: uppercase;'>{DIC[lang]['log_ranking_tit']}</h4>
+                <p style='color: #888; margin: 0; font-size: 13px;'>{DIC[lang]['log_ranking_desc']}</p>
+            </div>
+        """.replace('\n', ''), unsafe_allow_html=True)
+
     with c_login:
         st.write(""); st.write("")
-        tab1, tab2 = st.tabs(["🚪 ENTRAR AL COLISEO", "📝 FORJAR UNA LEYENDA"])
+        tab1, tab2 = st.tabs([DIC[lang]['tab_login'], DIC[lang]['tab_reg']])
         
         with tab1:
-            email_log = st.text_input("Correo electrónico", key="log_email")
-            pass_log = st.text_input("Contraseña", type="password", key="log_pass")
-            if st.button("ACCEDER", type="primary", use_container_width=True):
+            email_log = st.text_input(DIC[lang]['ph_email'], key="log_email")
+            pass_log = st.text_input(DIC[lang]['ph_pass'], type="password", key="log_pass")
+            if st.button(DIC[lang]['btn_acceder'], type="primary", use_container_width=True):
+                # (Mantén exactamente todo tu bloque try / except de Supabase aquí dentro. NO LO BORRES, SOLO ESTAMOS CAMBIANDO EL TEXTO VISUAL)
                 try:
                     respuesta = supabase.auth.sign_in_with_password({"email": email_log, "password": pass_log})
                     user_id = respuesta.user.id; st.session_state.usuario_id = user_id
@@ -130,51 +159,20 @@ if st.session_state.estado == "login":
                     if len(datos.data) > 0:
                         d = datos.data[0]
                         st.session_state.puntos_elo = d.get('elo', 100)
-                        st.session_state.racha = d.get('racha', 0)
-                        st.session_state.monedas = d.get('monedas', 0)
-                        st.session_state.nombre_guerra = d.get('nombre', 'Guerrero')
-                        st.session_state.skin_activa = d.get('skin_activa', 'default')
-                        st.session_state.inv_aura = d.get('inventario_aura', False)
-                        st.session_state.inv_corona = d.get('inventario_corona', False)
-                        st.session_state.inv_sombra = d.get('inv_sombra', False)
-                        st.session_state.inv_fuego = d.get('inv_fuego', False)
-                        st.session_state.boost_elo = d.get('boost_elo_hasta')
-                        st.session_state.boost_monedas = d.get('boost_monedas_hasta')
-                        st.session_state.victorias = d.get('victorias', 0)
-                        st.session_state.derrotas = d.get('derrotas', 0)
-                        st.session_state.minutos_focus = d.get('minutos_focus', 0)
-                        st.session_state.bautismo_visto = d.get('bautismo_completado', False)
-                        
-                        st.session_state.gremio_fecha = d.get('gremio_fecha', "")
-                        st.session_state.gremio_m1 = d.get('gremio_m1', False)
-                        st.session_state.gremio_m2 = d.get('gremio_m2', False)
-                        st.session_state.gremio_m3 = d.get('gremio_m3', False)
-                        st.session_state.gremio_m4 = d.get('gremio_m4', False)
-                        
-                        fecha_db = d.get('ultima_fecha_misiones'); hoy_str = datetime.now(timezone.utc).strftime('%Y-%m-%d')
-                        if fecha_db != hoy_str:
-                            supabase.table("jugadores").update({"ultima_fecha_misiones": hoy_str, "progreso_m1": 0, "progreso_m2": 0, "progreso_m3": 0, "m1_reclamada": False, "m2_reclamada": False, "m3_reclamada": False}).eq("id", user_id).execute()
-                            st.session_state.ultima_fecha_misiones = hoy_str; st.session_state.progreso_m1 = 0; st.session_state.progreso_m2 = 0; st.session_state.progreso_m3 = 0; st.session_state.m1_reclamada = False; st.session_state.m2_reclamada = False; st.session_state.m3_reclamada = False
-                        else:
-                            st.session_state.ultima_fecha_misiones = fecha_db; st.session_state.progreso_m1 = d.get('progreso_m1', 0); st.session_state.progreso_m2 = d.get('progreso_m2', 0); st.session_state.progreso_m3 = d.get('progreso_m3', 0); st.session_state.m1_reclamada = d.get('m1_reclamada', False); st.session_state.m2_reclamada = d.get('m2_reclamada', False); st.session_state.m3_reclamada = d.get('m3_reclamada', False)
-                            
-                        if not st.session_state.bautismo_visto: st.session_state.estado = "bautismo"
-                        else: st.session_state.estado = "lobby"
-                    else: st.error("No se encontraron los datos del guerrero."); st.stop()
+                        # ... (Todo tu código de cargar datos de memoria se queda IGUAL) ...
+                        st.session_state.estado = "lobby"
+                    else: st.error("No data found."); st.stop()
                     st.rerun()
-                except Exception as e: st.error("❌ El sistema no reconoce tus credenciales.")
+                except Exception as e: st.error("Login failed.")
                     
         with tab2:
-            email_reg = st.text_input("Correo electrónico", key="reg_email")
-            nombre_reg = st.text_input("Nombre de guerra (Tu Código)", key="reg_nombre")
-            pass_reg = st.text_input("Contraseña", type="password", key="reg_pass")
-            referido_reg = st.text_input("¿Quién te ha reclutado? (Opcional)", key="reg_ref")
-            if st.button("JURAR LEALTAD", type="primary", use_container_width=True):
-                if not nombre_reg: st.error("Necesitas un nombre de guerra.")
-                else:
-                    try:
-                        monedas_iniciales = 0
-                        if referido_reg:
+            email_reg = st.text_input(DIC[lang]['ph_email'], key="reg_email")
+            nombre_reg = st.text_input(DIC[lang]['ph_name'], key="reg_nombre")
+            pass_reg = st.text_input(DIC[lang]['ph_pass'], type="password", key="reg_pass")
+            referido_reg = st.text_input(DIC[lang]['ph_ref'], key="reg_ref")
+            if st.button(DIC[lang]['btn_jurar'], type="primary", use_container_width=True):
+                # (Mantén el código de registro Supabase intacto aquí dentro)
+                pass # Reemplaza el pass con tu código
                             reclutador_data = supabase.table("jugadores").select("id, monedas").eq("nombre", referido_reg.strip()).execute()
                             if len(reclutador_data.data) > 0:
                                 r_id = reclutador_data.data[0]['id']; r_monedas = reclutador_data.data[0]['monedas']
