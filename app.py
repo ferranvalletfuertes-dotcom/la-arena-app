@@ -32,6 +32,7 @@ except Exception as e:
     st.stop()
 
 # --- MEMORIA ABSOLUTA Y EXPANDIDA ---
+if 'idioma' not in st.session_state: st.session_state.idioma = 'en' # Ponemos inglés por defecto para atacar el mercado global
 if 'usuario_id' not in st.session_state: st.session_state.usuario_id = None
 if 'estado' not in st.session_state: st.session_state.estado = "login"
 if 'puntos_elo' not in st.session_state: st.session_state.puntos_elo = 100
