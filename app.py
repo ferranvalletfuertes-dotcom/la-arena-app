@@ -96,10 +96,10 @@ if 'volumen' not in st.session_state: st.session_state.volumen = 0.2
 
 CINTAS_AUDIO = {
     "Silencio Total": "",
-    "Lo-Fi (Concentración)": "https://cdn.pixabay.com/download/audio/2022/05/27/audio_1808fbf07a.mp3",
-    "Dreamcore (Viaje)": "https://cdn.pixabay.com/download/audio/2022/03/15/audio_c8b8175bbf.mp3",
-    "Phonk / Epic (Guerra)": "https://cdn.pixabay.com/download/audio/2021/08/09/audio_dc39bde807.mp3",
-    "Synthwave (Nocturno)": "https://cdn.pixabay.com/download/audio/2022/01/18/audio_d0a13f69d2.mp3"
+    "Lo-Fi (Concentración)": "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3",
+    "Dreamcore (Viaje)": "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3",
+    "Phonk / Epic (Guerra)": "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-3.mp3",
+    "Synthwave (Nocturno)": "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-4.mp3"
 }
 # --- LA PUERTA DE SEGURIDAD (SPLIT-SCREEN Y BILINGÜE) ---
 if st.session_state.estado == "login":
