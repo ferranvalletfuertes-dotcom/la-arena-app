@@ -324,46 +324,55 @@ elif st.session_state.estado == "lobby":
                 st.session_state.inicio_busqueda = time.time(); st.session_state.estado = "buscando_privada"; st.rerun()
     render_navbar("lobby")
 
+# --- MISIONES SECUNDARIAS (GREMIO) ---
 elif st.session_state.estado == "gremio":
-    st.markdown("<h1 style='text-align: center; color: #ff4b4b; letter-spacing: 2px;'>⚔️ EL GREMIO</h1>", unsafe_allow_html=True)
-    st.markdown("<h4 style='text-align: center; color: #888; margin-bottom: 30px;'>Conquista la realidad. Sistema de honor activado.</h4>", unsafe_allow_html=True)
+    st.markdown("<h1 style='text-align: center; color: #ff4b4b; letter-spacing: 2px;'>⚔️ MISIONES SECUNDARIAS</h1>", unsafe_allow_html=True)
+    st.markdown("<h4 style='text-align: center; color: #888; margin-bottom: 30px;'>Conquista la realidad en todas sus formas.</h4>", unsafe_allow_html=True)
 
     hoy_str = datetime.now(timezone.utc).strftime('%Y-%m-%d')
     if st.session_state.gremio_fecha != hoy_str:
         supabase.table("jugadores").update({"gremio_fecha": hoy_str, "gremio_m1": False, "gremio_m2": False, "gremio_m3": False, "gremio_m4": False}).eq("id", st.session_state.usuario_id).execute()
         st.session_state.gremio_fecha = hoy_str; st.session_state.gremio_m1 = False; st.session_state.gremio_m2 = False; st.session_state.gremio_m3 = False; st.session_state.gremio_m4 = False
 
-    st.markdown("<div style='background-color: #110000; border: 1px solid #ff4b4b; border-radius: 8px; padding: 15px; margin-bottom: 20px;'><p style='color: #ccc; margin: 0; font-size: 14px; text-align: center;'>⚠️ <b>ATENCIÓN:</b> El sistema no puede verificar si haces estas misiones. Si mientes pulsando el botón sin haber sudado, estarás corrompiendo tu propia mente.</p></div>", unsafe_allow_html=True)
+    st.markdown("<div style='background-color: #110000; border: 1px solid #ff4b4b; border-radius: 8px; padding: 15px; margin-bottom: 20px;'><p style='color: #ccc; margin: 0; font-size: 14px; text-align: center;'>⚠️ <b>ATENCIÓN:</b> El sistema no puede verificar esto. Si mientes, la recompensa es baja (🪙 15), pero el daño a tu disciplina es irreparable.</p></div>", unsafe_allow_html=True)
+
+    # El generador de misiones pseudo-aleatorio diario e inmutable por usuario
+    random.seed(f"{st.session_state.usuario_id}_{hoy_str}")
+    t1, d1 = "FÍSICO", random.choice(MISIONES_FISICAS)
+    t2, d2 = "SOCIAL", random.choice(MISIONES_SOCIALES)
+    t3, d3 = "MENTAL", random.choice(MISIONES_MENTALES)
+    t4, d4 = "DISCIPLINA", random.choice(MISIONES_ORDEN)
+    random.seed() # Restauramos la entropía normal para los combates
 
     g1, g2 = st.columns(2)
     with g1:
-        st.markdown(generar_html_mision("BAÑO DE HIELO", "Ducha de agua fría total (Min 2 min)", 100, st.session_state.gremio_m1), unsafe_allow_html=True)
+        st.markdown(generar_html_mision(t1, d1, 15, st.session_state.gremio_m1), unsafe_allow_html=True)
         if st.session_state.gremio_m1: st.button("✅ SUPERADO", disabled=True, key="g_m1_d", use_container_width=True)
         else:
             if st.button("🩸 LO HE HECHO", type="primary", key="g_m1_c", use_container_width=True):
-                st.session_state.monedas += 100; st.session_state.gremio_m1 = True
+                st.session_state.monedas += 15; st.session_state.gremio_m1 = True
                 supabase.table("jugadores").update({"monedas": st.session_state.monedas, "gremio_m1": True}).eq("id", st.session_state.usuario_id).execute(); st.rerun()
                 
-        st.markdown(generar_html_mision("SANGRE EN LAS VENAS", "50 Flexiones (Puedes dividir en series)", 150, st.session_state.gremio_m2), unsafe_allow_html=True)
+        st.markdown(generar_html_mision(t2, d2, 15, st.session_state.gremio_m2), unsafe_allow_html=True)
         if st.session_state.gremio_m2: st.button("✅ SUPERADO", disabled=True, key="g_m2_d", use_container_width=True)
         else:
             if st.button("🩸 LO HE HECHO", type="primary", key="g_m2_c", use_container_width=True):
-                st.session_state.monedas += 150; st.session_state.gremio_m2 = True
+                st.session_state.monedas += 15; st.session_state.gremio_m2 = True
                 supabase.table("jugadores").update({"monedas": st.session_state.monedas, "gremio_m2": True}).eq("id", st.session_state.usuario_id).execute(); st.rerun()
 
     with g2:
-        st.markdown(generar_html_mision("MENTE DESPEJADA", "Barrer, fregar y recoger tu cuarto al 100%", 100, st.session_state.gremio_m3), unsafe_allow_html=True)
+        st.markdown(generar_html_mision(t3, d3, 15, st.session_state.gremio_m3), unsafe_allow_html=True)
         if st.session_state.gremio_m3: st.button("✅ SUPERADO", disabled=True, key="g_m3_d", use_container_width=True)
         else:
             if st.button("🩸 LO HE HECHO", type="primary", key="g_m3_c", use_container_width=True):
-                st.session_state.monedas += 100; st.session_state.gremio_m3 = True
+                st.session_state.monedas += 15; st.session_state.gremio_m3 = True
                 supabase.table("jugadores").update({"monedas": st.session_state.monedas, "gremio_m3": True}).eq("id", st.session_state.usuario_id).execute(); st.rerun()
                 
-        st.markdown(generar_html_mision("CONOCIMIENTO", "Leer 15 páginas de un libro (No digital)", 150, st.session_state.gremio_m4), unsafe_allow_html=True)
+        st.markdown(generar_html_mision(t4, d4, 15, st.session_state.gremio_m4), unsafe_allow_html=True)
         if st.session_state.gremio_m4: st.button("✅ SUPERADO", disabled=True, key="g_m4_d", use_container_width=True)
         else:
             if st.button("🩸 LO HE HECHO", type="primary", key="g_m4_c", use_container_width=True):
-                st.session_state.monedas += 150; st.session_state.gremio_m4 = True
+                st.session_state.monedas += 15; st.session_state.gremio_m4 = True
                 supabase.table("jugadores").update({"monedas": st.session_state.monedas, "gremio_m4": True}).eq("id", st.session_state.usuario_id).execute(); st.rerun()
 
     render_navbar("gremio")
