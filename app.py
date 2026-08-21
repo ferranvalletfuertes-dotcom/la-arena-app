@@ -90,31 +90,6 @@ if 'gremio_m4' not in st.session_state: st.session_state.gremio_m4 = False
 # RUTAS DE LA APLICACIÓN
 # ==========================================================
 
-if st.session_state.estado == "login":
-    st.write("") 
-    c_hero, c_espacio, c_login = st.columns([1.2, 0.1, 1])
-    
-    with c_hero:
-        st.markdown(f"<div style='text-align: left;'><img src='{LOGO_URL}' width='150' class='logo-breathe' style='margin-bottom: 25px;'></div>", unsafe_allow_html=True)
-        st.markdown("<h1 class='epic-title' style='text-align: left;'>LA ARENA</h1>", unsafe_allow_html=True)
-        st.markdown("<div class='manifesto' style='text-align: left; margin-bottom: 25px;'>El mundo está lleno de gente que abandona cuando duele.<br><span class='highlight'>Nosotros venimos a romper al 99%.</span></div>".replace('\n', ''), unsafe_allow_html=True)
-        
-        st.markdown("""
-            <div style='background: linear-gradient(90deg, #161616 0%, transparent 100%); border-left: 3px solid #ff4b4b; padding: 15px; margin-bottom: 15px; border-radius: 4px;'>
-                <h4 style='color: white; margin: 0; font-size: 15px; text-transform: uppercase;'>⚔️ La Cárcel para tu Móvil</h4>
-                <p style='color: #888; margin: 0; font-size: 13px;'>Abre la app en tu teléfono y déjalo en la mesa. Si sales de la pantalla para mirar redes sociales, tu escudo colapsa y pierdes ELO.</p>
-            </div>
-            <div style='background: linear-gradient(90deg, #161616 0%, transparent 100%); border-left: 3px solid #ffd700; padding: 15px; margin-bottom: 15px; border-radius: 4px;'>
-                <h4 style='color: white; margin: 0; font-size: 15px; text-transform: uppercase;'>🪙 Mercado Negro de Skins</h4>
-                <p style='color: #888; margin: 0; font-size: 13px;'>Sobrevive a tus sesiones de estudio para ganar monedas. Abre cofres y equipa auras y neones.</p>
-            </div>
-            <div style='background: linear-gradient(90deg, #161616 0%, transparent 100%); border-left: 3px solid #00ff00; padding: 15px; border-radius: 4px;'>
-                <h4 style='color: white; margin: 0; font-size: 15px; text-transform: uppercase;'>🏆 Ranking Mundial y Temporadas</h4>
-                <p style='color: #888; margin: 0; font-size: 13px;'>Sube desde Hierro III hasta Diamante. Solo los más disciplinados alcanzan el Salón de los Dioses.</p>
-            </div>
-        """.replace('\n', ''), unsafe_allow_html=True)
-
-# --- LA PUERTA DE SEGURIDAD (SPLIT-SCREEN) ---
 # --- LA PUERTA DE SEGURIDAD (SPLIT-SCREEN Y BILINGÜE) ---
 if st.session_state.estado == "login":
     render_top_bar() 
@@ -226,7 +201,6 @@ if st.session_state.estado == "login":
                         st.success("¡Registrado! Ve a 'Entrar al Coliseo'.")
                     except Exception as e: 
                         st.error("Fallo en el registro.")
-
 elif st.session_state.estado == "lobby":
     st.session_state.partida_id = None; st.session_state.rival_nombre = "Desconocido"
     rango_n, rango_s, rango_i, rango_c = calcular_rango(st.session_state.puntos_elo)
