@@ -90,6 +90,16 @@ if 'gremio_m4' not in st.session_state: st.session_state.gremio_m4 = False
 # RUTAS DE LA APLICACIÓN
 # ==========================================================
 
+# --- RADIO DE COMBATE ---
+if 'musica_fondo' not in st.session_state: st.session_state.musica_fondo = "Lo-Fi (Concentración)"
+
+CINTAS_AUDIO = {
+    "Silencio Total": "",
+    "Lo-Fi (Concentración)": "https://cdn.pixabay.com/download/audio/2022/05/27/audio_1808fbf07a.mp3",
+    "Dreamcore (Viaje)": "https://cdn.pixabay.com/download/audio/2022/03/15/audio_c8b8175bbf.mp3",
+    "Phonk / Epic (Guerra)": "https://cdn.pixabay.com/download/audio/2021/08/09/audio_dc39bde807.mp3",
+    "Synthwave (Nocturno)": "https://cdn.pixabay.com/download/audio/2022/01/18/audio_d0a13f69d2.mp3"
+}
 # --- LA PUERTA DE SEGURIDAD (SPLIT-SCREEN Y BILINGÜE) ---
 if st.session_state.estado == "login":
     render_top_bar() 
@@ -598,13 +608,17 @@ elif st.session_state.estado == "cuartel":
         else: st.markdown("<p style='text-align: center; color: #555; margin-top: 20px;'>Peleas solo. Añade a tus aliados.</p>", unsafe_allow_html=True)
     except Exception as e: st.markdown("<p style='text-align: center; color: #ff4b4b; margin-top: 20px;'>⚠️ Tabla de amigos no configurada aún.</p>", unsafe_allow_html=True)
 
-    with st.expander("⚙️ Ajustes de Perfil"):
+  with st.expander("⚙️ Ajustes de Perfil"):
         nuevo_nombre = st.text_input("Cambiar nombre (cambiará tu código)", value=st.session_state.nombre_guerra)
-        if st.button("ACTUALIZAR NOMBRE"):
+        nueva_musica = st.selectbox("Radio de Combate (Música para los duelos)", list(CINTAS_AUDIO.keys()), index=list(CINTAS_AUDIO.keys()).index(st.session_state.musica_fondo))
+        
+        if st.button("ACTUALIZAR AJUSTES"):
             supabase.table("jugadores").update({"nombre": nuevo_nombre}).eq("id", st.session_state.usuario_id).execute()
-            st.session_state.nombre_guerra = nuevo_nombre; st.success("¡Actualizado!"); time.sleep(1); st.rerun()
-    render_navbar("cuartel")
-
+            st.session_state.nombre_guerra = nuevo_nombre
+            st.session_state.musica_fondo = nueva_musica
+            st.success("¡Base de datos actualizada!")
+            time.sleep(1)
+            st.rerun()
 elif st.session_state.estado == "cofre_animacion":
     st.markdown("<audio autoplay src='https://actions.google.com/sounds/v1/foley/creaky_door_open.ogg'></audio>", unsafe_allow_html=True)
     st.markdown("<h2 style='text-align:center; color:#ffd700;'>FORZANDO LA CERRADURA...</h2>", unsafe_allow_html=True)
