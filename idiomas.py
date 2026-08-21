@@ -1,0 +1,52 @@
+# idiomas.py
+
+DIC = {
+    "es": {
+        "lang_btn": "🇺🇸 EN",
+        "nav_lobby": "🏠 LOBBY",
+        "nav_gremio": "⚔️ GREMIO",
+        "nav_mundo": "🌍 MUNDO",
+        "nav_tienda": "🛒 TIENDA",
+        "nav_cuartel": "🛡️ CUARTEL",
+        "log_title": "LA ARENA",
+        "log_manifesto": "El mundo está lleno de gente que abandona cuando duele.<br><span class='highlight'>Nosotros venimos a romper al 99%.</span>",
+        "log_carcel_tit": "⚔️ La Cárcel para tu Móvil",
+        "log_carcel_desc": "Abre la app en tu teléfono y déjalo en la mesa. Si sales de la pantalla para mirar redes sociales, tu escudo colapsa y pierdes ELO.",
+        "log_mercado_tit": "🪙 Mercado Negro de Skins",
+        "log_mercado_desc": "Sobrevive a tus sesiones de estudio para ganar monedas. Abre cofres y equipa auras y neones.",
+        "log_ranking_tit": "🏆 Ranking Mundial y Temporadas",
+        "log_ranking_desc": "Sube desde Hierro III hasta Diamante. Solo los más disciplinados alcanzan el Salón de los Dioses.",
+        "tab_login": "🚪 ENTRAR AL COLISEO",
+        "tab_reg": "📝 FORJAR UNA LEYENDA",
+        "ph_email": "Correo electrónico",
+        "ph_pass": "Contraseña",
+        "ph_name": "Nombre de guerra (Tu Código)",
+        "ph_ref": "¿Quién te ha reclutado? (Opcional)",
+        "btn_acceder": "ACCEDER",
+        "btn_jurar": "JURAR LEALTAD"
+    },
+    "en": {
+        "lang_btn": "🇪🇸 ES",
+        "nav_lobby": "🏠 LOBBY",
+        "nav_gremio": "⚔️ GUILD",
+        "nav_mundo": "🌍 WORLD",
+        "nav_tienda": "🛒 STORE",
+        "nav_cuartel": "🛡️ BARRACKS",
+        "log_title": "THE ARENA",
+        "log_manifesto": "The world is full of people who quit when it hurts.<br><span class='highlight'>We are here to break the 99%.</span>",
+        "log_carcel_tit": "⚔️ The Mobile Prison",
+        "log_carcel_desc": "Open the app on your phone and leave it on the desk. If you leave the screen to check social media, your shield collapses and you lose ELO.",
+        "log_mercado_tit": "🪙 Black Market Skins",
+        "log_mercado_desc": "Survive your focus sessions to earn coins. Open chests and equip auras and neons.",
+        "log_ranking_tit": "🏆 Global Ranking & Seasons",
+        "log_ranking_desc": "Climb from Iron III to Diamond. Only the most disciplined reach the Hall of Gods.",
+        "tab_login": "🚪 ENTER THE COLOSSEUM",
+        "tab_reg": "📝 FORGE A LEGEND",
+        "ph_email": "Email address",
+        "ph_pass": "Password",
+        "ph_name": "War Name (Your Tag)",
+        "ph_ref": "Who recruited you? (Optional)",
+        "btn_acceder": "ENTER",
+        "btn_jurar": "SWEAR LOYALTY"
+    }
+}
