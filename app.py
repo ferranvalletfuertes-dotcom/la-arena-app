@@ -368,42 +368,92 @@ elif st.session_state.estado == "gremio":
 
     render_navbar("gremio")
 
+# --- LA PLAZA PÚBLICA (MUNDO + CHAT) ---
 elif st.session_state.estado == "mundo":
     st.markdown("<h1 style='text-align: center; color: #fff; letter-spacing: 2px;'>🌍 LA PLAZA PÚBLICA</h1>", unsafe_allow_html=True)
-    st.markdown("<h4 style='text-align: center; color: gray; margin-bottom: 30px;'>El mundo está observando.</h4>", unsafe_allow_html=True)
-    c_feed, c_rank = st.columns([1.2, 1])
-    with c_rank:
-        st.markdown("<h3 style='color: #ffd700; text-align: center;'>🏆 TOP GLOBAL</h3>", unsafe_allow_html=True)
-        st.markdown("<div style='background-color: #111; border: 1px solid #333; border-radius: 12px; padding: 15px;'>", unsafe_allow_html=True)
-        top_players = supabase.table("jugadores").select("nombre, elo, skin_activa").order("elo", desc=True).limit(10).execute()
-        if top_players.data:
-            for idx, p in enumerate(top_players.data):
-                p_nombre = p['nombre']; p_elo = p['elo']; r_n, r_s, r_i, r_c = calcular_rango(p_elo)
-                color_pos = "#ffd700" if idx == 0 else "#c0c0c0" if idx == 1 else "#cd7f32" if idx == 2 else "#888"
-                st.markdown(f"<div style='display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #222; padding: 10px 0;'><div style='display: flex; align-items: center; gap: 10px;'><strong style='color: {color_pos}; font-size: 18px;'>#{idx+1}</strong><span style='color: white; font-weight: bold;'>{p_nombre}</span></div><div style='text-align: right;'><span style='color: {r_c}; font-size: 12px;'>{r_i} {p_elo} pts</span></div></div>".replace('\n', ''), unsafe_allow_html=True)
-        st.markdown("</div>", unsafe_allow_html=True)
-    with c_feed:
-        st.markdown("<h3 style='color: #00aaff; text-align: center;'>📡 MURO EN DIRECTO</h3>", unsafe_allow_html=True)
-        st.markdown("<div class='feed-box' style='background-color: #0a0a0a; border: 1px solid #333; border-radius: 12px; padding: 15px; height: 450px; overflow-y: auto;'>", unsafe_allow_html=True)
-        feed = supabase.table("historial").select("*").order("id", desc=True).limit(15).execute()
-        if feed.data:
-            for f in feed.data:
-                res = f['resultado']; puntos = f['puntos_cambio']; j_nom = f.get('jugador_nombre', 'Un guerrero'); r_nom = f.get('rival_nombre', 'el Guardián')
-                if res == "victoria": color = "#00ff00"; icono = "🟢"; texto = f"**{j_nom}** completó su misión y roba <span style='color:{color};'>+{puntos} ELO</span>."
-                else: color = "#ff4b4b"; icono = "🔴"; texto = f"El escudo de **{j_nom}** colapsó. Pierde <span style='color:{color};'>{puntos} ELO</span>."
-                st.markdown(f"<div style='background-color: #111; border-left: 3px solid {color}; padding: 10px; margin-bottom: 8px; border-radius: 4px;'><p style='color: #ccc; margin: 0; font-size: 13px;'>{icono} {texto}</p></div>".replace('\n', ''), unsafe_allow_html=True)
-        else: st.markdown("<p style='text-align: center; color: #555;'>El silencio reina en la arena...</p>", unsafe_allow_html=True)
-        st.markdown("</div>", unsafe_allow_html=True)
+    st.markdown("<h4 style='text-align: center; color: gray; margin-bottom: 20px;'>El mundo está observando.</h4>", unsafe_allow_html=True)
+    
+    # Creamos las dos sub-pestañas
+    tab_radar, tab_taberna = st.tabs(["🌍 EL RADAR", "💬 LA TABERNA"])
+    
+    with tab_radar:
+        c_feed, c_rank = st.columns([1.2, 1])
+        with c_rank:
+            st.markdown("<h3 style='color: #ffd700; text-align: center;'>🏆 TOP GLOBAL</h3>", unsafe_allow_html=True)
+            st.markdown("<div style='background-color: #111; border: 1px solid #333; border-radius: 12px; padding: 15px;'>", unsafe_allow_html=True)
+            top_players = supabase.table("jugadores").select("nombre, elo, skin_activa").order("elo", desc=True).limit(10).execute()
+            if top_players.data:
+                for idx, p in enumerate(top_players.data):
+                    p_nombre = p['nombre']; p_elo = p['elo']; r_n, r_s, r_i, r_c = calcular_rango(p_elo)
+                    color_pos = "#ffd700" if idx == 0 else "#c0c0c0" if idx == 1 else "#cd7f32" if idx == 2 else "#888"
+                    st.markdown(f"<div style='display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #222; padding: 10px 0;'><div style='display: flex; align-items: center; gap: 10px;'><strong style='color: {color_pos}; font-size: 18px;'>#{idx+1}</strong><span style='color: white; font-weight: bold;'>{p_nombre}</span></div><div style='text-align: right;'><span style='color: {r_c}; font-size: 12px;'>{r_i} {p_elo} pts</span></div></div>".replace('\n', ''), unsafe_allow_html=True)
+            st.markdown("</div>", unsafe_allow_html=True)
+            
+        with c_feed:
+            st.markdown("<h3 style='color: #00aaff; text-align: center;'>📡 MURO EN DIRECTO</h3>", unsafe_allow_html=True)
+            st.markdown("<div class='feed-box' style='background-color: #0a0a0a; border: 1px solid #333; border-radius: 12px; padding: 15px; height: 450px; overflow-y: auto;'>", unsafe_allow_html=True)
+            feed = supabase.table("historial").select("*").order("id", desc=True).limit(15).execute()
+            if feed.data:
+                for f in feed.data:
+                    res = f['resultado']; puntos = f['puntos_cambio']; j_nom = f.get('jugador_nombre', 'Un guerrero'); r_nom = f.get('rival_nombre', 'el Guardián')
+                    if res == "victoria": color = "#00ff00"; icono = "🟢"; texto = f"**{j_nom}** completó su misión y roba <span style='color:{color};'>+{puntos} ELO</span>."
+                    else: color = "#ff4b4b"; icono = "🔴"; texto = f"El escudo de **{j_nom}** colapsó. Pierde <span style='color:{color};'>{puntos} ELO</span>."
+                    st.markdown(f"<div style='background-color: #111; border-left: 3px solid {color}; padding: 10px; margin-bottom: 8px; border-radius: 4px;'><p style='color: #ccc; margin: 0; font-size: 13px;'>{icono} {texto}</p></div>".replace('\n', ''), unsafe_allow_html=True)
+            else: st.markdown("<p style='text-align: center; color: #555;'>El silencio reina en la arena...</p>", unsafe_allow_html=True)
+            st.markdown("</div>", unsafe_allow_html=True)
 
-    st.divider()
-    st.markdown("<h3 style='text-align: center; color: #ffd700; margin-top: 20px;'>📜 LEYENDAS INMORTALES</h3>", unsafe_allow_html=True)
-    st.markdown("<p style='text-align: center; color: #888; font-size: 14px;'>El Salón de los Dioses. Solo los ganadores de temporadas pasadas.</p>", unsafe_allow_html=True)
-    leyendas = supabase.table("leyendas").select("*").order("temporada", desc=True).execute()
-    if leyendas.data:
-        for l in leyendas.data:
-            st.markdown(f"<div style='background:#1a1a1a; border-left:4px solid {l['rango_color']}; padding:15px; margin-bottom:10px;'><h4 style='margin:0; color:white;'>Temporada {l['temporada']}: {l['nombre']}</h4><p style='margin:0; color:#888;'>{l['rango_icono']} {l['rango_nombre']} - {l['elo_final']} ELO</p></div>".replace('\n', ''), unsafe_allow_html=True)
-    else: st.markdown("<div style='text-align:center; padding:30px; border:1px dashed #333;'><p style='color:#555; font-style:italic;'>El pedestal está vacío. Sé tú el primero.</p></div>".replace('\n', ''), unsafe_allow_html=True)
+        st.divider()
+        st.markdown("<h3 style='text-align: center; color: #ffd700; margin-top: 20px;'>📜 LEYENDAS INMORTALES</h3>", unsafe_allow_html=True)
+        st.markdown("<p style='text-align: center; color: #888; font-size: 14px;'>El Salón de los Dioses. Solo los ganadores de temporadas pasadas.</p>", unsafe_allow_html=True)
+        leyendas = supabase.table("leyendas").select("*").order("temporada", desc=True).execute()
+        if leyendas.data:
+            for l in leyendas.data:
+                st.markdown(f"<div style='background:#1a1a1a; border-left:4px solid {l['rango_color']}; padding:15px; margin-bottom:10px;'><h4 style='margin:0; color:white;'>Temporada {l['temporada']}: {l['nombre']}</h4><p style='margin:0; color:#888;'>{l['rango_icono']} {l['rango_nombre']} - {l['elo_final']} ELO</p></div>".replace('\n', ''), unsafe_allow_html=True)
+        else: st.markdown("<div style='text-align:center; padding:30px; border:1px dashed #333;'><p style='color:#555; font-style:italic;'>El pedestal está vacío. Sé tú el primero.</p></div>".replace('\n', ''), unsafe_allow_html=True)
+
+    with tab_taberna:
+        st.markdown("<h3 style='color: #ff4b4b; text-align: center;'>💬 LA TABERNA GLOBAL</h3>", unsafe_allow_html=True)
         
+        # Caja de mensajes
+        st.markdown("<div class='feed-box' style='background-color: #0a0a0a; border: 1px solid #333; border-radius: 12px; padding: 15px; height: 400px; overflow-y: auto; display: flex; flex-direction: column-reverse;'>", unsafe_allow_html=True)
+        
+        try:
+            chat_data = supabase.table("chat_global").select("*").order("fecha", desc=True).limit(30).execute()
+            chat_html = ""
+            if chat_data.data:
+                for msg in chat_data.data:
+                    es_mio = msg['jugador_id'] == st.session_state.usuario_id
+                    bg_color = "#1a1a1a" if es_mio else "#111"
+                    borde = "#ff4b4b" if es_mio else "#333"
+                    
+                    chat_html += f"<div style='background-color: {bg_color}; border-left: 3px solid {borde}; padding: 10px; margin-bottom: 8px; border-radius: 4px; text-align: left;'><strong style='color: {borde}; font-size: 12px;'>{msg['nombre_jugador']}</strong><br><span style='color: #ccc; font-size: 14px;'>{msg['mensaje']}</span></div>"
+                st.markdown(chat_html, unsafe_allow_html=True)
+            else:
+                st.markdown("<p style='text-align: center; color: #555;'>La taberna está vacía. Escribe el primer mensaje.</p>", unsafe_allow_html=True)
+        except Exception as e:
+            st.markdown("<p style='text-align: center; color: #ff4b4b;'>⚠️ Error al cargar la taberna. ¿Creaste la tabla en Supabase?</p>", unsafe_allow_html=True)
+        
+        st.markdown("</div>", unsafe_allow_html=True)
+        
+        # Formulario para enviar mensajes (limpia la caja al pulsar Enter/Enviar)
+        with st.form("chat_form", clear_on_submit=True):
+            c_input, c_btn = st.columns([4, 1])
+            with c_input:
+                nuevo_msg = st.text_input("Mensaje", label_visibility="collapsed", placeholder="Habla, guerrero...")
+            with c_btn:
+                submit_btn = st.form_submit_button("ENVIAR", use_container_width=True)
+            
+            if submit_btn and nuevo_msg.strip():
+                try:
+                    supabase.table("chat_global").insert({
+                        "jugador_id": st.session_state.usuario_id,
+                        "nombre_jugador": st.session_state.nombre_guerra,
+                        "mensaje": nuevo_msg.strip()
+                    }).execute()
+                    st.rerun()
+                except Exception as e:
+                    st.error("Error al enviar el mensaje.")
+                    
     render_navbar("mundo")
 
 elif st.session_state.estado == "tienda":
