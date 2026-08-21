@@ -8,7 +8,8 @@ from supabase import create_client, Client
 # --- IMPORTACIONES MODULARES (TU NUEVO EJÉRCITO) ---
 from datos import pildoras, MISIONES_DESARROLLO
 from motor import get_rank_info, calcular_rango, calcular_riesgo_recompensa, generar_codigo_sala, tiene_boost_activo
-from interfaz import cargar_css, generar_carta_html, generar_html_mision, render_navbar
+from idiomas import DIC
+from interfaz import cargar_css, generar_carta_html, generar_html_mision, render_navbar, render_top_bar
 
 LOGO_URL = "https://raw.githubusercontent.com/ferranvalletfuertes-dotcom/la-arena-app/main/logo.png"
 
