@@ -708,57 +708,153 @@ elif st.session_state.estado == "buscando" or st.session_state.estado == "buscan
             with st.spinner("Rastreando..." if st.session_state.estado == "buscando" else "Vigilando la puerta..."): time.sleep(2); st.rerun()
 
 elif st.session_state.estado == "duelo":
-    st.markdown("<audio autoplay loop src='https://cdn.pixabay.com/download/audio/2022/05/27/audio_1808fbf07a.mp3'></audio>", unsafe_allow_html=True)
+    # 1. HEMOS BORRADO EL AUDIO INVISIBLE ANTIGUO DE AQUÍ
     st.markdown("<h1 style='text-align: center; color: #ff4b4b; text-transform: uppercase; letter-spacing: 3px;'>🔥 DUELO A MUERTE 🔥</h1>", unsafe_allow_html=True)
+    
     _, _, tu_i, tu_c = calcular_rango(st.session_state.puntos_elo)
     _, _, riv_i, riv_c = calcular_rango(st.session_state.rival_elo)
     carta_tu = generar_carta_html(st.session_state.nombre_guerra, st.session_state.puntos_elo, tu_i, tu_c, "TÚ", st.session_state.skin_activa)
     carta_riv = generar_carta_html(st.session_state.rival_nombre, st.session_state.rival_elo, riv_i, riv_c, "ENEMIGO", st.session_state.get('rival_skin', 'default'))
+    
     st.markdown(f"<div style='display: flex; justify-content: center; align-items: center; gap: 20px; flex-wrap: wrap; margin-top: 20px;'>{carta_tu}<h1 style='color: #ff4b4b; font-size: 50px; font-style: italic;'>VS</h1>{carta_riv}</div>".replace('\n', ''), unsafe_allow_html=True)
     st.markdown(f"<div style='display: flex; justify-content: space-between; background-color: #111; border: 1px solid #333; padding: 15px; border-radius: 8px; margin-top: 15px;'><div style='text-align: left; width: 45%;'><p style='color: {tu_c}; margin: 0; font-weight: bold; font-size: 12px;'>TU OBJETIVO</p><p style='color: white; font-family: monospace; font-size: 14px; margin: 0;'>{st.session_state.mision_actual}</p></div><div style='border-left: 1px solid #333;'></div><div style='text-align: right; width: 45%;'><p style='color: {riv_c}; margin: 0; font-weight: bold; font-size: 12px;'>OBJETIVO ENEMIGO</p><p style='color: white; font-family: monospace; font-size: 14px; margin: 0;'>{st.session_state.rival_mision}</p></div></div>".replace('\n', ''), unsafe_allow_html=True)
     st.markdown("<div style='background-color: #0a0a0a; border: 2px solid #ff4b4b; border-radius: 15px; padding: 20px; margin: 30px 0; box-shadow: 0 0 30px rgba(255, 75, 75, 0.2);'><div id='reloj-container' style='text-align: center; font-size: 80px; font-family: monospace; font-weight: bold; color: white;'>--:--</div><div id='audio-container'></div></div>".replace('\n', ''), unsafe_allow_html=True)
     
+    # 2. AQUÍ INYECTAMOS EL NUEVO MÓDULO DE RADIO DE COMBATE VISIBLE
+    pista_actual = CINTAS_AUDIO[st.session_state.musica_fondo]
+    if pista_actual != "":
+        st.markdown(f"""
+            <div style='text-align: center; margin-bottom: 20px; padding: 10px; background-color: #111; border-radius: 8px; border: 1px solid #333;'>
+                <p style='color: #00ff00; font-family: monospace; font-size: 12px; margin-bottom: 5px;'>📻 RADIO ACTIVADA: {st.session_state.musica_fondo}</p>
+                <audio controls autoplay loop style='height: 35px; width: 100%; border-radius: 4px; outline: none;'>
+                    <source src="{pista_actual}" type="audio/mpeg">
+                </audio>
+                <p style='color: #888; font-size: 10px; margin-top: 5px; margin-bottom: 0;'>* Móvil: Si no suena automático, pulsa el Play para saltar la seguridad.</p>
+            </div>
+        """, unsafe_allow_html=True)
+
     if st.button("💀 ME RINDO (Tocar el móvil)", type="primary", use_container_width=True):
-        st.session_state.puntos_elo = max(0, st.session_state.puntos_elo - st.session_state.elo_castigo); st.session_state.racha = 0; st.session_state.derrotas += 1; st.session_state.minutos_focus += int(st.session_state.tiempo_combate / 60)
-        supabase.table("jugadores").update({"elo": st.session_state.puntos_elo, "racha": st.session_state.racha, "derrotas": st.session_state.derrotas, "minutos_focus": st.session_state.minutos_focus}).eq("id", st.session_state.usuario_id).execute()
-        supabase.table("historial").insert({"jugador_id": st.session_state.usuario_id, "jugador_nombre": st.session_state.nombre_guerra, "rival_nombre": st.session_state.rival_nombre, "resultado": "derrota", "puntos_cambio": -st.session_state.elo_castigo}).execute()
-        if st.session_state.partida_id: supabase.table("partidas").delete().eq("id", st.session_state.partida_id).execute()
-        st.session_state.estado = "derrota"; st.rerun()
+        st.session_state.puntos_elo = max(0, st.session_state.puntos_elo - st.session_state.elo_castigo)
+        st.session_state.racha = 0
+        st.session_state.derrotas += 1
+        st.session_state.minutos_focus += int(st.session_state.tiempo_combate / 60)
+        
+        supabase.table("jugadores").update({
+            "elo": st.session_state.puntos_elo, 
+            "racha": st.session_state.racha, 
+            "derrotas": st.session_state.derrotas, 
+            "minutos_focus": st.session_state.minutos_focus
+        }).eq("id", st.session_state.usuario_id).execute()
+        
+        supabase.table("historial").insert({
+            "jugador_id": st.session_state.usuario_id,
+            "jugador_nombre": st.session_state.nombre_guerra,
+            "rival_nombre": st.session_state.rival_nombre, 
+            "resultado": "derrota", 
+            "puntos_cambio": -st.session_state.elo_castigo
+        }).execute()
+        
+        if st.session_state.partida_id: 
+            supabase.table("partidas").delete().eq("id", st.session_state.partida_id).execute()
+            
+        st.session_state.estado = "derrota"
+        st.rerun()
             
     if st.button("VICTORIA_SECRETA", key="btn_victoria"):
         viejo_rango_idx = get_rank_info(st.session_state.puntos_elo)[6]
-        st.session_state.puntos_elo += st.session_state.elo_premio; st.session_state.racha += 1; st.session_state.monedas += st.session_state.monedas_ganadas_recientes; st.session_state.victorias += 1; st.session_state.minutos_focus += int(st.session_state.tiempo_combate / 60)
+        
+        st.session_state.puntos_elo += st.session_state.elo_premio
+        st.session_state.racha += 1
+        st.session_state.monedas += st.session_state.monedas_ganadas_recientes
+        st.session_state.victorias += 1
+        st.session_state.minutos_focus += int(st.session_state.tiempo_combate / 60)
+        
         st.session_state.progreso_m1 += 1  
-        if st.session_state.tiempo_combate == 1500: st.session_state.progreso_m2 += 1
-        elif st.session_state.tiempo_combate == 5400: st.session_state.progreso_m3 += 1
+        if st.session_state.tiempo_combate == 1500: 
+            st.session_state.progreso_m2 += 1
+        elif st.session_state.tiempo_combate == 5400: 
+            st.session_state.progreso_m3 += 1
             
-        supabase.table("jugadores").update({"elo": st.session_state.puntos_elo, "racha": st.session_state.racha, "monedas": st.session_state.monedas, "progreso_m1": st.session_state.progreso_m1, "progreso_m2": st.session_state.progreso_m2, "progreso_m3": st.session_state.progreso_m3, "victorias": st.session_state.victorias, "minutos_focus": st.session_state.minutos_focus}).eq("id", st.session_state.usuario_id).execute()
-        supabase.table("historial").insert({"jugador_id": st.session_state.usuario_id, "jugador_nombre": st.session_state.nombre_guerra, "rival_nombre": st.session_state.rival_nombre, "resultado": "victoria", "puntos_cambio": st.session_state.elo_premio}).execute()
-        if st.session_state.partida_id: supabase.table("partidas").delete().eq("id", st.session_state.partida_id).execute()
-        st.session_state.ultima_pildora = random.choice(pildoras); nuevo_rango = get_rank_info(st.session_state.puntos_elo)
-        if nuevo_rango[6] > viejo_rango_idx: st.session_state.rango_alcanzado_nombre = f"{nuevo_rango[2]} {nuevo_rango[0]} - {nuevo_rango[1]}"; st.session_state.rango_alcanzado_color = nuevo_rango[3]; st.session_state.estado = "ascenso"
-        else: st.session_state.estado = "victoria"
+        supabase.table("jugadores").update({
+            "elo": st.session_state.puntos_elo, 
+            "racha": st.session_state.racha, 
+            "monedas": st.session_state.monedas, 
+            "progreso_m1": st.session_state.progreso_m1, 
+            "progreso_m2": st.session_state.progreso_m2, 
+            "progreso_m3": st.session_state.progreso_m3, 
+            "victorias": st.session_state.victorias, 
+            "minutos_focus": st.session_state.minutos_focus
+        }).eq("id", st.session_state.usuario_id).execute()
+        
+        supabase.table("historial").insert({
+            "jugador_id": st.session_state.usuario_id,
+            "jugador_nombre": st.session_state.nombre_guerra,
+            "rival_nombre": st.session_state.rival_nombre, 
+            "resultado": "victoria", 
+            "puntos_cambio": st.session_state.elo_premio
+        }).execute()
+        
+        if st.session_state.partida_id: 
+            supabase.table("partidas").delete().eq("id", st.session_state.partida_id).execute()
+            
+        st.session_state.ultima_pildora = random.choice(pildoras)
+        
+        nuevo_rango = get_rank_info(st.session_state.puntos_elo)
+        if nuevo_rango[6] > viejo_rango_idx: 
+            st.session_state.rango_alcanzado_nombre = f"{nuevo_rango[2]} {nuevo_rango[0]} - {nuevo_rango[1]}"
+            st.session_state.rango_alcanzado_color = nuevo_rango[3]
+            st.session_state.estado = "ascenso"
+        else: 
+            st.session_state.estado = "victoria"
+            
         st.rerun()
 
     components.html(f"""
         <script>
             const parentDoc = window.parent.document;
             const todosLosBotones = parentDoc.querySelectorAll('button');
-            todosLosBotones.forEach(btn => {{ if(btn.innerText.includes('VICTORIA_SECRETA')) btn.closest('div[data-testid="stButton"]').style.display = 'none'; }});
-            let tiempoRestante = {st.session_state.tiempo_combate}; let latidoReproducido = false;
+            todosLosBotones.forEach(btn => {{ 
+                if(btn.innerText.includes('VICTORIA_SECRETA')) btn.closest('div[data-testid="stButton"]').style.display = 'none'; 
+            }});
+            
+            let tiempoRestante = {st.session_state.tiempo_combate}; 
+            let latidoReproducido = false;
+            
             function actualizarReloj() {{
-                let m = Math.floor(tiempoRestante / 60); let s = tiempoRestante % 60; let fmt = (m < 10 ? "0" : "") + m + ":" + (s < 10 ? "0" : "") + s;
+                let m = Math.floor(tiempoRestante / 60); 
+                let s = tiempoRestante % 60; 
+                let fmt = (m < 10 ? "0" : "") + m + ":" + (s < 10 ? "0" : "") + s;
                 parentDoc.getElementById('reloj-container').innerText = fmt;
-                if (tiempoRestante <= 10 && tiempoRestante > 0) {{ let audioTick = new Audio('https://actions.google.com/sounds/v1/alarms/beep_short.ogg'); audioTick.play(); }}
+                
+                if (tiempoRestante <= 5 && tiempoRestante > 0 && !latidoReproducido) {{ 
+                    parentDoc.getElementById('audio-container').innerHTML = "<audio autoplay src='https://actions.google.com/sounds/v1/alarms/digital_watch_alarm_long.ogg'></audio>"; 
+                    latidoReproducido = true; 
+                }}
             }}
+            
             actualizarReloj();
+            
             const intervalo = setInterval(function() {{
-                tiempoRestante--; actualizarReloj();
-                if (tiempoRestante <= 0) {{ clearInterval(intervalo); todosLosBotones.forEach(btn => {{ if(btn.innerText.includes('VICTORIA_SECRETA')) btn.click(); }}); }}
+                tiempoRestante--; 
+                actualizarReloj();
+                if (tiempoRestante <= 0) {{ 
+                    clearInterval(intervalo); 
+                    todosLosBotones.forEach(btn => {{ 
+                        if(btn.innerText.includes('VICTORIA_SECRETA')) btn.click(); 
+                    }}); 
+                }}
             }}, 1000);
+            
+            parentDoc.addEventListener('visibilitychange', function() {{ 
+                if (parentDoc.visibilityState === 'hidden') {{ 
+                    clearInterval(intervalo); 
+                    todosLosBotones.forEach(btn => {{ 
+                        if(btn.innerText.includes('ME RINDO')) btn.click(); 
+                    }}); 
+                }} 
+            }});
         </script>
     """, height=0, width=0)
-
 elif st.session_state.estado == "derrota":
     st.markdown("<audio autoplay src='https://actions.google.com/sounds/v1/alarms/alarm_clock.ogg'></audio>", unsafe_allow_html=True)
     st.markdown("<h1 style='text-align: center; color: #ff1a1a; font-size: 4em; text-transform: uppercase;'>💀 DERROTA</h1>", unsafe_allow_html=True)
