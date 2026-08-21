@@ -719,9 +719,7 @@ elif st.session_state.estado == "buscando" or st.session_state.estado == "buscan
             st.session_state.rival_mision = sala.get('jugador2_mision', "Sobrevivir"); st.session_state.estado = "duelo"; st.rerun()
         else:
             with st.spinner("Rastreando..." if st.session_state.estado == "buscando" else "Vigilando la puerta..."): time.sleep(2); st.rerun()
-
 elif st.session_state.estado == "duelo":
-    # 1. HEMOS BORRADO EL AUDIO INVISIBLE ANTIGUO DE AQUÍ
     st.markdown("<h1 style='text-align: center; color: #ff4b4b; text-transform: uppercase; letter-spacing: 3px;'>🔥 DUELO A MUERTE 🔥</h1>", unsafe_allow_html=True)
     
     _, _, tu_i, tu_c = calcular_rango(st.session_state.puntos_elo)
@@ -733,26 +731,18 @@ elif st.session_state.estado == "duelo":
     st.markdown(f"<div style='display: flex; justify-content: space-between; background-color: #111; border: 1px solid #333; padding: 15px; border-radius: 8px; margin-top: 15px;'><div style='text-align: left; width: 45%;'><p style='color: {tu_c}; margin: 0; font-weight: bold; font-size: 12px;'>TU OBJETIVO</p><p style='color: white; font-family: monospace; font-size: 14px; margin: 0;'>{st.session_state.mision_actual}</p></div><div style='border-left: 1px solid #333;'></div><div style='text-align: right; width: 45%;'><p style='color: {riv_c}; margin: 0; font-weight: bold; font-size: 12px;'>OBJETIVO ENEMIGO</p><p style='color: white; font-family: monospace; font-size: 14px; margin: 0;'>{st.session_state.rival_mision}</p></div></div>".replace('\n', ''), unsafe_allow_html=True)
     st.markdown("<div style='background-color: #0a0a0a; border: 2px solid #ff4b4b; border-radius: 15px; padding: 20px; margin: 30px 0; box-shadow: 0 0 30px rgba(255, 75, 75, 0.2);'><div id='reloj-container' style='text-align: center; font-size: 80px; font-family: monospace; font-weight: bold; color: white;'>--:--</div><div id='audio-container'></div></div>".replace('\n', ''), unsafe_allow_html=True)
     
-    # 2. AQUÍ INYECTAMOS EL NUEVO MÓDULO DE RADIO DE COMBATE VISIBLE
-  # MÓDULO DE RADIO DE COMBATE CON LIMITADOR
-    pista_actual = CINTAS_AUDIO[st.session_state.get('musica_fondo', 'Lo-Fi (Concentración)')]
-    vol = st.session_state.get('volumen', 0.2)
+    # MÓDULO DE RADIO PURO (Sin manipuladores de volumen)
+    pista_actual = CINTAS_AUDIO.get(st.session_state.get('musica_fondo', 'Lo-Fi (Concentración)'), "")
     
     if pista_actual != "":
         st.markdown(f"""
             <div style='text-align: center; margin-bottom: 20px; padding: 10px; background-color: #111; border-radius: 8px; border: 1px solid #333;'>
                 <p style='color: #00ff00; font-family: monospace; font-size: 12px; margin-bottom: 5px;'>📻 RADIO ACTIVADA: {st.session_state.musica_fondo}</p>
-                <audio id="radio-combate" controls autoplay loop style='height: 35px; width: 100%; border-radius: 4px; outline: none;' oncanplay="this.volume={vol};">
+                <audio controls autoplay loop style='height: 40px; width: 100%; border-radius: 4px; outline: none;'>
                     <source src="{pista_actual}" type="audio/mpeg">
                 </audio>
-                <p style='color: #888; font-size: 10px; margin-top: 5px; margin-bottom: 0;'>* Móvil: Si no suena, pulsa Play. Regula el volumen desde el Cuartel.</p>
+                <p style='color: #888; font-size: 10px; margin-top: 5px; margin-bottom: 0;'>* Si no suena al entrar, dale al botón de Play. Usa los botones de tu dispositivo para el volumen.</p>
             </div>
-            <script>
-                // Seguro extra de Javascript para inyectar el volumen
-                const pDoc = window.parent.document;
-                const audioEl = pDoc.getElementById('radio-combate');
-                if(audioEl) {{ audioEl.volume = {vol}; }}
-            </script>
         """, unsafe_allow_html=True)
 
     if st.button("💀 ME RINDO (Tocar el móvil)", type="primary", use_container_width=True):
