@@ -608,7 +608,7 @@ elif st.session_state.estado == "cuartel":
         else: st.markdown("<p style='text-align: center; color: #555; margin-top: 20px;'>Peleas solo. Añade a tus aliados.</p>", unsafe_allow_html=True)
     except Exception as e: st.markdown("<p style='text-align: center; color: #ff4b4b; margin-top: 20px;'>⚠️ Tabla de amigos no configurada aún.</p>", unsafe_allow_html=True)
 
-  with st.expander("⚙️ Ajustes de Perfil"):
+    with st.expander("⚙️ Ajustes de Perfil"):
         nuevo_nombre = st.text_input("Cambiar nombre (cambiará tu código)", value=st.session_state.nombre_guerra)
         nueva_musica = st.selectbox("Radio de Combate (Música para los duelos)", list(CINTAS_AUDIO.keys()), index=list(CINTAS_AUDIO.keys()).index(st.session_state.musica_fondo))
         
@@ -619,6 +619,8 @@ elif st.session_state.estado == "cuartel":
             st.success("¡Base de datos actualizada!")
             time.sleep(1)
             st.rerun()
+            
+    render_navbar("cuartel")
 elif st.session_state.estado == "cofre_animacion":
     st.markdown("<audio autoplay src='https://actions.google.com/sounds/v1/foley/creaky_door_open.ogg'></audio>", unsafe_allow_html=True)
     st.markdown("<h2 style='text-align:center; color:#ffd700;'>FORZANDO LA CERRADURA...</h2>", unsafe_allow_html=True)
