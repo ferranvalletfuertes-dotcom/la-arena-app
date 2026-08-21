@@ -109,3 +109,47 @@ MISIONES_DESARROLLO = [
     "Memorizar frases clave en latín estoico (Amor Fati, Veni Vidi Vici).",
     "Investigar la historia militar de Roma o Esparta para forjar carácter."
 ]
+# MISIONES SECUNDARIAS (POR PILARES)
+MISIONES_FISICAS = [
+    "100 Flexiones divididas a lo largo del día.", 
+    "Ducha de agua fría extrema (Min 2 minutos).", 
+    "Correr o caminar a paso rápido 3km sin música.", 
+    "100 Sentadillas sin peso.", 
+    "Rutina de estiramientos de 15 minutos sin distracciones.", 
+    "10 minutos de planchas (planks) acumuladas.", 
+    "No consumir nada de azúcar procesado en todo el día.", 
+    "Hacer 50 Burpees de castigo."
+]
+
+MISIONES_SOCIALES = [
+    "Llamar a un familiar con el que hace tiempo que no hablas.", 
+    "Hacer un cumplido sincero a un compañero o desconocido.", 
+    "Ofrecer ayuda a alguien sin esperar nada a cambio.", 
+    "Cero quejas ni críticas hacia nadie durante 24 horas.", 
+    "Escribir un mensaje de agradecimiento a alguien que te enseñó algo.", 
+    "Preguntar a alguien por sus metas y escuchar sin interrumpir.", 
+    "Inicia una conversación con alguien con quien no suelas hablar.",
+    "Pagar el café o detalle de otra persona de forma anónima."
+]
+
+MISIONES_MENTALES = [
+    "Leer 15 páginas de un libro físico (cero pantallas).", 
+    "15 minutos de meditación en silencio absoluto.", 
+    "Anotar en un papel 3 cosas por las que estás agradecido hoy.", 
+    "Escribir 500 palabras soltando todo lo que tienes en la cabeza.", 
+    "Aprender un concepto nuevo fuera de tu zona de confort.", 
+    "Escuchar un podcast educativo tomando 3 notas clave.", 
+    "Visualizar tu mayor fracaso durante 5 minutos para coger asco a la pereza.",
+    "Pasar 1 hora entera sin escuchar música, podcasts ni mirar pantallas."
+]
+
+MISIONES_ORDEN = [
+    "Barrer, fregar y recoger tu cuarto al 100%.", 
+    "Dejar la bandeja de entrada de tus correos a cero (Inbox Zero).", 
+    "Preparar la ropa y la mochila para mañana antes de dormir.", 
+    "Borrar 50 fotos, apps o archivos inútiles del móvil/PC.", 
+    "Limpiar tu mesa de trabajo hasta que parezca un quirófano.", 
+    "Hacer la cama perfectamente nada más levantarte.", 
+    "Cancelar 1 suscripción o gasto hormiga innecesario.", 
+    "Planificar en papel tu día de mañana hora por hora."
+]
