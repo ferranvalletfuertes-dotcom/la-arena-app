@@ -565,44 +565,44 @@ elif st.session_state.estado == "mundo":
 
 elif st.session_state.estado == "tienda":
     _, _, tu_i, tu_c = calcular_rango(st.session_state.puntos_elo)
-    st.markdown("<h1 style='text-align: center; color: #ffd700; letter-spacing: 2px;'>🛒 EL MERCADO NEGRO</h1>", unsafe_allow_html=True)
-    st.markdown(f"<div style='background-color: #1a1a1a; border: 1px solid #ffd700; border-radius: 10px; padding: 15px; text-align: center; margin-bottom: 30px;'><p style='margin:0; color:#aaa; font-size:14px;'>Fondos Disponibles</p><h2 style='margin:0; color:#ffd700; font-size:36px;'>🪙 {st.session_state.monedas}</h2></div>".replace('\n', ''), unsafe_allow_html=True)
+    st.markdown(f"<h1 style='text-align: center; color: #ffd700; letter-spacing: 2px;'>{t('tie_tit')}</h1>", unsafe_allow_html=True)
+    st.markdown(f"<div style='background-color: #1a1a1a; border: 1px solid #ffd700; border-radius: 10px; padding: 15px; text-align: center; margin-bottom: 30px;'><p style='margin:0; color:#aaa; font-size:14px;'>{t('tie_fondos')}</p><h2 style='margin:0; color:#ffd700; font-size:36px;'>🪙 {st.session_state.monedas}</h2></div>".replace('\n', ''), unsafe_allow_html=True)
     
-    st.markdown("### 🎲 EL COFRE DEL GLADIADOR")
-    st.markdown(f"<div style='background:#121212; border:2px solid #ffd700; padding:20px; text-align:center; border-radius:8px;'><h1 style='font-size: 80px; margin:0;'>🧰</h1><h3 style='color: white; margin-top: 10px;'>Cofre Misterioso</h3><p style='color: #888; font-size: 12px;'>🟦 70% | 🟪 20% | 🟥 9% | 🟨 1%</p><h2 style='color:#ffd700; margin-bottom: 20px;'>🪙 1000</h2></div>".replace('\n', ''), unsafe_allow_html=True)
-    if st.button("🎲 ABRIR COFRE (1000 Monedas)", type="primary", use_container_width=True):
+    st.markdown(t('tie_cofre_tit'))
+    st.markdown(f"<div style='background:#121212; border:2px solid #ffd700; padding:20px; text-align:center; border-radius:8px;'><h1 style='font-size: 80px; margin:0;'>🧰</h1><h3 style='color: white; margin-top: 10px;'>{t('tie_cofre_sub')}</h3><p style='color: #888; font-size: 12px;'>🟦 70% | 🟪 20% | 🟥 9% | 🟨 1%</p><h2 style='color:#ffd700; margin-bottom: 20px;'>🪙 1000</h2></div>".replace('\n', ''), unsafe_allow_html=True)
+    if st.button(t('tie_cofre_btn'), type="primary", use_container_width=True):
         if st.session_state.monedas >= 1000:
             st.session_state.monedas -= 1000; supabase.table("jugadores").update({"monedas": st.session_state.monedas}).eq("id", st.session_state.usuario_id).execute()
             st.session_state.estado = "cofre_animacion"; st.rerun()
         else: st.error("No tienes fondos para el azar.")
     
-    st.markdown("### 🧬 BOOSTS DIRECTOS (24H)")
+    st.markdown(t('tie_boosts'))
     b1, b2 = st.columns(2)
     with b1:
         st.markdown("<div style='background:#121212; border:1px solid #333; padding:15px; text-align:center; border-radius:8px;'><h3>⚡ x2 ELO</h3><h3 style='color:#ffd700;'>🪙 150</h3></div>".replace('\n', ''), unsafe_allow_html=True)
-        if st.button("COMPRAR ELO", key="b_elo", use_container_width=True):
+        if st.button(t('tie_comprar'), key="b_elo", use_container_width=True):
             if st.session_state.monedas >= 150:
                 st.session_state.monedas -= 150; fin = (datetime.now(timezone.utc) + timedelta(hours=24)).isoformat()
-                st.session_state.boost_elo = fin; supabase.table("jugadores").update({"monedas": st.session_state.monedas, "boost_elo_hasta": fin}).eq("id", st.session_state.usuario_id).execute(); st.success("¡Boost ELO!"); time.sleep(1); st.rerun()
+                st.session_state.boost_elo = fin; supabase.table("jugadores").update({"monedas": st.session_state.monedas, "boost_elo_hasta": fin}).eq("id", st.session_state.usuario_id).execute(); st.rerun()
             else: st.error("No tienes oro.")
     with b2:
         st.markdown("<div style='background:#121212; border:1px solid #333; padding:15px; text-align:center; border-radius:8px;'><h3>💰 x2 ORO</h3><h3 style='color:#ffd700;'>🪙 200</h3></div>".replace('\n', ''), unsafe_allow_html=True)
-        if st.button("COMPRAR ORO", key="b_oro", use_container_width=True):
+        if st.button(t('tie_comprar'), key="b_oro", use_container_width=True):
             if st.session_state.monedas >= 200:
                 st.session_state.monedas -= 200; fin = (datetime.now(timezone.utc) + timedelta(hours=24)).isoformat()
-                st.session_state.boost_monedas = fin; supabase.table("jugadores").update({"monedas": st.session_state.monedas, "boost_monedas_hasta": fin}).eq("id", st.session_state.usuario_id).execute(); st.success("¡Boost ORO!"); time.sleep(1); st.rerun()
+                st.session_state.boost_monedas = fin; supabase.table("jugadores").update({"monedas": st.session_state.monedas, "boost_monedas_hasta": fin}).eq("id", st.session_state.usuario_id).execute(); st.rerun()
             else: st.error("No tienes oro.")
 
-    st.markdown("### 🔥 COMPRA DIRECTA")
+    st.markdown(t('tie_compra_dir'))
     t1, t2 = st.columns(2)
     carta_aura = generar_carta_html(st.session_state.nombre_guerra, st.session_state.puntos_elo, tu_i, tu_c, "PREVIA", 'aura')
     with t1:
         st.markdown(f"<div style='background:#121212; border:1px solid #ff4b4b; padding:15px; text-align:center; border-radius:8px;'>{carta_aura}<h4 style='margin-top:10px;'>Aura Sanguinaria</h4><p style='color:#ff4b4b;'>Mítica</p><h3 style='color:#ffd700;'>🪙 5000</h3></div>".replace('\n', ''), unsafe_allow_html=True)
         if st.session_state.inv_aura:
-            if st.session_state.skin_activa == 'aura': st.info("EQUIPADA")
-            elif st.button("EQUIPAR", key="eq_aura", use_container_width=True): st.session_state.skin_activa = 'aura'; supabase.table("jugadores").update({"skin_activa": "aura"}).eq("id", st.session_state.usuario_id).execute(); st.rerun()
+            if st.session_state.skin_activa == 'aura': st.info(t('tie_equipada'))
+            elif st.button(t('tie_equipar'), key="eq_aura", use_container_width=True): st.session_state.skin_activa = 'aura'; supabase.table("jugadores").update({"skin_activa": "aura"}).eq("id", st.session_state.usuario_id).execute(); st.rerun()
         else:
-            if st.button("COMPRAR", key="cp_aura", use_container_width=True):
+            if st.button(t('tie_comprar'), key="cp_aura", use_container_width=True):
                 if st.session_state.monedas >= 5000: st.session_state.monedas -= 5000; st.session_state.inv_aura = True; supabase.table("jugadores").update({"monedas": st.session_state.monedas, "inventario_aura": True}).eq("id", st.session_state.usuario_id).execute(); st.rerun()
                 else: st.error("Ahorra.")
                 
@@ -610,10 +610,10 @@ elif st.session_state.estado == "tienda":
     with t2:
         st.markdown(f"<div style='background:#121212; border:1px solid #ffd700; padding:15px; text-align:center; border-radius:8px;'>{carta_corona}<h4 style='margin-top:10px;'>Corona del Rey</h4><p style='color:#ffd700;'>Legendaria</p><h3 style='color:#ffd700;'>🪙 10000</h3></div>".replace('\n', ''), unsafe_allow_html=True)
         if st.session_state.inv_corona:
-            if st.session_state.skin_activa == 'corona': st.info("EQUIPADA")
-            elif st.button("EQUIPAR", key="eq_cor", use_container_width=True): st.session_state.skin_activa = 'corona'; supabase.table("jugadores").update({"skin_activa": "corona"}).eq("id", st.session_state.usuario_id).execute(); st.rerun()
+            if st.session_state.skin_activa == 'corona': st.info(t('tie_equipada'))
+            elif st.button(t('tie_equipar'), key="eq_cor", use_container_width=True): st.session_state.skin_activa = 'corona'; supabase.table("jugadores").update({"skin_activa": "corona"}).eq("id", st.session_state.usuario_id).execute(); st.rerun()
         else:
-            if st.button("COMPRAR", key="cp_cor", use_container_width=True):
+            if st.button(t('tie_comprar'), key="cp_cor", use_container_width=True):
                 if st.session_state.monedas >= 10000: st.session_state.monedas -= 10000; st.session_state.inv_corona = True; supabase.table("jugadores").update({"monedas": st.session_state.monedas, "inventario_corona": True}).eq("id", st.session_state.usuario_id).execute(); st.rerun()
                 else: st.error("Ahorra.")
 
@@ -622,10 +622,10 @@ elif st.session_state.estado == "tienda":
     with t3:
         st.markdown(f"<div style='background:#121212; border:1px solid #00aaff; padding:15px; text-align:center; border-radius:8px;'>{carta_sombra}<h4 style='margin-top:10px;'>Sombra Persistente</h4><p style='color:#00aaff;'>Rara</p><h3 style='color:#ffd700;'>🪙 1500</h3></div>".replace('\n', ''), unsafe_allow_html=True)
         if st.session_state.inv_sombra:
-            if st.session_state.skin_activa == 'sombra': st.info("EQUIPADA")
-            elif st.button("EQUIPAR", key="eq_som", use_container_width=True): st.session_state.skin_activa = 'sombra'; supabase.table("jugadores").update({"skin_activa": "sombra"}).eq("id", st.session_state.usuario_id).execute(); st.rerun()
+            if st.session_state.skin_activa == 'sombra': st.info(t('tie_equipada'))
+            elif st.button(t('tie_equipar'), key="eq_som", use_container_width=True): st.session_state.skin_activa = 'sombra'; supabase.table("jugadores").update({"skin_activa": "sombra"}).eq("id", st.session_state.usuario_id).execute(); st.rerun()
         else:
-            if st.button("COMPRAR", key="cp_som", use_container_width=True):
+            if st.button(t('tie_comprar'), key="cp_som", use_container_width=True):
                 if st.session_state.monedas >= 1500: st.session_state.monedas -= 1500; st.session_state.inv_sombra = True; supabase.table("jugadores").update({"monedas": st.session_state.monedas, "inv_sombra": True}).eq("id", st.session_state.usuario_id).execute(); st.rerun()
                 else: st.error("Ahorra.")
 
@@ -633,15 +633,38 @@ elif st.session_state.estado == "tienda":
     with t4:
         st.markdown(f"<div style='background:#121212; border:1px solid #aa00ff; padding:15px; text-align:center; border-radius:8px;'>{carta_fuego}<h4 style='margin-top:10px;'>Fuego Fatuo</h4><p style='color:#aa00ff;'>Épica</p><h3 style='color:#ffd700;'>🪙 2500</h3></div>".replace('\n', ''), unsafe_allow_html=True)
         if st.session_state.inv_fuego:
-            if st.session_state.skin_activa == 'fuego': st.info("EQUIPADA")
-            elif st.button("EQUIPAR", key="eq_fue", use_container_width=True): st.session_state.skin_activa = 'fuego'; supabase.table("jugadores").update({"skin_activa": "fuego"}).eq("id", st.session_state.usuario_id).execute(); st.rerun()
+            if st.session_state.skin_activa == 'fuego': st.info(t('tie_equipada'))
+            elif st.button(t('tie_equipar'), key="eq_fue", use_container_width=True): st.session_state.skin_activa = 'fuego'; supabase.table("jugadores").update({"skin_activa": "fuego"}).eq("id", st.session_state.usuario_id).execute(); st.rerun()
         else:
-            if st.button("COMPRAR", key="cp_fue", use_container_width=True):
+            if st.button(t('tie_comprar'), key="cp_fue", use_container_width=True):
                 if st.session_state.monedas >= 2500: st.session_state.monedas -= 2500; st.session_state.inv_fuego = True; supabase.table("jugadores").update({"monedas": st.session_state.monedas, "inv_fuego": True}).eq("id", st.session_state.usuario_id).execute(); st.rerun()
                 else: st.error("Ahorra.")
 
-    if st.button("✖ QUITAR SKIN ACTUAL", use_container_width=True):
+    if st.button(t('tie_quitar'), use_container_width=True):
         st.session_state.skin_activa = 'default'; supabase.table("jugadores").update({"skin_activa": "default"}).eq("id", st.session_state.usuario_id).execute(); st.rerun()
+
+    # --- EL MERCADO OCULTO (EASTER EGG) ---
+    st.divider()
+    st.markdown(f"<h3 style='text-align: center; color: #fff; margin-top: 30px; text-shadow: 0 0 15px #fff;'>{t('tie_oculto_tit')}</h3>", unsafe_allow_html=True)
+    st.markdown(f"<p style='text-align: center; color: #888; font-size: 12px; margin-bottom: 20px;'>{t('tie_oculto_desc')}</p>", unsafe_allow_html=True)
+    
+    col_s1, col_s2 = st.columns([3, 1])
+    with col_s1:
+        codigo_secreto = st.text_input(t('tie_oculto_ph'), type="password", label_visibility="collapsed", placeholder=t('tie_oculto_ph'))
+    with col_s2:
+        if st.button(t('tie_oculto_btn'), use_container_width=True):
+            if st.session_state.puntos_elo < 1000:
+                st.error("Eres indigno. Vuelve cuando tengas 1000 ELO.")
+            elif codigo_secreto.strip().upper() == "SUPREMO":
+                supabase.table("jugadores").update({"skin_activa": "ascendido"}).eq("id", st.session_state.usuario_id).execute()
+                st.session_state.skin_activa = "ascendido"
+                st.balloons()
+                st.success("HAS TRASCENDIDO. Skin 'Ascendido' equipada para siempre.")
+                time.sleep(2)
+                st.rerun()
+            else:
+                st.error("El código es incorrecto.")
+    render_navbar("tienda")
 
     # --- EL MERCADO OCULTO (EASTER EGG) ---
     st.divider()
@@ -667,85 +690,81 @@ elif st.session_state.estado == "tienda":
                 st.error("El código es incorrecto.")
     render_navbar("tienda")
 
-elif st.session_state.estado == "cuartel":
-    info_rango = get_rank_info(st.session_state.puntos_elo)
-    rango_n, rango_s, rango_i, rango_c, elo_min, elo_max, rango_nivel = info_rango
-    st.markdown("<h1 style='text-align: center; color: #fff; letter-spacing: 2px;'>🛡️ CUARTEL GENERAL</h1>", unsafe_allow_html=True)
-    st.markdown(f"<h4 style='text-align: center; color: {rango_c}; margin-bottom: 30px;'>Registro de Guerra de {st.session_state.nombre_guerra}</h4>", unsafe_allow_html=True)
+# --- MISIONES SECUNDARIAS (GREMIO) ---
+elif st.session_state.estado == "gremio":
+    render_top_bar()
     
-    st.markdown(f"<div style='background-color: #111; border: 1px dashed #ffd700; border-radius: 8px; padding: 20px; text-align: center; margin-bottom: 30px;'><h3 style='color: #ffd700; margin-top: 0;'>🤝 PROGRAMA DE EMBAJADORES</h3><p style='color: #888; font-size: 14px;'>Tu Código de Reclutamiento:</p><h2 style='color: white; font-family: monospace; letter-spacing: 2px;'>{st.session_state.nombre_guerra}</h2><p style='color: #555; font-size: 12px; margin-bottom: 0;'>Si un amigo usa tu nombre al registrarse, tú ganas 🪙 1000 y él 🪙 500.</p></div>".replace('\n', ''), unsafe_allow_html=True)
+    st.markdown(f"<h1 class='epic-title' style='color: #00ff00;'>{t('gre_tit')}</h1>", unsafe_allow_html=True)
+    st.markdown(f"<h4 style='text-align: center; color: #888; margin-bottom: 40px; text-transform: uppercase; letter-spacing: 2px;'>{t('gre_sub')}</h4>", unsafe_allow_html=True)
 
-    if elo_min == elo_max: porcentaje_elo = 100; texto_progreso = f"RANGO MÁXIMO ALCANZADO ({st.session_state.puntos_elo} ELO)"
-    else: puntos_conseguidos = st.session_state.puntos_elo - elo_min; puntos_rango = elo_max - elo_min; porcentaje_elo = int((puntos_conseguidos / puntos_rango) * 100); texto_progreso = f"{st.session_state.puntos_elo} / {elo_max} ELO para el siguiente rango"
+    hoy_str = datetime.now(timezone.utc).strftime('%Y-%m-%d')
+    if st.session_state.gremio_fecha != hoy_str:
+        supabase.table("jugadores").update({"gremio_fecha": hoy_str, "gremio_m1": False, "gremio_m2": False, "gremio_m3": False, "gremio_m4": False}).eq("id", st.session_state.usuario_id).execute()
+        st.session_state.gremio_fecha = hoy_str; st.session_state.gremio_m1 = False; st.session_state.gremio_m2 = False; st.session_state.gremio_m3 = False; st.session_state.gremio_m4 = False
 
-    st.markdown(f"<div style='background-color: #111; border: 1px solid {rango_c}; border-radius: 12px; padding: 20px; text-align: center; margin-bottom: 30px;'><h3 style='color: white; margin-top: 0;'>PROGRESO DE LIGA: {rango_i} {rango_n}</h3><div style='width: 100%; background-color: #333; border-radius: 10px; margin: 15px 0;'><div style='width: {porcentaje_elo}%; height: 20px; background: linear-gradient(90deg, #111, {rango_c}); border-radius: 10px; transition: width 0.5s ease;'></div></div><p style='color: #888; font-size: 14px; font-weight: bold; margin: 0;'>{texto_progreso} ({porcentaje_elo}%)</p></div>".replace('\n', ''), unsafe_allow_html=True)
+    st.markdown(f"""
+        <div style='background-color: #111; border-left: 4px solid #00ff00; border-radius: 8px; padding: 20px; margin-bottom: 40px; box-shadow: 0 4px 15px rgba(0,255,0,0.1);'>
+            <h3 style='color: white; margin-top: 0; display: flex; justify-content: space-between;'>
+                <span>{t('gre_mis')}</span>
+                <span style='color: #ffd700;'>🪙 {st.session_state.monedas}</span>
+            </h3>
+            <p style='color: #888; margin: 0; font-size: 14px;'>{t('gre_aviso')}</p>
+        </div>
+    """, unsafe_allow_html=True)
 
-    total_partidas = st.session_state.victorias + st.session_state.derrotas
-    winrate = int((st.session_state.victorias / total_partidas) * 100) if total_partidas > 0 else 0
-    horas_focus = round(st.session_state.minutos_focus / 60, 1)
+    random.seed(f"{st.session_state.usuario_id}_{hoy_str}")
+    t1, d1 = "FÍSICO", random.choice(MISIONES_FISICAS)
+    t2, d2 = "SOCIAL", random.choice(MISIONES_SOCIALES)
+    t3, d3 = "MENTAL", random.choice(MISIONES_MENTALES)
+    t4, d4 = "DISCIPLINA", random.choice(MISIONES_ORDEN)
+    random.seed() 
 
-    c1, c2, c3 = st.columns(3)
-    with c1: st.markdown(f"<div style='background-color: #161616; border: 1px solid #333; border-radius: 8px; padding: 15px; text-align: center;'><p style='color: #888; font-size: 12px; margin: 0;'>Winrate</p><h2 style='color: #00ff00; margin: 5px 0;'>{winrate}%</h2><p style='color: #555; font-size: 10px; margin: 0;'>{st.session_state.victorias} V / {st.session_state.derrotas} D</p></div>".replace('\n', ''), unsafe_allow_html=True)
-    with c2: st.markdown(f"<div style='background-color: #161616; border: 1px solid #333; border-radius: 8px; padding: 15px; text-align: center;'><p style='color: #888; font-size: 12px; margin: 0;'>Tiempo Profundo</p><h2 style='color: #00aaff; margin: 5px 0;'>{horas_focus}h</h2><p style='color: #555; font-size: 10px; margin: 0;'>{st.session_state.minutos_focus} Min. Totales</p></div>".replace('\n', ''), unsafe_allow_html=True)
-    with c3: st.markdown(f"<div style='background-color: #161616; border: 1px solid #333; border-radius: 8px; padding: 15px; text-align: center;'><p style='color: #888; font-size: 12px; margin: 0;'>Mejor Racha</p><h2 style='color: #ff4b4b; margin: 5px 0;'>🔥 {st.session_state.racha}</h2><p style='color: #555; font-size: 10px; margin: 0;'>Seguidas</p></div>".replace('\n', ''), unsafe_allow_html=True)
-
-    st.markdown("<h3 style='text-align: center; color: #fff; margin-top: 40px;'>👥 HERMANOS DE SANGRE</h3>", unsafe_allow_html=True)
-    col_am_1, col_am_2 = st.columns([3, 1])
-    with col_am_1: amigo_input = st.text_input("Añadir guerrero", placeholder="Nombre exacto", label_visibility="collapsed")
-    with col_am_2:
-        if st.button("➕ AÑADIR", use_container_width=True):
-            if amigo_input.strip() == st.session_state.nombre_guerra: st.error("No puedes añadirte a ti mismo.")
-            elif amigo_input:
-                try:
-                    comprobar = supabase.table("jugadores").select("id").eq("nombre", amigo_input.strip()).execute()
-                    if len(comprobar.data) > 0:
-                        supabase.table("amigos").insert({"jugador_id": st.session_state.usuario_id, "amigo_nombre": amigo_input.strip()}).execute()
-                        st.success(f"¡{amigo_input} añadido a tus filas!"); time.sleep(1); st.rerun()
-                    else: st.error("Guerrero no encontrado.")
-                except Exception as e: st.error("Error base de datos.")
-    
-    try:
-        mis_amigos = supabase.table("amigos").select("amigo_nombre").eq("jugador_id", st.session_state.usuario_id).execute()
-        if len(mis_amigos.data) > 0:
-            nombres_amigos = [a['amigo_nombre'] for a in mis_amigos.data]
-            datos_amigos = supabase.table("jugadores").select("nombre, elo, skin_activa").in_("nombre", nombres_amigos).order("elo", desc=True).execute()
-            if datos_amigos.data:
-                cartas_amigos = "<div style='display: flex; flex-wrap: wrap; justify-content: center; gap: 15px; margin-top: 15px;'>"
-                for am in datos_amigos.data:
-                    am_n, am_s, am_i, am_c = calcular_rango(am['elo'])
-                    cartas_amigos += generar_carta_html(am['nombre'], am['elo'], am_i, am_c, "ALIADO", am.get('skin_activa', 'default'))
-                cartas_amigos += "</div>"
-                st.markdown(cartas_amigos.replace('\n', ''), unsafe_allow_html=True)
-        else: st.markdown("<p style='text-align: center; color: #555; margin-top: 20px;'>Peleas solo. Añade a tus aliados.</p>", unsafe_allow_html=True)
-    except Exception as e: st.markdown("<p style='text-align: center; color: #ff4b4b; margin-top: 20px;'>⚠️ Tabla de amigos no configurada aún.</p>", unsafe_allow_html=True)
-
-    with st.expander(t("ajustes_titulo")):
-        with st.form("form_ajustes"):
-            nuevo_nombre = st.text_input(t("ajustes_nombre"), value=st.session_state.nombre_guerra)
-            nueva_musica = st.selectbox(t("ajustes_musica"), list(CINTAS_AUDIO.keys()), index=list(CINTAS_AUDIO.keys()).index(st.session_state.get('musica_fondo', 'Lo-Fi (Concentración)')))
-            nuevo_volumen = st.slider(t("ajustes_volumen"), min_value=0.0, max_value=1.0, value=float(st.session_state.get('volumen', 0.2)), step=0.1)
-            
-            idioma_actual = "English" if st.session_state.idioma == "en" else "Español"
-            nuevo_idioma_key = st.selectbox(t("ajustes_idioma"), ["Español", "English"], index=["Español", "English"].index(idioma_actual))
-            nuevo_idioma = "en" if nuevo_idioma_key == "English" else "es"
-            
-            if st.form_submit_button(t("ajustes_btn")):
-                supabase.table("jugadores").update({
-                    "nombre": nuevo_nombre,
-                    "musica": nueva_musica,
-                    "volumen": nuevo_volumen
-                }).eq("id", st.session_state.usuario_id).execute()
+    g1, g2 = st.columns(2)
+    with g1:
+        st.markdown(f"<div style='margin-bottom: 10px;'>", unsafe_allow_html=True)
+        st.markdown(generar_html_mision(t1, d1, 15, st.session_state.gremio_m1), unsafe_allow_html=True)
+        if st.session_state.gremio_m1: 
+            st.button(t('gre_sup'), disabled=True, key="g_m1_d", use_container_width=True)
+        else:
+            if st.button(t('gre_hacer'), type="primary", key="g_m1_c", use_container_width=True):
+                st.session_state.monedas += 15; st.session_state.gremio_m1 = True
+                supabase.table("jugadores").update({"monedas": st.session_state.monedas, "gremio_m1": True}).eq("id", st.session_state.usuario_id).execute(); st.rerun()
+        st.markdown("</div><br>", unsafe_allow_html=True)
                 
-                st.session_state.nombre_guerra = nuevo_nombre
-                st.session_state.musica_fondo = nueva_musica
-                st.session_state.volumen = nuevo_volumen
-                st.session_state.idioma = nuevo_idioma
+        st.markdown(f"<div style='margin-bottom: 10px;'>", unsafe_allow_html=True)
+        st.markdown(generar_html_mision(t2, d2, 15, st.session_state.gremio_m2), unsafe_allow_html=True)
+        if st.session_state.gremio_m2: 
+            st.button(t('gre_sup'), disabled=True, key="g_m2_d", use_container_width=True)
+        else:
+            if st.button(t('gre_hacer'), type="primary", key="g_m2_c", use_container_width=True):
+                st.session_state.monedas += 15; st.session_state.gremio_m2 = True
+                supabase.table("jugadores").update({"monedas": st.session_state.monedas, "gremio_m2": True}).eq("id", st.session_state.usuario_id).execute(); st.rerun()
+        st.markdown("</div>", unsafe_allow_html=True)
+
+    with g2:
+        st.markdown(f"<div style='margin-bottom: 10px;'>", unsafe_allow_html=True)
+        st.markdown(generar_html_mision(t3, d3, 15, st.session_state.gremio_m3), unsafe_allow_html=True)
+        if st.session_state.gremio_m3: 
+            st.button(t('gre_sup'), disabled=True, key="g_m3_d", use_container_width=True)
+        else:
+            if st.button(t('gre_hacer'), type="primary", key="g_m3_c", use_container_width=True):
+                st.session_state.monedas += 15; st.session_state.gremio_m3 = True
+                supabase.table("jugadores").update({"monedas": st.session_state.monedas, "gremio_m3": True}).eq("id", st.session_state.usuario_id).execute(); st.rerun()
+        st.markdown("</div><br>", unsafe_allow_html=True)
                 
-                st.success("✔ Base de datos actualizada / Database updated")
-                time.sleep(1)
-                st.rerun()
-                
-    render_navbar("cuartel")
+        st.markdown(f"<div style='margin-bottom: 10px;'>", unsafe_allow_html=True)
+        st.markdown(generar_html_mision(t4, d4, 15, st.session_state.gremio_m4), unsafe_allow_html=True)
+        if st.session_state.gremio_m4: 
+            st.button(t('gre_sup'), disabled=True, key="g_m4_d", use_container_width=True)
+        else:
+            if st.button(t('gre_hacer'), type="primary", key="g_m4_c", use_container_width=True):
+                st.session_state.monedas += 15; st.session_state.gremio_m4 = True
+                supabase.table("jugadores").update({"monedas": st.session_state.monedas, "gremio_m4": True}).eq("id", st.session_state.usuario_id).execute(); st.rerun()
+        st.markdown("</div>", unsafe_allow_html=True)
+
+    st.write("")
+    st.write("")
+    render_navbar("gremio")
 elif st.session_state.estado == "cofre_animacion":
     st.markdown("<audio autoplay src='https://actions.google.com/sounds/v1/foley/creaky_door_open.ogg'></audio>", unsafe_allow_html=True)
     st.markdown("<h2 style='text-align:center; color:#ffd700;'>FORZANDO LA CERRADURA...</h2>", unsafe_allow_html=True)
