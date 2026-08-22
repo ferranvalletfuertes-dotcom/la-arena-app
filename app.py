@@ -693,7 +693,7 @@ elif st.session_state.estado == "tienda":
                 st.rerun()
             else:
                 st.error("El código es incorrecto.")
-    render_navbar("tienda")
+ 
 
     # --- EL MERCADO OCULTO (EASTER EGG) ---
     st.divider()
