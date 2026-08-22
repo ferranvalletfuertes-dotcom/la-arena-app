@@ -672,7 +672,8 @@ elif st.session_state.estado == "tienda":
     if st.button(t('tie_quitar'), use_container_width=True):
         st.session_state.skin_activa = 'default'; supabase.table("jugadores").update({"skin_activa": "default"}).eq("id", st.session_state.usuario_id).execute(); st.rerun()
 
-    # --- EL MERCADO OCULTO (EASTER EGG) ---
+
+   # --- EL MERCADO OCULTO (EASTER EGG) ---
     st.divider()
     st.markdown(f"<h3 style='text-align: center; color: #fff; margin-top: 30px; text-shadow: 0 0 15px #fff;'>{t('tie_oculto_tit')}</h3>", unsafe_allow_html=True)
     st.markdown(f"<p style='text-align: center; color: #888; font-size: 12px; margin-bottom: 20px;'>{t('tie_oculto_desc')}</p>", unsafe_allow_html=True)
@@ -693,30 +694,7 @@ elif st.session_state.estado == "tienda":
                 st.rerun()
             else:
                 st.error("El código es incorrecto.")
- 
-
-    # --- EL MERCADO OCULTO (EASTER EGG) ---
-    st.divider()
-    st.markdown("<h3 style='text-align: center; color: #fff; margin-top: 30px; text-shadow: 0 0 15px #fff;'>👁️ EL MERCADO OCULTO</h3>", unsafe_allow_html=True)
-    st.markdown("<p style='text-align: center; color: #888; font-size: 12px; margin-bottom: 20px;'>Solo los guerreros que han superado los 1000 ELO son dignos de introducir la palabra de paso.</p>", unsafe_allow_html=True)
-    
-    col_s1, col_s2 = st.columns([3, 1])
-    with col_s1:
-        codigo_secreto = st.text_input("Código de Ascensión", type="password", label_visibility="collapsed", placeholder="Introduce el código secreto...")
-    with col_s2:
-        if st.button("⚡ DESCIFRAR", use_container_width=True):
-            if st.session_state.puntos_elo < 1000:
-                st.error("Eres indigno. Vuelve cuando tengas 1000 ELO.")
-            elif codigo_secreto.strip().upper() == "SUPREMO":
-                # Guardar la skin secreta en la base de datos
-                supabase.table("jugadores").update({"skin_activa": "ascendido"}).eq("id", st.session_state.usuario_id).execute()
-                st.session_state.skin_activa = "ascendido"
-                st.balloons()
-                st.success("HAS TRASCENDIDO. Skin 'Ascendido' equipada para siempre.")
-                time.sleep(2)
-                st.rerun()
-            else:
-                st.error("El código es incorrecto.")
+                
     render_navbar("tienda")
 
 # --- MISIONES SECUNDARIAS (GREMIO) ---
