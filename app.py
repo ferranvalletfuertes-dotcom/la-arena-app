@@ -858,7 +858,7 @@ elif st.session_state.estado == "duelo":
             
         st.rerun()
 
-   components.html(f"""
+    components.html(f"""
         <script>
             const parentDoc = window.parent.document;
             const todosLosBotones = parentDoc.querySelectorAll('button');
