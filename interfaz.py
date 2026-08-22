@@ -7,106 +7,64 @@ def cargar_css():
         /* Importar fuente letal */
         @import url('https://fonts.googleapis.com/css2?family=Oswald:wght@400;700&display=swap');
         
-        * {
-            font-family: 'Oswald', sans-serif !important;
-        }
+        * { font-family: 'Oswald', sans-serif !important; }
 
-        /* Animaciones de respiración y latido */
-        @keyframes pulse-red {
-            0% { box-shadow: 0 0 10px #ff4b4b, inset 0 0 5px #ff4b4b; }
-            50% { box-shadow: 0 0 25px #ff4b4b, inset 0 0 10px #ff4b4b; }
-            100% { box-shadow: 0 0 10px #ff4b4b, inset 0 0 5px #ff4b4b; }
-        }
-        @keyframes levitate {
+        /* EL MOTOR DE LEVITACIÓN */
+        @keyframes flotar {
             0% { transform: translateY(0px); }
-            50% { transform: translateY(-10px); }
+            50% { transform: translateY(-12px); }
             100% { transform: translateY(0px); }
         }
-        @keyframes neon-flicker {
-            0%, 19%, 21%, 23%, 25%, 54%, 56%, 100% { text-shadow: 0 0 10px #fff, 0 0 20px #fff, 0 0 30px #ff4b4b, 0 0 40px #ff4b4b; }
-            20%, 24%, 55% { text-shadow: none; }
-        }
 
-        /* Títulos Épicos */
-        .epic-title {
-            text-align: center;
-            color: #ffffff;
-            font-size: 3.5rem;
-            text-transform: uppercase;
-            letter-spacing: 5px;
-            margin-bottom: 0.5rem;
-            animation: neon-flicker 4s infinite;
-        }
-
-        /* Cartas de Jugador con Efecto de Levitación Continua */
-        .player-card {
+        .carta-viva {
             background: linear-gradient(145deg, #161616, #0a0a0a);
             border-radius: 12px;
             padding: 20px;
             text-align: center;
             width: 160px;
-            transition: all 0.3s ease;
-            /* AQUÍ ESTÁ LA MAGIA QUE QUERÍAS: Levitación automática y constante */
-            animation: levitate 3s ease-in-out infinite; 
+            /* Aquí está la vida: 3 segundos, infinito, suave */
+            animation: flotar 3s ease-in-out infinite;
+            transition: box-shadow 0.3s ease;
         }
-        .player-card:hover {
-            transform: scale(1.05);
-            box-shadow: 0 15px 30px rgba(255, 75, 75, 0.2);
+        
+        .carta-viva:hover {
+            box-shadow: 0 15px 30px rgba(255, 75, 75, 0.4);
             cursor: crosshair;
         }
 
-        /* Botón de Peligro (Rendirse) */
-        .btn-peligro button {
-            background-color: transparent !important;
-            border: 2px solid #ff4b4b !important;
-            color: #ff4b4b !important;
-            transition: all 0.3s ease !important;
-        }
-        .btn-peligro button:hover {
-            background-color: #ff4b4b !important;
-            color: white !important;
-            animation: pulse-red 1s infinite !important;
+        /* Títulos */
+        .epic-title {
+            text-align: center; color: #ffffff; font-size: 3.5rem;
+            text-transform: uppercase; letter-spacing: 5px; margin-bottom: 0.5rem;
         }
 
-        /* Modificación de Inputs y Formularios para que parezcan terminales */
-        .stTextInput input, .stSelectbox div[data-baseweb="select"] {
-            background-color: #0a0a0a !important;
-            border: 1px solid #333 !important;
-            color: #00ff00 !important;
-            font-family: monospace !important;
-            border-radius: 4px !important;
-        }
-        .stTextInput input:focus {
-            border-color: #ff4b4b !important;
-            box-shadow: 0 0 10px rgba(255, 75, 75, 0.3) !important;
-        }
-
-        /* Esconder la barra superior de Streamlit y el footer */
+        /* Ocultar basura de Streamlit */
         #MainMenu {visibility: hidden;}
         footer {visibility: hidden;}
         header {visibility: hidden;}
         </style>
     """, unsafe_allow_html=True)
 
-def generar_carta_html(nombre, elo, rango_i, rango_c, subtitulo, skin='default'):
-    display_name = f"👑 {nombre}" if skin == 'corona' else nombre
-    if skin == 'aura': color_borde = "#ff0000"; clase_animacion = "anim-aura"; efecto_sombra = ""
-    elif skin == 'fuego': color_borde = "#aa00ff"; clase_animacion = "anim-fuego"; efecto_sombra = ""
-    elif skin == 'sombra': color_borde = "#00aaff"; clase_animacion = "anim-sombra"; efecto_sombra = ""
-    else: color_borde = rango_c; clase_animacion = "anim-float"; efecto_sombra = f"box-shadow: 0 0 20px {color_borde}30;"
+def generar_carta_html(nombre, elo, icono, color, etiqueta, skin="default"):
+    # Aplicamos los bordes y auras según el mercado negro
+    borde_skin = f"border: 2px solid {color};"
+    if skin == "fuego": borde_skin = f"border: 2px solid {color}; box-shadow: 0 0 15px #ff4b4b, inset 0 0 10px #ff4b4b;"
+    elif skin == "sombra": borde_skin = f"border: 2px solid {color}; box-shadow: 0 0 15px #8a2be2, inset 0 0 10px #8a2be2;"
+    elif skin == "aura": borde_skin = f"border: 2px solid {color}; box-shadow: 0 0 20px #00aaff, inset 0 0 15px #00aaff;"
+    elif skin == "corona": borde_skin = f"border: 2px solid #ffd700; box-shadow: 0 0 25px #ffd700, inset 0 0 15px #ffd700;"
 
-    html_bruto = f"""
-    <div class="fut-card {clase_animacion}" style="background: linear-gradient(135deg, #161616 0%, #050505 100%); border: 2px solid {color_borde}; border-radius: 12px; width: 140px; margin: 10px; padding: 15px 10px; position: relative; {efecto_sombra} display: inline-block; text-align: center; transition: all 0.3s ease;">
-        <div style="position: absolute; top: 8px; left: 12px; color: {color_borde}; font-weight: 900; font-size: 20px; font-family: monospace; text-shadow: 0 0 5px {color_borde};">{elo}</div>
-        <div style="position: absolute; top: 8px; right: 12px; font-size: 20px; filter: drop-shadow(0 0 5px {color_borde});">{rango_i}</div>
-        <div style="margin-top: 35px; margin-bottom: 10px;">
-            <svg width="60" height="60" viewBox="0 0 24 24" fill="none" stroke="{color_borde}" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="opacity: 0.9; filter: drop-shadow(0 0 8px {color_borde});"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+    html = f"""
+    <div class="carta-viva" style="{borde_skin}">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+            <span style="color: {color}; font-weight: bold; font-size: 14px;">{elo}</span>
+            <span style="color: {color}; font-size: 18px;">{icono}</span>
         </div>
-        <h4 style="color: white; margin: 0; font-size: 14px; text-transform: uppercase; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; letter-spacing: 1px;">{display_name}</h4>
-        <div style="color: #666; font-size: 11px; margin-top: 5px; text-transform: uppercase; letter-spacing: 2px; font-weight: bold;">{subtitulo}</div>
+        <div style="font-size: 40px; margin-bottom: 10px; color: #fff;">👤</div>
+        <h4 style="color: white; margin: 0; font-size: 16px; letter-spacing: 1px; text-transform: uppercase;">{nombre}</h4>
+        <p style="color: #888; font-size: 10px; margin-top: 5px; letter-spacing: 1px;">{etiqueta}</p>
     </div>
     """
-    return html_bruto.replace("\n", "")
+    return html.replace('\n', '')
 
 def generar_html_mision(titulo, desc, oro, completada):
     color_borde = "#00ff00" if completada else "#333"
