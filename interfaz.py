@@ -19,7 +19,7 @@ def cargar_css():
         }
         @keyframes levitate {
             0% { transform: translateY(0px); }
-            50% { transform: translateY(-5px); }
+            50% { transform: translateY(-10px); }
             100% { transform: translateY(0px); }
         }
         @keyframes neon-flicker {
@@ -38,7 +38,7 @@ def cargar_css():
             animation: neon-flicker 4s infinite;
         }
 
-        /* Cartas de Jugador con Efecto Hover */
+        /* Cartas de Jugador con Efecto de Levitación Continua */
         .player-card {
             background: linear-gradient(145deg, #161616, #0a0a0a);
             border-radius: 12px;
@@ -46,10 +46,12 @@ def cargar_css():
             text-align: center;
             width: 160px;
             transition: all 0.3s ease;
+            /* AQUÍ ESTÁ LA MAGIA QUE QUERÍAS: Levitación automática y constante */
+            animation: levitate 3s ease-in-out infinite; 
         }
         .player-card:hover {
-            transform: translateY(-8px) scale(1.02);
-            box-shadow: 0 15px 25px rgba(0,0,0,0.5);
+            transform: scale(1.05);
+            box-shadow: 0 15px 30px rgba(255, 75, 75, 0.2);
             cursor: crosshair;
         }
 
