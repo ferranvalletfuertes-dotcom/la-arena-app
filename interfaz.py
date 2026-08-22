@@ -48,33 +48,31 @@ def cargar_css():
 
 
 def render_navbar(activo):
-    import streamlit as st
-    idioma = st.session_state.get('idioma', 'es')
-    
-    # Diccionario local ultrarrápido exclusivo para la barra de navegación
+    # Diccionario local ultrarrápido exclusivo para la barra
     nav_txt = {
         "es": ["🔥 LOBBY", "🌍 MUNDO", "🛡️ CUARTEL", "🛒 TIENDA", "⚔️ GREMIO"],
         "en": ["🔥 LOBBY", "🌍 WORLD", "🛡️ BARRACKS", "🛒 STORE", "⚔️ GUILD"]
     }
+    idioma = st.session_state.get('idioma', 'es')
     txt = nav_txt.get(idioma, nav_txt["es"])
 
     st.write("<br><br><br>", unsafe_allow_html=True)
     c1, c2, c3, c4, c5 = st.columns(5)
     
     with c1:
-        if st.button(txt[0], use_container_width=True, type="primary" if activo == "lobby" else "secondary", key=f"nav_1_{activo}"):
+        if st.button(txt[0], use_container_width=True, type="primary" if activo == "lobby" else "secondary", key=f"nav_1_{activo}_n"):
             st.session_state.estado = "lobby"; st.rerun()
     with c2:
-        if st.button(txt[1], use_container_width=True, type="primary" if activo == "mundo" else "secondary", key=f"nav_2_{activo}"):
+        if st.button(txt[1], use_container_width=True, type="primary" if activo == "mundo" else "secondary", key=f"nav_2_{activo}_n"):
             st.session_state.estado = "mundo"; st.rerun()
     with c3:
-        if st.button(txt[2], use_container_width=True, type="primary" if activo == "cuartel" else "secondary", key=f"nav_3_{activo}"):
+        if st.button(txt[2], use_container_width=True, type="primary" if activo == "cuartel" else "secondary", key=f"nav_3_{activo}_n"):
             st.session_state.estado = "cuartel"; st.rerun()
     with c4:
-        if st.button(txt[3], use_container_width=True, type="primary" if activo == "tienda" else "secondary", key=f"nav_4_{activo}"):
+        if st.button(txt[3], use_container_width=True, type="primary" if activo == "tienda" else "secondary", key=f"nav_4_{activo}_n"):
             st.session_state.estado = "tienda"; st.rerun()
     with c5:
-        if st.button(txt[4], use_container_width=True, type="primary" if activo == "gremio" else "secondary", key=f"nav_5_{activo}"):
+        if st.button(txt[4], use_container_width=True, type="primary" if activo == "gremio" else "secondary", key=f"nav_5_{activo}_n"):
             st.session_state.estado = "gremio"; st.rerun()
 def generar_carta_html(nombre, elo, icono, color, etiqueta, skin="default"):
     # Parámetros por defecto (Rango normal)
