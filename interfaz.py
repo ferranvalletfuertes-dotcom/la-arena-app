@@ -7,7 +7,10 @@ def cargar_css():
         /* Importar fuente letal */
         @import url('https://fonts.googleapis.com/css2?family=Oswald:wght@400;700&display=swap');
         
-        * { font-family: 'Oswald', sans-serif !important; }
+        /* Aplicamos la fuente SOLO a los textos, protegiendo los iconos internos de Streamlit */
+        h1, h2, h3, h4, h5, h6, p, label, .stButton button, .stSelectbox div, input {
+            font-family: 'Oswald', sans-serif !important;
+        }
 
         /* EL MOTOR DE LEVITACIÓN */
         @keyframes flotar {
@@ -22,7 +25,7 @@ def cargar_css():
             padding: 20px;
             text-align: center;
             width: 160px;
-            margin: 0 auto !important; /* ESTO CENTRA LA CARTA EN CUALQUIER PANTALLA O COLUMNA */
+            margin: 0 auto !important; 
             animation: flotar 3s ease-in-out infinite;
             transition: box-shadow 0.3s ease;
         }
@@ -32,19 +35,47 @@ def cargar_css():
             cursor: crosshair;
         }
 
-        /* Títulos */
         .epic-title {
             text-align: center; color: #ffffff; font-size: 3.5rem;
             text-transform: uppercase; letter-spacing: 5px; margin-bottom: 0.5rem;
         }
 
-        /* Ocultar basura de Streamlit */
         #MainMenu {visibility: hidden;}
         footer {visibility: hidden;}
         header {visibility: hidden;}
         </style>
     """, unsafe_allow_html=True)
 
+
+def render_navbar(activo):
+    import streamlit as st
+    idioma = st.session_state.get('idioma', 'es')
+    
+    # Diccionario local ultrarrápido para la barra de navegación
+    nav_txt = {
+        "es": ["🔥 LOBBY", "🌍 MUNDO", "🛡️ CUARTEL", "🛒 TIENDA", "⚔️ GREMIO"],
+        "en": ["🔥 LOBBY", "🌍 WORLD", "🛡️ BARRACKS", "🛒 STORE", "⚔️ GUILD"]
+    }
+    txt = nav_txt.get(idioma, nav_txt["es"])
+
+    st.write("<br><br><br>", unsafe_allow_html=True)
+    c1, c2, c3, c4, c5 = st.columns(5)
+    
+    with c1:
+        if st.button(txt[0], use_container_width=True, type="primary" if activo == "lobby" else "secondary"):
+            st.session_state.estado = "lobby"; st.rerun()
+    with c2:
+        if st.button(txt[1], use_container_width=True, type="primary" if activo == "mundo" else "secondary"):
+            st.session_state.estado = "mundo"; st.rerun()
+    with c3:
+        if st.button(txt[2], use_container_width=True, type="primary" if activo == "cuartel" else "secondary"):
+            st.session_state.estado = "cuartel"; st.rerun()
+    with c4:
+        if st.button(txt[3], use_container_width=True, type="primary" if activo == "tienda" else "secondary"):
+            st.session_state.estado = "tienda"; st.rerun()
+    with c5:
+        if st.button(txt[4], use_container_width=True, type="primary" if activo == "gremio" else "secondary"):
+            st.session_state.estado = "gremio"; st.rerun()
 
 def generar_carta_html(nombre, elo, icono, color, etiqueta, skin="default"):
     # Parámetros por defecto (Rango normal)
