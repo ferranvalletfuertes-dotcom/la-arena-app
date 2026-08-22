@@ -62,19 +62,19 @@ def render_navbar(activo):
     c1, c2, c3, c4, c5 = st.columns(5)
     
     with c1:
-        if st.button(txt[0], use_container_width=True, type="primary" if activo == "lobby" else "secondary"):
+        if st.button(txt[0], use_container_width=True, type="primary" if activo == "lobby" else "secondary", key=f"nav_1_{activo}"):
             st.session_state.estado = "lobby"; st.rerun()
     with c2:
-        if st.button(txt[1], use_container_width=True, type="primary" if activo == "mundo" else "secondary"):
+        if st.button(txt[1], use_container_width=True, type="primary" if activo == "mundo" else "secondary", key=f"nav_2_{activo}"):
             st.session_state.estado = "mundo"; st.rerun()
     with c3:
-        if st.button(txt[2], use_container_width=True, type="primary" if activo == "cuartel" else "secondary"):
+        if st.button(txt[2], use_container_width=True, type="primary" if activo == "cuartel" else "secondary", key=f"nav_3_{activo}"):
             st.session_state.estado = "cuartel"; st.rerun()
     with c4:
-        if st.button(txt[3], use_container_width=True, type="primary" if activo == "tienda" else "secondary"):
+        if st.button(txt[3], use_container_width=True, type="primary" if activo == "tienda" else "secondary", key=f"nav_4_{activo}"):
             st.session_state.estado = "tienda"; st.rerun()
     with c5:
-        if st.button(txt[4], use_container_width=True, type="primary" if activo == "gremio" else "secondary"):
+        if st.button(txt[4], use_container_width=True, type="primary" if activo == "gremio" else "secondary", key=f"nav_5_{activo}"):
             st.session_state.estado = "gremio"; st.rerun()
 
 def generar_carta_html(nombre, elo, icono, color, etiqueta, skin="default"):
