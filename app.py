@@ -217,116 +217,137 @@ if st.session_state.estado == "login":
 # --- EL LOBBY BILINGÜE ---
 elif st.session_state.estado == "lobby":
     render_top_bar()
-    lang = st.session_state.idioma
-
-    st.session_state.partida_id = None; st.session_state.rival_nombre = "Desconocido"
+    st.session_state.partida_id = None
+    st.session_state.rival_nombre = "Desconocido"
     rango_n, rango_s, rango_i, rango_c = calcular_rango(st.session_state.puntos_elo)
 
     st.markdown(f"<div style='text-align: center;'><img src='{LOGO_URL}' width='80' style='border-radius: 15px; box-shadow: 0 0 15px #ff4b4b; margin-bottom: 10px;'></div>", unsafe_allow_html=True)
-    st.markdown(f"<h1 style='text-align: center; color: #ff4b4b; letter-spacing: 2px; margin-top: 0;'>{DIC[lang]['lobby_title']}</h1>", unsafe_allow_html=True)
+    st.markdown("<h1 class='epic-title'>⚔️ MODO COMBATE</h1>", unsafe_allow_html=True)
     
     boosts_html = ""
     if tiene_boost_activo(st.session_state.boost_elo): boosts_html += "<span style='background:#ff4b4b; color:white; padding:2px 8px; border-radius:10px; font-size:12px; font-weight:bold; margin-right:5px;'>⚡ x2 ELO</span>"
     if tiene_boost_activo(st.session_state.boost_monedas): boosts_html += "<span style='background:#ffd700; color:black; padding:2px 8px; border-radius:10px; font-size:12px; font-weight:bold;'>💰 x2 MONEDAS</span>"
     
-    welcome_text = DIC[lang]['lobby_welcome'].replace("{nombre}", st.session_state.nombre_guerra)
-    st.markdown(f"<h3 style='text-align: center; color: white; text-transform: uppercase;'>{welcome_text} <br><div style='margin-top:10px;'>{boosts_html}</div></h3>".replace('\n', ''), unsafe_allow_html=True)
+    st.markdown(f"<h3 style='text-align: center; color: white; text-transform: uppercase;'>Bienvenido, {st.session_state.nombre_guerra} <br><div style='margin-top:10px;'>{boosts_html}</div></h3>".replace('\n', ''), unsafe_allow_html=True)
     st.divider()
     
-    leyenda_str = "TU LEYENDA" if lang == 'es' else "YOUR LEGEND"
-    carta_propia = generar_carta_html(st.session_state.nombre_guerra, st.session_state.puntos_elo, rango_i, rango_c, leyenda_str, st.session_state.skin_activa)
+    carta_propia = generar_carta_html(st.session_state.nombre_guerra, st.session_state.puntos_elo, rango_i, rango_c, "TU LEYENDA", st.session_state.skin_activa)
     st.markdown(f"<div style='text-align: center; margin-bottom: 20px;'>{carta_propia}</div>".replace('\n', ''), unsafe_allow_html=True)
     
-    st.markdown(f"<div style='display: flex; justify-content: space-around; text-align: center; background-color: #121212; padding: 25px; border-radius: 12px; border: 1px solid {rango_c}; box-shadow: 0 4px 20px {rango_c}40;'><div><p style='margin: 0; color: #888; font-size: 14px; text-transform: uppercase;'>{DIC[lang]['lobby_rank']}</p><h2 style='margin: 0; color: {rango_c};'>{rango_i} {rango_n}</h2></div><div style='border-left: 1px solid #333; border-right: 1px solid #333; padding: 0 20px;'><p style='margin: 0; color: #888; font-size: 14px; text-transform: uppercase;'>{DIC[lang]['lobby_elo']}</p><h2 style='margin: 0; color: white;'>{st.session_state.puntos_elo} pts</h2></div><div><p style='margin: 0; color: #888; font-size: 14px; text-transform: uppercase;'>{DIC[lang]['lobby_vault']}</p><h2 style='margin: 0; color: #ffd700;'>🪙 {st.session_state.monedas}</h2></div></div>".replace('\n', ''), unsafe_allow_html=True)
+    st.markdown(f"<div style='display: flex; justify-content: space-around; text-align: center; background-color: #121212; padding: 25px; border-radius: 12px; border: 1px solid {rango_c}; box-shadow: 0 4px 20px {rango_c}40;'><div><p style='margin: 0; color: #888; font-size: 14px; text-transform: uppercase;'>Tu Rango</p><h2 style='margin: 0; color: {rango_c};'>{rango_i} {rango_n}</h2></div><div style='border-left: 1px solid #333; border-right: 1px solid #333; padding: 0 20px;'><p style='margin: 0; color: #888; font-size: 14px; text-transform: uppercase;'>ELO</p><h2 style='margin: 0; color: white;'>{st.session_state.puntos_elo} pts</h2></div><div><p style='margin: 0; color: #888; font-size: 14px; text-transform: uppercase;'>Bóveda</p><h2 style='margin: 0; color: #ffd700;'>🪙 {st.session_state.monedas}</h2></div></div>".replace('\n', ''), unsafe_allow_html=True)
     
-    st.markdown(f"<h3 style='text-align: center; color: #00ff00; margin-top: 40px; text-shadow: 0 0 10px rgba(0,255,0,0.4);'>{DIC[lang]['lobby_contracts']}</h3>", unsafe_allow_html=True)
+    st.markdown("<h3 style='text-align: center; color: #00ff00; margin-top: 40px; text-shadow: 0 0 10px rgba(0,255,0,0.4);'>📜 CONTRATOS MERCENARIOS</h3>", unsafe_allow_html=True)
     
-    pasos_totales = 4; pasos_actuales = min(st.session_state.progreso_m1, 1) + min(st.session_state.progreso_m2, 2) + min(st.session_state.progreso_m3, 1); porcentaje = int((pasos_actuales / pasos_totales) * 100)
-    st.markdown(f"<div style='width: 100%; background-color: #333; border-radius: 10px; margin-bottom: 20px;'><div style='width: {porcentaje}%; height: 15px; background: linear-gradient(90deg, #008000, #00ff00); border-radius: 10px; box-shadow: 0 0 10px #00ff00; transition: width 0.5s ease;'></div></div><p style='text-align: center; color: #888; font-size: 12px; margin-top: -10px;'>{DIC[lang]['lobby_prog_daily']}: {porcentaje}%</p>".replace('\n', ''), unsafe_allow_html=True)
+    pasos_totales = 4
+    pasos_actuales = min(st.session_state.progreso_m1, 1) + min(st.session_state.progreso_m2, 2) + min(st.session_state.progreso_m3, 1)
+    porcentaje = int((pasos_actuales / pasos_totales) * 100)
+    st.markdown(f"<div style='width: 100%; background-color: #333; border-radius: 10px; margin-bottom: 20px;'><div style='width: {porcentaje}%; height: 15px; background: linear-gradient(90deg, #008000, #00ff00); border-radius: 10px; box-shadow: 0 0 10px #00ff00; transition: width 0.5s ease;'></div></div><p style='text-align: center; color: #888; font-size: 12px; margin-top: -10px;'>Progreso Diario: {porcentaje}%</p>".replace('\n', ''), unsafe_allow_html=True)
     
     c_m1, c_m2, c_m3 = st.columns(3)
     with c_m1:
-        st.markdown(generar_html_mision(DIC[lang]['lobby_m1_title'], DIC[lang]['lobby_m1_desc'], 50, st.session_state.m1_reclamada), unsafe_allow_html=True)
-        if st.session_state.m1_reclamada: st.button(DIC[lang]['lobby_btn_claimed'], disabled=True, key="btn_m1_d", use_container_width=True)
+        st.markdown(generar_html_mision("Primer Sangrado", "Gana 1 combate", 50, st.session_state.m1_reclamada), unsafe_allow_html=True)
+        if st.session_state.m1_reclamada: 
+            st.button("✅ RECLAMADO", disabled=True, key="btn_m1_d", use_container_width=True)
         elif st.session_state.progreso_m1 >= 1:
-            if st.button(DIC[lang]['lobby_btn_claim'], type="primary", key="btn_m1_c", use_container_width=True):
-                st.session_state.monedas += 50; st.session_state.m1_reclamada = True
-                supabase.table("jugadores").update({"monedas": st.session_state.monedas, "m1_reclamada": True}).eq("id", st.session_state.usuario_id).execute(); st.rerun()
-        else: st.button(DIC[lang]['lobby_btn_missing1'], disabled=True, key="btn_m1_f", use_container_width=True)
-    with c_m2:
-        st.markdown(generar_html_mision(DIC[lang]['lobby_m2_title'], DIC[lang]['lobby_m2_desc'], 100, st.session_state.m2_reclamada), unsafe_allow_html=True)
-        if st.session_state.m2_reclamada: st.button(DIC[lang]['lobby_btn_claimed'], disabled=True, key="btn_m2_d", use_container_width=True)
-        elif st.session_state.progreso_m2 >= 2:
-            if st.button(DIC[lang]['lobby_btn_claim'], type="primary", key="btn_m2_c", use_container_width=True):
-                st.session_state.monedas += 100; st.session_state.m2_reclamada = True
-                supabase.table("jugadores").update({"monedas": st.session_state.monedas, "m2_reclamada": True}).eq("id", st.session_state.usuario_id).execute(); st.rerun()
+            if st.button("🎁 RECLAMAR", type="primary", key="btn_m1_c", use_container_width=True):
+                st.session_state.monedas += 50
+                st.session_state.m1_reclamada = True
+                supabase.table("jugadores").update({"monedas": st.session_state.monedas, "m1_reclamada": True}).eq("id", st.session_state.usuario_id).execute()
+                st.rerun()
         else: 
-            faltan_str = DIC[lang]['lobby_btn_missing_multi'].replace("{n}", str(2 - st.session_state.progreso_m2))
-            st.button(faltan_str, disabled=True, key="btn_m2_f", use_container_width=True)
+            st.button("Falta 1", disabled=True, key="btn_m1_f", use_container_width=True)
+    with c_m2:
+        st.markdown(generar_html_mision("Asesino a Sueldo", "Gana 2 escaramuzas", 100, st.session_state.m2_reclamada), unsafe_allow_html=True)
+        if st.session_state.m2_reclamada: 
+            st.button("✅ RECLAMADO", disabled=True, key="btn_m2_d", use_container_width=True)
+        elif st.session_state.progreso_m2 >= 2:
+            if st.button("🎁 RECLAMAR", type="primary", key="btn_m2_c", use_container_width=True):
+                st.session_state.monedas += 100
+                st.session_state.m2_reclamada = True
+                supabase.table("jugadores").update({"monedas": st.session_state.monedas, "m2_reclamada": True}).eq("id", st.session_state.usuario_id).execute()
+                st.rerun()
+        else: 
+            st.button(f"Faltan {2 - st.session_state.progreso_m2}", disabled=True, key="btn_m2_f", use_container_width=True)
     with c_m3:
-        st.markdown(generar_html_mision(DIC[lang]['lobby_m3_title'], DIC[lang]['lobby_m3_desc'], 300, st.session_state.m3_reclamada), unsafe_allow_html=True)
-        if st.session_state.m3_reclamada: st.button(DIC[lang]['lobby_btn_claimed'], disabled=True, key="btn_m3_d", use_container_width=True)
+        st.markdown(generar_html_mision("El Titán", "Sobrevive 1 asalto", 300, st.session_state.m3_reclamada), unsafe_allow_html=True)
+        if st.session_state.m3_reclamada: 
+            st.button("✅ RECLAMADO", disabled=True, key="btn_m3_d", use_container_width=True)
         elif st.session_state.progreso_m3 >= 1:
-            if st.button(DIC[lang]['lobby_btn_claim'], type="primary", key="btn_m3_c", use_container_width=True):
-                st.session_state.monedas += 300; st.session_state.m3_reclamada = True
-                supabase.table("jugadores").update({"monedas": st.session_state.monedas, "m3_reclamada": True}).eq("id", st.session_state.usuario_id).execute(); st.rerun()
-        else: st.button(DIC[lang]['lobby_btn_missing1'], disabled=True, key="btn_m3_f", use_container_width=True)
+            if st.button("🎁 RECLAMAR", type="primary", key="btn_m3_c", use_container_width=True):
+                st.session_state.monedas += 300
+                st.session_state.m3_reclamada = True
+                supabase.table("jugadores").update({"monedas": st.session_state.monedas, "m3_reclamada": True}).eq("id", st.session_state.usuario_id).execute()
+                st.rerun()
+        else: 
+            st.button("Falta 1", disabled=True, key="btn_m3_f", use_container_width=True)
 
     st.write(""); st.divider()
-    st.markdown(f"""
+    st.markdown("""
         <div class="rules-box">
-            <h3 style="text-align: center; color: #ff4b4b; text-transform: uppercase; margin-top: 0;">{DIC[lang]['lobby_rules_title']}</h3>
+            <h3 style="text-align: center; color: #ff4b4b; text-transform: uppercase; margin-top: 0;">⚠️ Las Leyes de la Arena</h3>
             <ul style="list-style-type: none; padding-left: 0; color: #ccc; font-size: 15px; line-height: 1.8;">
-                <li style="margin-bottom: 10px;">{DIC[lang]['lobby_rules_1']}</li>
-                <li style="margin-bottom: 10px;">{DIC[lang]['lobby_rules_2']}</li>
-                <li>{DIC[lang]['lobby_rules_3']}</li>
+                <li style="margin-bottom: 10px;">📱 <span class='neon-green'>CÓMO SE JUEGA:</span> Abre esto en tu móvil, déjalo en la mesa y ve a trabajar en tu PC o en tus libros.</li>
+                <li style="margin-bottom: 10px;">🔴 <span class='neon-red'>CÓMO PIERDES:</span> Si coges el móvil y cambias de app, tu escudo colapsa y pierdes ELO.</li>
+                <li>⚔️ <strong style='color: #ffd700;'>EL PACTO:</strong> Convierte tu móvil en tu propio vigilante. No te engañes a ti mismo.</li>
             </ul>
         </div>
     """.replace('\n', ''), unsafe_allow_html=True)
 
-    st.markdown(f"<h3 style='text-align: center; color: #ff4b4b;'>{DIC[lang]['lobby_dec_title']}</h3>", unsafe_allow_html=True)
+    st.markdown("<h3 style='text-align: center; color: #ff4b4b;'>🔥 DECLARACIÓN DE INTENCIONES</h3>", unsafe_allow_html=True)
     c_texto, c_dado = st.columns([5, 1])
     with c_dado:
         st.write("")
         if st.button("🎲", help="Oráculo", use_container_width=True):
-            st.session_state.input_mision_texto = random.choice(MISIONES_DESARROLLO); st.rerun()
+            st.session_state.input_mision_texto = random.choice(MISIONES_DESARROLLO)
+            st.rerun()
     with c_texto:
-        mision_input = st.text_input("", value=st.session_state.input_mision_texto, placeholder=DIC[lang]['lobby_ph_mision'], label_visibility="collapsed")
+        mision_input = st.text_input("", value=st.session_state.input_mision_texto, placeholder="Ej: Terminar el ensayo de Filosofía...", label_visibility="collapsed")
         st.session_state.input_mision_texto = mision_input 
     
-    tiempo_opts = {}
-    if lang == 'es':
-        tiempo_opts["⚙️ Modo Test (10 Segundos)"] = 10
-        for m in range(15, 105, 5):
-            if m == 25: tiempo_opts["⚔️ Escaramuza (25 Minutos)"] = m * 60
-            elif m == 50: tiempo_opts["🔥 Asalto Profundo (50 Minutos)"] = m * 60
-            elif m == 90: tiempo_opts["💀 Modo Titán (90 Minutos)"] = m * 60
-            else: tiempo_opts[f"⏱️ {m} Minutos"] = m * 60
-    else:
-        tiempo_opts["⚙️ Test Mode (10 Seconds)"] = 10
-        for m in range(15, 105, 5):
-            if m == 25: tiempo_opts["⚔️ Skirmish (25 Minutes)"] = m * 60
-            elif m == 50: tiempo_opts["🔥 Deep Assault (50 Minutes)"] = m * 60
-            elif m == 90: tiempo_opts["💀 Titan Mode (90 Minutes)"] = m * 60
-            else: tiempo_opts[f"⏱️ {m} Minutes"] = m * 60
+    tiempo_opts = {
+        "⚙️ Modo Test (10 Segundos)": 10,
+        "⏱️ 15 Minutos": 900,
+        "⏱️ 20 Minutos": 1200,
+        "⚔️ Escaramuza (25 Minutos)": 1500,
+        "⏱️ 30 Minutos": 1800,
+        "⏱️ 35 Minutos": 2100,
+        "⏱️ 40 Minutos": 2400,
+        "⏱️ 45 Minutos": 2700,
+        "🔥 Asalto Profundo (50 Minutos)": 3000,
+        "⏱️ 55 Minutos": 3300,
+        "⏱️ 60 Minutos": 3600,
+        "⏱️ 65 Minutos": 3900,
+        "⏱️ 70 Minutos": 4200,
+        "⏱️ 75 Minutos": 4500,
+        "⏱️ 80 Minutos": 4800,
+        "⏱️ 85 Minutos": 5100,
+        "💀 Modo Titán (90 Minutos)": 5400,
+        "⏱️ 95 Minutos": 5700,
+        "⏱️ 100 Minutos": 6000
+    }
 
-    tiempo_str = st.selectbox(DIC[lang]['lobby_duration'], list(tiempo_opts.keys()))
+    tiempo_str = st.selectbox("Duración de la batalla:", list(tiempo_opts.keys()))
     
     c_pub, c_priv = st.columns(2)
     with c_pub:
-        if st.button(DIC[lang]['lobby_btn_global'], use_container_width=True, type="primary"):
-            if not st.session_state.input_mision_texto: st.error(DIC[lang]['lobby_err_mision'])
+        if st.button("🌍 BÚSQUEDA MUNDIAL", use_container_width=True, type="primary"):
+            if not st.session_state.input_mision_texto: 
+                st.error("Un guerrero no entra sin propósito. Declara tu misión o usa el dado 🎲.")
             else:
                 limite_fantasmas = (datetime.now(timezone.utc) - timedelta(seconds=30)).isoformat()
                 supabase.table("partidas").delete().eq("estado", "esperando").lt("ultima_actividad", limite_fantasmas).execute()
-                st.session_state.mision_actual = st.session_state.input_mision_texto; st.session_state.tiempo_combate = tiempo_opts[tiempo_str]
+                st.session_state.mision_actual = st.session_state.input_mision_texto
+                st.session_state.tiempo_combate = tiempo_opts[tiempo_str]
                 w_elo, l_elo, coins = calcular_riesgo_recompensa(st.session_state.tiempo_combate, st.session_state.puntos_elo, st.session_state.boost_elo, st.session_state.boost_monedas)
                 st.session_state.elo_premio = w_elo; st.session_state.elo_castigo = l_elo; st.session_state.monedas_ganadas_recientes = coins
-                st.session_state.tipo_partida = "publica"; st.session_state.codigo_sala = ""; st.session_state.inicio_busqueda = time.time(); st.session_state.estado = "buscando"; st.rerun()
-    st.markdown(f"<h3 style='text-align: center; color: #888; margin-top: 30px;'>{DIC[lang]['lobby_priv_title']}</h3>", unsafe_allow_html=True)
-  c_p1, c_p2 = st.columns([2, 1])
+                st.session_state.tipo_partida = "publica"
+                st.session_state.codigo_sala = ""
+                st.session_state.inicio_busqueda = time.time(); st.session_state.estado = "buscando"; st.rerun()
+                
+    st.markdown("<h3 style='text-align: center; color: #888; margin-top: 30px;'>🤝 DUELO PRIVADO</h3>", unsafe_allow_html=True)
+    c_p1, c_p2 = st.columns([2, 1])
     with c_p1: 
-        codigo_input = st.text_input("", placeholder="Código o vacío para crear", label_visibility="collapsed", key="input_cod_priv")
+        codigo_input = st.text_input("", placeholder="Pega código o vacío para crear", label_visibility="collapsed", key="input_cod_priv")
     with c_p2:
         if st.button("🚪 CREAR / UNIRSE", use_container_width=True):
             codigo_secreto = codigo_input.upper().strip()
@@ -335,7 +356,7 @@ elif st.session_state.estado == "lobby":
             if codigo_secreto == "NIVEL8":
                 st.session_state.monedas += 777
                 supabase.table("jugadores").update({"monedas": st.session_state.monedas}).eq("id", st.session_state.usuario_id).execute()
-                st.balloons() # Lluvia visual
+                st.balloons()
                 st.success("💻 ACCESO CLASIFICADO: Has descubierto el Protocolo Nivel 8. El Arquitecto te observa. +777 Monedas transferidas.")
                 time.sleep(3)
                 st.rerun()
