@@ -858,7 +858,7 @@ elif st.session_state.estado == "duelo":
             
         st.rerun()
 
-    components.html(f"""
+   components.html(f"""
         <script>
             const parentDoc = window.parent.document;
             const todosLosBotones = parentDoc.querySelectorAll('button');
@@ -868,6 +868,17 @@ elif st.session_state.estado == "duelo":
             
             let tiempoRestante = {st.session_state.tiempo_combate}; 
             let latidoReproducido = false;
+            let wakeLock = null;
+
+            // EL CENTINELA: Fuerza a la pantalla a quedarse encendida
+            async function activarEscudoPantalla() {{
+                try {{
+                    wakeLock = await navigator.wakeLock.request('screen');
+                }} catch (err) {{
+                    console.log(`Escudo falló: ${{err.name}}, ${{err.message}}`);
+                }}
+            }}
+            activarEscudoPantalla();
             
             function actualizarReloj() {{
                 let m = Math.floor(tiempoRestante / 60); 
@@ -888,19 +899,24 @@ elif st.session_state.estado == "duelo":
                 actualizarReloj();
                 if (tiempoRestante <= 0) {{ 
                     clearInterval(intervalo); 
+                    if(wakeLock !== null) wakeLock.release();
                     todosLosBotones.forEach(btn => {{ 
                         if(btn.innerText.includes('VICTORIA_SECRETA')) btn.click(); 
                     }}); 
                 }}
             }}, 1000);
             
+            // EL VERDUGO: Si cambian de app o bloquean el móvil manualmente, mueren.
             parentDoc.addEventListener('visibilitychange', function() {{ 
                 if (parentDoc.visibilityState === 'hidden') {{ 
                     clearInterval(intervalo); 
+                    if(wakeLock !== null) wakeLock.release();
                     todosLosBotones.forEach(btn => {{ 
                         if(btn.innerText.includes('ME RINDO')) btn.click(); 
                     }}); 
-                }} 
+                }} else if (wakeLock !== null && parentDoc.visibilityState === 'visible') {{
+                    activarEscudoPantalla();
+                }}
             }});
         </script>
     """, height=0, width=0)
