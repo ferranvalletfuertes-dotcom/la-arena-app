@@ -8,8 +8,7 @@ from supabase import create_client, Client
 # --- IMPORTACIONES MODULARES (TU NUEVO EJÉRCITO) ---
 from datos import pildoras, MISIONES_DESARROLLO, MISIONES_FISICAS, MISIONES_SOCIALES, MISIONES_MENTALES, MISIONES_ORDEN
 from motor import get_rank_info, calcular_rango, calcular_riesgo_recompensa, generar_codigo_sala, tiene_boost_activo
-from interfaz import cargar_css, generar_carta_html, generar_html_mision, render_navbar, render_top_bar
-
+from interfaz import cargar_css, generar_carta_html, generar_html_mision, render_top_bar
 LOGO_URL = "https://raw.githubusercontent.com/ferranvalletfuertes-dotcom/la-arena-app/main/logo.png"
 
 st.set_page_config(page_title="Modo Combate | La Arena", page_icon=LOGO_URL, layout="centered")
@@ -112,6 +111,36 @@ DIC = {
 def t(clave):
     idioma = st.session_state.get('idioma', 'es')
     return DIC.get(idioma, DIC["es"]).get(clave, clave)
+
+def render_navbar(activo):
+    import streamlit as st
+    idioma = st.session_state.get('idioma', 'es')
+    
+    # Diccionario blindado e independiente
+    nav_txt = {
+        "es": ["🔥 LOBBY", "🌍 MUNDO", "🛡️ CUARTEL", "🛒 TIENDA", "⚔️ GREMIO"],
+        "en": ["🔥 LOBBY", "🌍 WORLD", "🛡️ BARRACKS", "🛒 STORE", "⚔️ GUILD"]
+    }
+    txt = nav_txt.get(idioma, nav_txt["es"])
+
+    st.write("<br><br><br>", unsafe_allow_html=True)
+    c1, c2, c3, c4, c5 = st.columns(5)
+    
+    with c1:
+        if st.button(txt[0], use_container_width=True, type="primary" if activo == "lobby" else "secondary", key=f"btn_global_1_{activo}"):
+            st.session_state.estado = "lobby"; st.rerun()
+    with c2:
+        if st.button(txt[1], use_container_width=True, type="primary" if activo == "mundo" else "secondary", key=f"btn_global_2_{activo}"):
+            st.session_state.estado = "mundo"; st.rerun()
+    with c3:
+        if st.button(txt[2], use_container_width=True, type="primary" if activo == "cuartel" else "secondary", key=f"btn_global_3_{activo}"):
+            st.session_state.estado = "cuartel"; st.rerun()
+    with c4:
+        if st.button(txt[3], use_container_width=True, type="primary" if activo == "tienda" else "secondary", key=f"btn_global_4_{activo}"):
+            st.session_state.estado = "tienda"; st.rerun()
+    with c5:
+        if st.button(txt[4], use_container_width=True, type="primary" if activo == "gremio" else "secondary", key=f"btn_global_5_{activo}"):
+            st.session_state.estado = "gremio"; st.rerun()
 # ==========================================================
 # RUTAS DE LA APLICACIÓN
 # ==========================================================
