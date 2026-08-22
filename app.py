@@ -85,6 +85,61 @@ if 'gremio_m2' not in st.session_state: st.session_state.gremio_m2 = False
 if 'gremio_m3' not in st.session_state: st.session_state.gremio_m3 = False
 if 'gremio_m4' not in st.session_state: st.session_state.gremio_m4 = False
 
+# --- MOTOR DE TRADUCCIÓN NATIVO (NIVEL 8) ---
+DIC = {
+    "es": {
+        "log_title": "MÁS QUE UNA APP. UN COLISEO.",
+        "log_manifesto": "El mundo moderno te quiere débil, distraído y adicto. La Arena es tu cura.",
+        "log_carcel_tit": "⛓️ EL CENTINELA",
+        "log_carcel_desc": "Inicia un combate. Si abandonas la app, tu escudo colapsa y tu rango es destruido.",
+        "log_mercado_tit": "🛒 EL MERCADO NEGRO",
+        "log_mercado_desc": "Gana oro con tu sudor. Compra skins, auras y multiplicadores.",
+        "log_ranking_tit": "🏆 LA TABERNA",
+        "log_ranking_desc": "Compara tu ELO con guerreros de todo el mundo. Solo la élite asciende.",
+        "tab_login": "🔑 ENTRAR AL COLISEO",
+        "tab_reg": "🩸 JURAMENTO DE SANGRE",
+        "ph_email": "Tu correo de combate",
+        "ph_pass": "Tu contraseña",
+        "btn_acceder": "ENTRAR A LA ARENA",
+        "ph_name": "Nombre de Guerra (Ej: Espartano)",
+        "ph_ref": "Código de Embajador (Opcional)",
+        "btn_jurar": "JURAR LEALTAD",
+        "ajustes_titulo": "⚙️ Ajustes de Perfil",
+        "ajustes_nombre": "Cambiar nombre (cambiará tu código)",
+        "ajustes_musica": "Radio de Combate (Música)",
+        "ajustes_volumen": "Volumen de la Radio",
+        "ajustes_idioma": "Idioma / Language",
+        "ajustes_btn": "ACTUALIZAR AJUSTES"
+    },
+    "en": {
+        "log_title": "MORE THAN AN APP. A COLOSSEUM.",
+        "log_manifesto": "The modern world wants you weak, distracted, and addicted. The Arena is your cure.",
+        "log_carcel_tit": "⛓️ THE SENTINEL",
+        "log_carcel_desc": "Start a combat. If you leave the app, your shield collapses and your rank is destroyed.",
+        "log_mercado_tit": "🛒 THE BLACK MARKET",
+        "log_mercado_desc": "Earn gold with your sweat. Buy skins, auras, and multipliers.",
+        "log_ranking_tit": "🏆 THE TAVERN",
+        "log_ranking_desc": "Compare your ELO with warriors worldwide. Only the elite ascend.",
+        "tab_login": "🔑 ENTER COLOSSEUM",
+        "tab_reg": "🩸 BLOOD OATH",
+        "ph_email": "Your combat email",
+        "ph_pass": "Your password",
+        "btn_acceder": "ENTER THE ARENA",
+        "ph_name": "War Name (Ex: Spartan)",
+        "ph_ref": "Ambassador Code (Optional)",
+        "btn_jurar": "SWEAR LOYALTY",
+        "ajustes_titulo": "⚙️ Profile Settings",
+        "ajustes_nombre": "Change name (will change your code)",
+        "ajustes_musica": "Combat Radio (Music)",
+        "ajustes_volumen": "Radio Volume",
+        "ajustes_idioma": "Language / Idioma",
+        "ajustes_btn": "UPDATE SETTINGS"
+    }
+}
+
+def t(clave):
+    idioma = st.session_state.get('idioma', 'es')
+    return DIC.get(idioma, DIC["es"]).get(clave, clave)
 # ==========================================================
 # RUTAS DE LA APLICACIÓN
 # ==========================================================
@@ -694,13 +749,18 @@ elif st.session_state.estado == "cuartel":
         else: st.markdown("<p style='text-align: center; color: #555; margin-top: 20px;'>Peleas solo. Añade a tus aliados.</p>", unsafe_allow_html=True)
     except Exception as e: st.markdown("<p style='text-align: center; color: #ff4b4b; margin-top: 20px;'>⚠️ Tabla de amigos no configurada aún.</p>", unsafe_allow_html=True)
 
-    with st.expander("⚙️ Ajustes de Perfil"):
+   with st.expander(t("ajustes_titulo")):
         with st.form("form_ajustes"):
-            nuevo_nombre = st.text_input("Cambiar nombre (cambiará tu código)", value=st.session_state.nombre_guerra)
-            nueva_musica = st.selectbox("Radio de Combate", list(CINTAS_AUDIO.keys()), index=list(CINTAS_AUDIO.keys()).index(st.session_state.get('musica_fondo', 'Lo-Fi (Concentración)')))
-            nuevo_volumen = st.slider("Volumen de la Radio (0.0 Mudo - 1.0 Máx)", min_value=0.0, max_value=1.0, value=float(st.session_state.get('volumen', 0.2)), step=0.1)
+            nuevo_nombre = st.text_input(t("ajustes_nombre"), value=st.session_state.nombre_guerra)
+            nueva_musica = st.selectbox(t("ajustes_musica"), list(CINTAS_AUDIO.keys()), index=list(CINTAS_AUDIO.keys()).index(st.session_state.get('musica_fondo', 'Lo-Fi (Concentración)')))
+            nuevo_volumen = st.slider(t("ajustes_volumen"), min_value=0.0, max_value=1.0, value=float(st.session_state.get('volumen', 0.2)), step=0.1)
             
-            if st.form_submit_button("ACTUALIZAR AJUSTES"):
+            # El Selector Bilingüe
+            idioma_actual = "English" if st.session_state.idioma == "en" else "Español"
+            nuevo_idioma_key = st.selectbox(t("ajustes_idioma"), ["Español", "English"], index=["Español", "English"].index(idioma_actual))
+            nuevo_idioma = "en" if nuevo_idioma_key == "English" else "es"
+            
+            if st.form_submit_button(t("ajustes_btn")):
                 supabase.table("jugadores").update({
                     "nombre": nuevo_nombre,
                     "musica": nueva_musica,
@@ -710,7 +770,9 @@ elif st.session_state.estado == "cuartel":
                 st.session_state.nombre_guerra = nuevo_nombre
                 st.session_state.musica_fondo = nueva_musica
                 st.session_state.volumen = nuevo_volumen
-                st.success("¡Base de datos actualizada!")
+                st.session_state.idioma = nuevo_idioma
+                
+                st.success("✔ Base de datos actualizada / Database updated")
                 time.sleep(1)
                 st.rerun()
                 
