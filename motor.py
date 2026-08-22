@@ -3,13 +3,18 @@ import string
 from datetime import datetime, timezone
 
 def get_rank_info(elo):
-    if elo < 200: return ("Hierro III", "Esclavo", "🪨", "#7a7a7a", 0, 200, 1)
-    elif elo < 300: return ("Hierro II", "Distraído", "⛓️", "#8f8f8f", 200, 300, 2)
-    elif elo < 400: return ("Hierro I", "Despertando", "⚙️", "#a3a3a3", 300, 400, 3)
-    elif elo < 600: return ("Bronce", "Guerrero", "🥉", "#cd7f32", 400, 600, 4)
-    elif elo < 800: return ("Plata", "Dueño del Tiempo", "🥈", "#c0c0c0", 600, 800, 5)
-    elif elo < 1000: return ("Oro", "Élite", "🥇", "#ffd700", 800, 1000, 6)
-    else: return ("Diamante", "Intocable", "💎", "#00ffff", 1000, 1000, 7)
+    # Formato: Nombre, Subtítulo, Icono, Color, Elo_Min, Elo_Max, Nivel_Interno
+    if elo < 200: return ("Hierro I", "Iniciado", "⛓️", "#a19d94", 0, 200, 1)
+    elif elo < 400: return ("Hierro II", "Novato", "⛓️", "#a19d94", 200, 400, 2)
+    elif elo < 600: return ("Bronce I", "Aprendiz", "🥉", "#cd7f32", 400, 600, 3)
+    elif elo < 800: return ("Bronce II", "Luchador", "🥉", "#cd7f32", 600, 800, 4)
+    elif elo < 1100: return ("Plata I", "Guerrero", "🥈", "#c0c0c0", 800, 1100, 5)
+    elif elo < 1400: return ("Plata II", "Veterano", "🥈", "#c0c0c0", 1100, 1400, 6)
+    elif elo < 1800: return ("Oro I", "Élite", "🥇", "#ffd700", 1400, 1800, 7)
+    elif elo < 2200: return ("Oro II", "Campeón", "🥇", "#ffd700", 1800, 2200, 8)
+    elif elo < 2700: return ("Platino", "Comandante", "💎", "#00ced1", 2200, 2700, 9)
+    elif elo < 3500: return ("Diamante", "Señor de la Guerra", "💠", "#b9f2ff", 2700, 3500, 10)
+    else: return ("Mítico", "Leyenda Absoluta", "🔥", "#ff4b4b", 3500, 3500, 11)
 
 def calcular_rango(elo):
     info = get_rank_info(elo)
