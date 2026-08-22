@@ -47,30 +47,45 @@ def cargar_css():
 
 
 def generar_carta_html(nombre, elo, icono, color, etiqueta, skin="default"):
-    # Borde base adaptado al rango del jugador
-    borde_skin = f"border: 2px solid {color};"
-    
-    # Efectos del mercado negro
-    if skin == "fuego": 
-        borde_skin = f"border: 2px solid {color}; box-shadow: 0 0 15px #ff4b4b, inset 0 0 10px #ff4b4b;"
-    elif skin == "sombra": 
-        borde_skin = f"border: 2px solid {color}; box-shadow: 0 0 15px #8a2be2, inset 0 0 10px #8a2be2;"
-    elif skin == "aura": 
-        borde_skin = f"border: 2px solid {color}; box-shadow: 0 0 20px #00aaff, inset 0 0 15px #00aaff;"
-    elif skin == "corona":
-        borde_skin = f"border: 2px solid {color}; box-shadow: 0 0 10px rgba(255, 215, 0, 0.2);" # Brillo muy sutil
-        
-    # Lógica de la corona: se pone en el nombre, no en el borde
-    nombre_display = f"👑 {nombre}" if skin == "corona" else nombre
+    # Parámetros por defecto (Rango normal)
+    color_borde = color
+    color_texto = color
+    sombra = "box-shadow: none;"
+    fondo = "background: linear-gradient(145deg, #161616, #0a0a0a);"
+    nombre_display = nombre
 
-    # Recuperamos el icono elegante original en SVG
-    svg_icono = f'''<svg width="45" height="45" viewBox="0 0 24 24" fill="none" stroke="{color}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>'''
+    # INYECCIÓN DE SKINS PREMIUM (Invaden toda la carta)
+    if skin == "fuego": 
+        color_borde = "#ff4b4b"
+        color_texto = "#ff4b4b"
+        sombra = "box-shadow: 0 0 25px rgba(255, 75, 75, 0.5), inset 0 0 20px rgba(255, 75, 75, 0.3);"
+        fondo = "background: linear-gradient(145deg, #3a0808, #0a0a0a);" # Degradado rojo sangre
+    elif skin == "sombra": 
+        color_borde = "#8a2be2"
+        color_texto = "#8a2be2"
+        sombra = "box-shadow: 0 0 25px rgba(138, 43, 226, 0.5), inset 0 0 20px rgba(138, 43, 226, 0.3);"
+        fondo = "background: linear-gradient(145deg, #1a083a, #0a0a0a);" # Degradado morado oscuro
+    elif skin == "aura": 
+        color_borde = "#00aaff"
+        color_texto = "#00aaff"
+        sombra = "box-shadow: 0 0 25px rgba(0, 170, 255, 0.5), inset 0 0 20px rgba(0, 170, 255, 0.3);"
+        fondo = "background: linear-gradient(145deg, #08253a, #0a0a0a);" # Degradado azul eléctrico
+    elif skin == "corona":
+        # La corona respeta tu rango original, pero te da estatus de Rey
+        sombra = "box-shadow: 0 0 15px rgba(255, 215, 0, 0.2);" 
+        nombre_display = f"👑 {nombre}"
+
+    # Construcción del Estilo Final
+    estilo_carta = f"border: 2px solid {color_borde}; {sombra} {fondo}"
+
+    # El Avatar Elegante teñido del color de la skin
+    svg_icono = f'''<svg width="45" height="45" viewBox="0 0 24 24" fill="none" stroke="{color_texto}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>'''
 
     html = f"""
-    <div class="carta-viva" style="{borde_skin}">
+    <div class="carta-viva" style="{estilo_carta}">
         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
-            <span style="color: {color}; font-weight: bold; font-size: 14px;">{elo}</span>
-            <span style="color: {color}; font-size: 18px;">{icono}</span>
+            <span style="color: {color_texto}; font-weight: bold; font-size: 14px;">{elo}</span>
+            <span style="color: {color_texto}; font-size: 18px;">{icono}</span>
         </div>
         <div style="margin-bottom: 10px;">
             {svg_icono}
