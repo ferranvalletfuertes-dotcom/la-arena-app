@@ -698,80 +698,97 @@ elif st.session_state.estado == "tienda":
     render_navbar("tienda")
 
 # --- MISIONES SECUNDARIAS (GREMIO) ---
-elif st.session_state.estado == "gremio":
-    render_top_bar()
+elif st.session_state.estado == "cuartel":
+    idioma = st.session_state.get('idioma', 'es')
+    c_txt = {
+        "es": {
+            "tit": "🛡️ CUARTEL GENERAL", "reg": "Registro de Guerra de", "emb_tit": "🤝 PROGRAMA DE EMBAJADORES", "emb_sub": "Tu Código de Reclutamiento:", "emb_desc": "Si un amigo usa tu nombre al registrarse, tú ganas 🪙 1000 y él 🪙 500.", "max": "RANGO MÁXIMO ALCANZADO", "sig": "ELO para el siguiente rango", "prog": "PROGRESO DE LIGA", "win": "Winrate", "tiem": "Tiempo Profundo", "tot": "Min. Totales", "rach": "Mejor Racha", "seg": "Seguidas", "herm": "👥 HERMANOS DE SANGRE", "ph": "Nombre exacto", "btn": "➕ AÑADIR", "err1": "No puedes añadirte a ti mismo.", "err2": "Guerrero no encontrado.", "ok": "¡Añadido a tus filas!", "solo": "Peleas solo. Añade a tus aliados."
+        },
+        "en": {
+            "tit": "🛡️ HEADQUARTERS", "reg": "War Log of", "emb_tit": "🤝 AMBASSADOR PROGRAM", "emb_sub": "Your Referral Code:", "emb_desc": "If a friend uses your name to register, you earn 🪙 1000 and they earn 🪙 500.", "max": "MAXIMUM RANK REACHED", "sig": "ELO for next rank", "prog": "LEAGUE PROGRESS", "win": "Winrate", "tiem": "Deep Work Time", "tot": "Total Min.", "rach": "Best Streak", "seg": "In a row", "herm": "👥 BLOOD BROTHERS", "ph": "Exact name", "btn": "➕ ADD", "err1": "You can't add yourself.", "err2": "Warrior not found.", "ok": "Added to your ranks!", "solo": "You fight alone. Add your allies."
+        }
+    }
+    c_t = c_txt.get(idioma, c_txt["es"])
     
-    st.markdown(f"<h1 class='epic-title' style='color: #00ff00;'>{t('gre_tit')}</h1>", unsafe_allow_html=True)
-    st.markdown(f"<h4 style='text-align: center; color: #888; margin-bottom: 40px; text-transform: uppercase; letter-spacing: 2px;'>{t('gre_sub')}</h4>", unsafe_allow_html=True)
+    info_rango = get_rank_info(st.session_state.puntos_elo)
+    rango_n, rango_s, rango_i, rango_c, elo_min, elo_max, rango_nivel = info_rango
+    
+    st.markdown(f"<h1 style='text-align: center; color: #fff; letter-spacing: 2px;'>{c_t['tit']}</h1>", unsafe_allow_html=True)
+    st.markdown(f"<h4 style='text-align: center; color: {rango_c}; margin-bottom: 30px;'>{c_t['reg']} {st.session_state.nombre_guerra}</h4>", unsafe_allow_html=True)
+    
+    st.markdown(f"<div style='background-color: #111; border: 1px dashed #ffd700; border-radius: 8px; padding: 20px; text-align: center; margin-bottom: 30px;'><h3 style='color: #ffd700; margin-top: 0;'>{c_t['emb_tit']}</h3><p style='color: #888; font-size: 14px;'>{c_t['emb_sub']}</p><h2 style='color: white; font-family: monospace; letter-spacing: 2px;'>{st.session_state.nombre_guerra}</h2><p style='color: #555; font-size: 12px; margin-bottom: 0;'>{c_t['emb_desc']}</p></div>".replace('\n', ''), unsafe_allow_html=True)
 
-    hoy_str = datetime.now(timezone.utc).strftime('%Y-%m-%d')
-    if st.session_state.gremio_fecha != hoy_str:
-        supabase.table("jugadores").update({"gremio_fecha": hoy_str, "gremio_m1": False, "gremio_m2": False, "gremio_m3": False, "gremio_m4": False}).eq("id", st.session_state.usuario_id).execute()
-        st.session_state.gremio_fecha = hoy_str; st.session_state.gremio_m1 = False; st.session_state.gremio_m2 = False; st.session_state.gremio_m3 = False; st.session_state.gremio_m4 = False
+    if elo_min == elo_max: porcentaje_elo = 100; texto_progreso = f"{c_t['max']} ({st.session_state.puntos_elo} ELO)"
+    else: puntos_conseguidos = st.session_state.puntos_elo - elo_min; puntos_rango = elo_max - elo_min; porcentaje_elo = int((puntos_conseguidos / puntos_rango) * 100); texto_progreso = f"{st.session_state.puntos_elo} / {elo_max} {c_t['sig']}"
 
-    st.markdown(f"""
-        <div style='background-color: #111; border-left: 4px solid #00ff00; border-radius: 8px; padding: 20px; margin-bottom: 40px; box-shadow: 0 4px 15px rgba(0,255,0,0.1);'>
-            <h3 style='color: white; margin-top: 0; display: flex; justify-content: space-between;'>
-                <span>{t('gre_mis')}</span>
-                <span style='color: #ffd700;'>🪙 {st.session_state.monedas}</span>
-            </h3>
-            <p style='color: #888; margin: 0; font-size: 14px;'>{t('gre_aviso')}</p>
-        </div>
-    """, unsafe_allow_html=True)
+    st.markdown(f"<div style='background-color: #111; border: 1px solid {rango_c}; border-radius: 12px; padding: 20px; text-align: center; margin-bottom: 30px;'><h3 style='color: white; margin-top: 0;'>{c_t['prog']}: {rango_i} {rango_n}</h3><div style='width: 100%; background-color: #333; border-radius: 10px; margin: 15px 0;'><div style='width: {porcentaje_elo}%; height: 20px; background: linear-gradient(90deg, #111, {rango_c}); border-radius: 10px; transition: width 0.5s ease;'></div></div><p style='color: #888; font-size: 14px; font-weight: bold; margin: 0;'>{texto_progreso} ({porcentaje_elo}%)</p></div>".replace('\n', ''), unsafe_allow_html=True)
 
-    random.seed(f"{st.session_state.usuario_id}_{hoy_str}")
-    t1, d1 = "FÍSICO", random.choice(MISIONES_FISICAS)
-    t2, d2 = "SOCIAL", random.choice(MISIONES_SOCIALES)
-    t3, d3 = "MENTAL", random.choice(MISIONES_MENTALES)
-    t4, d4 = "DISCIPLINA", random.choice(MISIONES_ORDEN)
-    random.seed() 
+    total_partidas = st.session_state.victorias + st.session_state.derrotas
+    winrate = int((st.session_state.victorias / total_partidas) * 100) if total_partidas > 0 else 0
+    horas_focus = round(st.session_state.minutos_focus / 60, 1)
 
-    g1, g2 = st.columns(2)
-    with g1:
-        st.markdown(f"<div style='margin-bottom: 10px;'>", unsafe_allow_html=True)
-        st.markdown(generar_html_mision(t1, d1, 15, st.session_state.gremio_m1), unsafe_allow_html=True)
-        if st.session_state.gremio_m1: 
-            st.button(t('gre_sup'), disabled=True, key="g_m1_d", use_container_width=True)
-        else:
-            if st.button(t('gre_hacer'), type="primary", key="g_m1_c", use_container_width=True):
-                st.session_state.monedas += 15; st.session_state.gremio_m1 = True
-                supabase.table("jugadores").update({"monedas": st.session_state.monedas, "gremio_m1": True}).eq("id", st.session_state.usuario_id).execute(); st.rerun()
-        st.markdown("</div><br>", unsafe_allow_html=True)
+    c1, c2, c3 = st.columns(3)
+    with c1: st.markdown(f"<div style='background-color: #161616; border: 1px solid #333; border-radius: 8px; padding: 15px; text-align: center;'><p style='color: #888; font-size: 12px; margin: 0;'>{c_t['win']}</p><h2 style='color: #00ff00; margin: 5px 0;'>{winrate}%</h2><p style='color: #555; font-size: 10px; margin: 0;'>{st.session_state.victorias} V / {st.session_state.derrotas} D</p></div>".replace('\n', ''), unsafe_allow_html=True)
+    with c2: st.markdown(f"<div style='background-color: #161616; border: 1px solid #333; border-radius: 8px; padding: 15px; text-align: center;'><p style='color: #888; font-size: 12px; margin: 0;'>{c_t['tiem']}</p><h2 style='color: #00aaff; margin: 5px 0;'>{horas_focus}h</h2><p style='color: #555; font-size: 10px; margin: 0;'>{st.session_state.minutos_focus} {c_t['tot']}</p></div>".replace('\n', ''), unsafe_allow_html=True)
+    with c3: st.markdown(f"<div style='background-color: #161616; border: 1px solid #333; border-radius: 8px; padding: 15px; text-align: center;'><p style='color: #888; font-size: 12px; margin: 0;'>{c_t['rach']}</p><h2 style='color: #ff4b4b; margin: 5px 0;'>🔥 {st.session_state.racha}</h2><p style='color: #555; font-size: 10px; margin: 0;'>{c_t['seg']}</p></div>".replace('\n', ''), unsafe_allow_html=True)
+
+    st.markdown(f"<h3 style='text-align: center; color: #fff; margin-top: 40px;'>{c_t['herm']}</h3>", unsafe_allow_html=True)
+    col_am_1, col_am_2 = st.columns([3, 1])
+    with col_am_1: amigo_input = st.text_input("Añadir guerrero", placeholder=c_t['ph'], label_visibility="collapsed")
+    with col_am_2:
+        if st.button(c_t['btn'], use_container_width=True):
+            if amigo_input.strip() == st.session_state.nombre_guerra: st.error(c_t['err1'])
+            elif amigo_input:
+                try:
+                    comprobar = supabase.table("jugadores").select("id").eq("nombre", amigo_input.strip()).execute()
+                    if len(comprobar.data) > 0:
+                        supabase.table("amigos").insert({"jugador_id": st.session_state.usuario_id, "amigo_nombre": amigo_input.strip()}).execute()
+                        st.success(c_t['ok']); time.sleep(1); st.rerun()
+                    else: st.error(c_t['err2'])
+                except Exception as e: st.error("Error base de datos.")
+    
+    try:
+        mis_amigos = supabase.table("amigos").select("amigo_nombre").eq("jugador_id", st.session_state.usuario_id).execute()
+        if len(mis_amigos.data) > 0:
+            nombres_amigos = [a['amigo_nombre'] for a in mis_amigos.data]
+            datos_amigos = supabase.table("jugadores").select("nombre, elo, skin_activa").in_("nombre", nombres_amigos).order("elo", desc=True).execute()
+            if datos_amigos.data:
+                cartas_amigos = "<div style='display: flex; flex-wrap: wrap; justify-content: center; gap: 15px; margin-top: 15px;'>"
+                for am in datos_amigos.data:
+                    am_n, am_s, am_i, am_c = calcular_rango(am['elo'])
+                    cartas_amigos += generar_carta_html(am['nombre'], am['elo'], am_i, am_c, "ALIADO", am.get('skin_activa', 'default'))
+                cartas_amigos += "</div>"
+                st.markdown(cartas_amigos.replace('\n', ''), unsafe_allow_html=True)
+        else: st.markdown(f"<p style='text-align: center; color: #555; margin-top: 20px;'>{c_t['solo']}</p>", unsafe_allow_html=True)
+    except Exception as e: st.markdown("<p style='text-align: center; color: #ff4b4b; margin-top: 20px;'>⚠️ Tabla de amigos no configurada aún.</p>", unsafe_allow_html=True)
+
+    with st.expander(t("ajustes_titulo")):
+        with st.form("form_ajustes"):
+            nuevo_nombre = st.text_input(t("ajustes_nombre"), value=st.session_state.nombre_guerra)
+            nueva_musica = st.selectbox(t("ajustes_musica"), list(CINTAS_AUDIO.keys()), index=list(CINTAS_AUDIO.keys()).index(st.session_state.get('musica_fondo', 'Lo-Fi (Concentración)')))
+            nuevo_volumen = st.slider(t("ajustes_volumen"), min_value=0.0, max_value=1.0, value=float(st.session_state.get('volumen', 0.2)), step=0.1)
+            
+            idioma_actual = "English" if st.session_state.idioma == "en" else "Español"
+            nuevo_idioma_key = st.selectbox(t("ajustes_idioma"), ["Español", "English"], index=["Español", "English"].index(idioma_actual))
+            nuevo_idioma = "en" if nuevo_idioma_key == "English" else "es"
+            
+            if st.form_submit_button(t("ajustes_btn")):
+                supabase.table("jugadores").update({
+                    "nombre": nuevo_nombre,
+                    "musica": nueva_musica,
+                    "volumen": nuevo_volumen
+                }).eq("id", st.session_state.usuario_id).execute()
                 
-        st.markdown(f"<div style='margin-bottom: 10px;'>", unsafe_allow_html=True)
-        st.markdown(generar_html_mision(t2, d2, 15, st.session_state.gremio_m2), unsafe_allow_html=True)
-        if st.session_state.gremio_m2: 
-            st.button(t('gre_sup'), disabled=True, key="g_m2_d", use_container_width=True)
-        else:
-            if st.button(t('gre_hacer'), type="primary", key="g_m2_c", use_container_width=True):
-                st.session_state.monedas += 15; st.session_state.gremio_m2 = True
-                supabase.table("jugadores").update({"monedas": st.session_state.monedas, "gremio_m2": True}).eq("id", st.session_state.usuario_id).execute(); st.rerun()
-        st.markdown("</div>", unsafe_allow_html=True)
-
-    with g2:
-        st.markdown(f"<div style='margin-bottom: 10px;'>", unsafe_allow_html=True)
-        st.markdown(generar_html_mision(t3, d3, 15, st.session_state.gremio_m3), unsafe_allow_html=True)
-        if st.session_state.gremio_m3: 
-            st.button(t('gre_sup'), disabled=True, key="g_m3_d", use_container_width=True)
-        else:
-            if st.button(t('gre_hacer'), type="primary", key="g_m3_c", use_container_width=True):
-                st.session_state.monedas += 15; st.session_state.gremio_m3 = True
-                supabase.table("jugadores").update({"monedas": st.session_state.monedas, "gremio_m3": True}).eq("id", st.session_state.usuario_id).execute(); st.rerun()
-        st.markdown("</div><br>", unsafe_allow_html=True)
+                st.session_state.nombre_guerra = nuevo_nombre
+                st.session_state.musica_fondo = nueva_musica
+                st.session_state.volumen = nuevo_volumen
+                st.session_state.idioma = nuevo_idioma
                 
-        st.markdown(f"<div style='margin-bottom: 10px;'>", unsafe_allow_html=True)
-        st.markdown(generar_html_mision(t4, d4, 15, st.session_state.gremio_m4), unsafe_allow_html=True)
-        if st.session_state.gremio_m4: 
-            st.button(t('gre_sup'), disabled=True, key="g_m4_d", use_container_width=True)
-        else:
-            if st.button(t('gre_hacer'), type="primary", key="g_m4_c", use_container_width=True):
-                st.session_state.monedas += 15; st.session_state.gremio_m4 = True
-                supabase.table("jugadores").update({"monedas": st.session_state.monedas, "gremio_m4": True}).eq("id", st.session_state.usuario_id).execute(); st.rerun()
-        st.markdown("</div>", unsafe_allow_html=True)
-
-    st.write("")
-    st.write("")
-    render_navbar("gremio")
+                st.success("✔ Base de datos actualizada / Database updated")
+                time.sleep(1)
+                st.rerun()
+                
+    render_navbar("cuartel")
 elif st.session_state.estado == "cofre_animacion":
     st.markdown("<audio autoplay src='https://actions.google.com/sounds/v1/foley/creaky_door_open.ogg'></audio>", unsafe_allow_html=True)
     st.markdown("<h2 style='text-align:center; color:#ffd700;'>FORZANDO LA CERRADURA...</h2>", unsafe_allow_html=True)
