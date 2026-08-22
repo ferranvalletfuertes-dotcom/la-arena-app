@@ -749,13 +749,12 @@ elif st.session_state.estado == "cuartel":
         else: st.markdown("<p style='text-align: center; color: #555; margin-top: 20px;'>Peleas solo. Añade a tus aliados.</p>", unsafe_allow_html=True)
     except Exception as e: st.markdown("<p style='text-align: center; color: #ff4b4b; margin-top: 20px;'>⚠️ Tabla de amigos no configurada aún.</p>", unsafe_allow_html=True)
 
-   with st.expander(t("ajustes_titulo")):
+    with st.expander(t("ajustes_titulo")):
         with st.form("form_ajustes"):
             nuevo_nombre = st.text_input(t("ajustes_nombre"), value=st.session_state.nombre_guerra)
             nueva_musica = st.selectbox(t("ajustes_musica"), list(CINTAS_AUDIO.keys()), index=list(CINTAS_AUDIO.keys()).index(st.session_state.get('musica_fondo', 'Lo-Fi (Concentración)')))
             nuevo_volumen = st.slider(t("ajustes_volumen"), min_value=0.0, max_value=1.0, value=float(st.session_state.get('volumen', 0.2)), step=0.1)
             
-            # El Selector Bilingüe
             idioma_actual = "English" if st.session_state.idioma == "en" else "Español"
             nuevo_idioma_key = st.selectbox(t("ajustes_idioma"), ["Español", "English"], index=["Español", "English"].index(idioma_actual))
             nuevo_idioma = "en" if nuevo_idioma_key == "English" else "es"
