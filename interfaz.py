@@ -22,7 +22,7 @@ def cargar_css():
             padding: 20px;
             text-align: center;
             width: 160px;
-            /* Aquí está la vida: 3 segundos, infinito, suave */
+            margin: 0 auto !important; /* ESTO CENTRA LA CARTA EN CUALQUIER PANTALLA O COLUMNA */
             animation: flotar 3s ease-in-out infinite;
             transition: box-shadow 0.3s ease;
         }
@@ -45,13 +45,26 @@ def cargar_css():
         </style>
     """, unsafe_allow_html=True)
 
+
 def generar_carta_html(nombre, elo, icono, color, etiqueta, skin="default"):
-    # Aplicamos los bordes y auras según el mercado negro
+    # Borde base adaptado al rango del jugador
     borde_skin = f"border: 2px solid {color};"
-    if skin == "fuego": borde_skin = f"border: 2px solid {color}; box-shadow: 0 0 15px #ff4b4b, inset 0 0 10px #ff4b4b;"
-    elif skin == "sombra": borde_skin = f"border: 2px solid {color}; box-shadow: 0 0 15px #8a2be2, inset 0 0 10px #8a2be2;"
-    elif skin == "aura": borde_skin = f"border: 2px solid {color}; box-shadow: 0 0 20px #00aaff, inset 0 0 15px #00aaff;"
-    elif skin == "corona": borde_skin = f"border: 2px solid #ffd700; box-shadow: 0 0 25px #ffd700, inset 0 0 15px #ffd700;"
+    
+    # Efectos del mercado negro
+    if skin == "fuego": 
+        borde_skin = f"border: 2px solid {color}; box-shadow: 0 0 15px #ff4b4b, inset 0 0 10px #ff4b4b;"
+    elif skin == "sombra": 
+        borde_skin = f"border: 2px solid {color}; box-shadow: 0 0 15px #8a2be2, inset 0 0 10px #8a2be2;"
+    elif skin == "aura": 
+        borde_skin = f"border: 2px solid {color}; box-shadow: 0 0 20px #00aaff, inset 0 0 15px #00aaff;"
+    elif skin == "corona":
+        borde_skin = f"border: 2px solid {color}; box-shadow: 0 0 10px rgba(255, 215, 0, 0.2);" # Brillo muy sutil
+        
+    # Lógica de la corona: se pone en el nombre, no en el borde
+    nombre_display = f"👑 {nombre}" if skin == "corona" else nombre
+
+    # Recuperamos el icono elegante original en SVG
+    svg_icono = f'''<svg width="45" height="45" viewBox="0 0 24 24" fill="none" stroke="{color}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>'''
 
     html = f"""
     <div class="carta-viva" style="{borde_skin}">
@@ -59,8 +72,10 @@ def generar_carta_html(nombre, elo, icono, color, etiqueta, skin="default"):
             <span style="color: {color}; font-weight: bold; font-size: 14px;">{elo}</span>
             <span style="color: {color}; font-size: 18px;">{icono}</span>
         </div>
-        <div style="font-size: 40px; margin-bottom: 10px; color: #fff;">👤</div>
-        <h4 style="color: white; margin: 0; font-size: 16px; letter-spacing: 1px; text-transform: uppercase;">{nombre}</h4>
+        <div style="margin-bottom: 10px;">
+            {svg_icono}
+        </div>
+        <h4 style="color: white; margin: 0; font-size: 15px; letter-spacing: 1px; text-transform: uppercase;">{nombre_display}</h4>
         <p style="color: #888; font-size: 10px; margin-top: 5px; letter-spacing: 1px;">{etiqueta}</p>
     </div>
     """
