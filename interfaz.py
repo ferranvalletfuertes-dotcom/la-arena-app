@@ -4,56 +4,85 @@ import streamlit as st
 def cargar_css():
     st.markdown("""
         <style>
+        /* Importar fuente letal */
+        @import url('https://fonts.googleapis.com/css2?family=Oswald:wght@400;700&display=swap');
+        
+        * {
+            font-family: 'Oswald', sans-serif !important;
+        }
+
+        /* Animaciones de respiración y latido */
+        @keyframes pulse-red {
+            0% { box-shadow: 0 0 10px #ff4b4b, inset 0 0 5px #ff4b4b; }
+            50% { box-shadow: 0 0 25px #ff4b4b, inset 0 0 10px #ff4b4b; }
+            100% { box-shadow: 0 0 10px #ff4b4b, inset 0 0 5px #ff4b4b; }
+        }
+        @keyframes levitate {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-5px); }
+            100% { transform: translateY(0px); }
+        }
+        @keyframes neon-flicker {
+            0%, 19%, 21%, 23%, 25%, 54%, 56%, 100% { text-shadow: 0 0 10px #fff, 0 0 20px #fff, 0 0 30px #ff4b4b, 0 0 40px #ff4b4b; }
+            20%, 24%, 55% { text-shadow: none; }
+        }
+
+        /* Títulos Épicos */
+        .epic-title {
+            text-align: center;
+            color: #ffffff;
+            font-size: 3.5rem;
+            text-transform: uppercase;
+            letter-spacing: 5px;
+            margin-bottom: 0.5rem;
+            animation: neon-flicker 4s infinite;
+        }
+
+        /* Cartas de Jugador con Efecto Hover */
+        .player-card {
+            background: linear-gradient(145deg, #161616, #0a0a0a);
+            border-radius: 12px;
+            padding: 20px;
+            text-align: center;
+            width: 160px;
+            transition: all 0.3s ease;
+        }
+        .player-card:hover {
+            transform: translateY(-8px) scale(1.02);
+            box-shadow: 0 15px 25px rgba(0,0,0,0.5);
+            cursor: crosshair;
+        }
+
+        /* Botón de Peligro (Rendirse) */
+        .btn-peligro button {
+            background-color: transparent !important;
+            border: 2px solid #ff4b4b !important;
+            color: #ff4b4b !important;
+            transition: all 0.3s ease !important;
+        }
+        .btn-peligro button:hover {
+            background-color: #ff4b4b !important;
+            color: white !important;
+            animation: pulse-red 1s infinite !important;
+        }
+
+        /* Modificación de Inputs y Formularios para que parezcan terminales */
+        .stTextInput input, .stSelectbox div[data-baseweb="select"] {
+            background-color: #0a0a0a !important;
+            border: 1px solid #333 !important;
+            color: #00ff00 !important;
+            font-family: monospace !important;
+            border-radius: 4px !important;
+        }
+        .stTextInput input:focus {
+            border-color: #ff4b4b !important;
+            box-shadow: 0 0 10px rgba(255, 75, 75, 0.3) !important;
+        }
+
+        /* Esconder la barra superior de Streamlit y el footer */
         #MainMenu {visibility: hidden;}
         footer {visibility: hidden;}
         header {visibility: hidden;}
-        
-        .stButton > button[data-baseweb="button"] {
-            background-color: #ff4b4b; color: white; border-radius: 8px; border: none;
-            padding: 10px 24px; font-weight: 900; letter-spacing: 1px; text-transform: uppercase;
-            transition: all 0.3s ease; box-shadow: 0 4px 10px rgba(255, 75, 75, 0.2);
-        }
-        .stButton > button[data-baseweb="button"]:hover {
-            background-color: #ff1a1a; box-shadow: 0 0 20px rgba(255, 75, 75, 0.6); transform: scale(1.02);
-        }
-        .nav-btn > button[data-baseweb="button"] {
-            background-color: #1a1a1a !important; border: 1px solid #333 !important;
-            color: #888 !important; box-shadow: none !important; padding: 5px !important;
-        }
-        .nav-btn > button[data-baseweb="button"]:hover {
-            color: #fff !important; border-color: #ff4b4b !important; 
-            background-color: #222 !important; transform: none !important;
-        }
-        div[data-testid="stExpander"] { background-color: #161616; border: 1px solid #333; border-radius: 8px; }
-        
-        .epic-title { color: #ff4b4b; font-size: 3.5em; text-transform: uppercase; letter-spacing: 4px; text-shadow: 0 0 25px rgba(255,75,75,0.7); margin-bottom: 0px; }
-        .manifesto { color: #a3a3a3; font-size: 1.1em; font-style: italic; margin-top: 10px; line-height: 1.6; }
-        .highlight { color: #ffffff; font-weight: bold; text-shadow: 0 0 5px rgba(255,255,255,0.3); }
-        .stTextInput > div > div > input { background-color: #111 !important; color: #00ff00 !important; border: 1px solid #333 !important; font-family: monospace; text-align: center; font-weight: bold; }
-        .neon-red { color: #ff4b4b; text-shadow: 0 0 10px rgba(255, 75, 75, 0.8); font-weight: 900; }
-        .neon-green { color: #00ff00; text-shadow: 0 0 10px rgba(0, 255, 0, 0.8); font-weight: 900; }
-        .rules-box { border: 1px solid #ff4b4b; background-color: #110000; padding: 20px; border-radius: 8px; box-shadow: 0 0 20px rgba(255, 75, 75, 0.3); margin-top: 25px; margin-bottom: 25px; }
-
-        @keyframes float-card { 0% { transform: translateY(0px); } 50% { transform: translateY(-10px); } 100% { transform: translateY(0px); } }
-        @keyframes rank-up-pop { 0% { transform: scale(0.5); opacity: 0; } 70% { transform: scale(1.05); opacity: 1; } 100% { transform: scale(1); opacity: 1; } }
-        @keyframes breathe-logo { 0% { transform: translateY(0px) scale(1); box-shadow: 0 0 15px #ff4b4b; } 50% { transform: translateY(-8px) scale(1.02); box-shadow: 0 0 35px #ff0000; } 100% { transform: translateY(0px) scale(1); box-shadow: 0 0 15px #ff4b4b; } }
-        .logo-breathe { border-radius: 15px; animation: breathe-logo 3.5s ease-in-out infinite; }
-        
-        @keyframes glitch { 0% { text-shadow: 2px 0 0 #ff4b4b, -2px 0 0 #00ffff; } 5% { text-shadow: -2px 0 0 #ff4b4b, 2px 0 0 #00ffff; } 10% { text-shadow: 2px 0 0 #ff4b4b, -2px 0 0 #00ffff; } 15% { text-shadow: -2px 0 0 #ff4b4b, 2px 0 0 #00ffff; } 20% { text-shadow: none; } 100% { text-shadow: none; } }
-        .glitch-text { animation: glitch 2.5s infinite; color: white; font-family: monospace; text-align: center; letter-spacing: 2px; }
-
-        .fut-card { transition: filter 0.3s ease; }
-        .fut-card:hover { filter: brightness(1.2); cursor: pointer; }
-        .anim-float { animation: float-card 3.5s ease-in-out infinite; }
-        .anim-aura { animation: float-card 3.5s ease-in-out infinite; border: 2px solid #ff0000 !important; box-shadow: 0 0 15px #ff0000, 0 0 5px #ff0000 inset !important; }
-        .anim-fuego { animation: float-card 3.5s ease-in-out infinite; border: 2px solid #aa00ff !important; box-shadow: 0 0 15px #aa00ff, 0 0 5px #aa00ff inset !important; }
-        .anim-sombra { animation: float-card 3.5s ease-in-out infinite; border: 2px solid #00aaff !important; box-shadow: 0 0 15px #00aaff, 0 0 5px #00aaff inset !important; }
-
-        @keyframes chest-shake { 0% { transform: translate(1px, 1px) rotate(0deg); } 10% { transform: translate(-1px, -2px) rotate(-1deg); } 20% { transform: translate(-3px, 0px) rotate(1deg); } 30% { transform: translate(3px, 2px) rotate(0deg); } 40% { transform: translate(1px, -1px) rotate(1deg); } 50% { transform: translate(-1px, 2px) rotate(-1deg); } 60% { transform: translate(-3px, 1px) rotate(0deg); } 70% { transform: translate(3px, 1px) rotate(-1deg); } 80% { transform: translate(-1px, -1px) rotate(1deg); } 90% { transform: translate(1px, 2px) rotate(0deg); } 100% { transform: translate(1px, -2px) rotate(-1deg); } }
-        .chest-anim { font-size: 100px; animation: chest-shake 0.5s infinite; text-align: center; margin: 20px 0; text-shadow: 0 0 30px #ffd700; }
-        
-        .feed-box::-webkit-scrollbar { display: none; }
-        .feed-box { -ms-overflow-style: none; scrollbar-width: none; }
         </style>
     """, unsafe_allow_html=True)
 
