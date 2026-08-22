@@ -324,19 +324,35 @@ elif st.session_state.estado == "lobby":
                 st.session_state.elo_premio = w_elo; st.session_state.elo_castigo = l_elo; st.session_state.monedas_ganadas_recientes = coins
                 st.session_state.tipo_partida = "publica"; st.session_state.codigo_sala = ""; st.session_state.inicio_busqueda = time.time(); st.session_state.estado = "buscando"; st.rerun()
     st.markdown(f"<h3 style='text-align: center; color: #888; margin-top: 30px;'>{DIC[lang]['lobby_priv_title']}</h3>", unsafe_allow_html=True)
-    c_p1, c_p2 = st.columns([2, 1])
-    with c_p1: codigo_input = st.text_input("", placeholder=DIC[lang]['lobby_ph_code'], label_visibility="collapsed", key="input_cod_priv")
+  c_p1, c_p2 = st.columns([2, 1])
+    with c_p1: 
+        codigo_input = st.text_input("", placeholder="Código o vacío para crear", label_visibility="collapsed", key="input_cod_priv")
     with c_p2:
-        if st.button(DIC[lang]['lobby_btn_priv'], use_container_width=True):
-            if not st.session_state.input_mision_texto: st.error(DIC[lang]['lobby_err_mision'])
+        if st.button("🚪 CREAR / UNIRSE", use_container_width=True):
+            codigo_secreto = codigo_input.upper().strip()
+            
+            # --- EASTER EGG INYECTADO ---
+            if codigo_secreto == "NIVEL8":
+                st.session_state.monedas += 777
+                supabase.table("jugadores").update({"monedas": st.session_state.monedas}).eq("id", st.session_state.usuario_id).execute()
+                st.balloons() # Lluvia visual
+                st.success("💻 ACCESO CLASIFICADO: Has descubierto el Protocolo Nivel 8. El Arquitecto te observa. +777 Monedas transferidas.")
+                time.sleep(3)
+                st.rerun()
+            # -----------------------------
+            
+            elif not st.session_state.input_mision_texto: 
+                st.error("Un guerrero no entra sin propósito. Declara tu misión o usa el dado 🎲.")
             else:
-                st.session_state.mision_actual = st.session_state.input_mision_texto; st.session_state.tiempo_combate = tiempo_opts[tiempo_str]
+                st.session_state.mision_actual = st.session_state.input_mision_texto
+                st.session_state.tiempo_combate = tiempo_opts[tiempo_str]
                 w_elo, l_elo, coins = calcular_riesgo_recompensa(st.session_state.tiempo_combate, st.session_state.puntos_elo, st.session_state.boost_elo, st.session_state.boost_monedas)
                 st.session_state.elo_premio = w_elo; st.session_state.elo_castigo = l_elo; st.session_state.monedas_ganadas_recientes = coins
-                st.session_state.tipo_partida = "privada"; st.session_state.codigo_sala = codigo_input.upper().strip() if codigo_input else generar_codigo_sala()
+                st.session_state.tipo_partida = "privada"
+                st.session_state.codigo_sala = codigo_secreto if codigo_secreto else generar_codigo_sala()
                 st.session_state.inicio_busqueda = time.time(); st.session_state.estado = "buscando_privada"; st.rerun()
+                
     render_navbar("lobby")
-
 # --- MISIONES SECUNDARIAS (GREMIO) ---
 elif st.session_state.estado == "gremio":
     st.markdown("<h1 style='text-align: center; color: #ff4b4b; letter-spacing: 2px;'>⚔️ MISIONES SECUNDARIAS</h1>", unsafe_allow_html=True)
