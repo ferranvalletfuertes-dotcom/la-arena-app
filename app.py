@@ -376,57 +376,81 @@ elif st.session_state.estado == "lobby":
     render_navbar("lobby")
 # --- MISIONES SECUNDARIAS (GREMIO) ---
 elif st.session_state.estado == "gremio":
-    st.markdown("<h1 style='text-align: center; color: #ff4b4b; letter-spacing: 2px;'>⚔️ MISIONES SECUNDARIAS</h1>", unsafe_allow_html=True)
-    st.markdown("<h4 style='text-align: center; color: #888; margin-bottom: 30px;'>Conquista la realidad en todas sus formas.</h4>", unsafe_allow_html=True)
+    render_top_bar()
+    
+    st.markdown("<h1 class='epic-title' style='color: #00ff00;'>⚔️ EL GREMIO</h1>", unsafe_allow_html=True)
+    st.markdown("<h4 style='text-align: center; color: #888; margin-bottom: 40px; text-transform: uppercase; letter-spacing: 2px;'>Conquista la realidad fuera de la pantalla</h4>", unsafe_allow_html=True)
 
     hoy_str = datetime.now(timezone.utc).strftime('%Y-%m-%d')
     if st.session_state.gremio_fecha != hoy_str:
         supabase.table("jugadores").update({"gremio_fecha": hoy_str, "gremio_m1": False, "gremio_m2": False, "gremio_m3": False, "gremio_m4": False}).eq("id", st.session_state.usuario_id).execute()
         st.session_state.gremio_fecha = hoy_str; st.session_state.gremio_m1 = False; st.session_state.gremio_m2 = False; st.session_state.gremio_m3 = False; st.session_state.gremio_m4 = False
 
-    st.markdown("<div style='background-color: #110000; border: 1px solid #ff4b4b; border-radius: 8px; padding: 15px; margin-bottom: 20px;'><p style='color: #ccc; margin: 0; font-size: 14px; text-align: center;'>⚠️ <b>ATENCIÓN:</b> El sistema no puede verificar esto. Si mientes, la recompensa es baja (🪙 15), pero el daño a tu disciplina es irreparable.</p></div>", unsafe_allow_html=True)
+    st.markdown("""
+        <div style='background-color: #111; border-left: 4px solid #00ff00; border-radius: 8px; padding: 20px; margin-bottom: 40px; box-shadow: 0 4px 15px rgba(0,255,0,0.1);'>
+            <h3 style='color: white; margin-top: 0; display: flex; justify-content: space-between;'>
+                <span>📜 MISIONES DIARIAS</span>
+                <span style='color: #ffd700;'>Bóveda: 🪙 {monedas}</span>
+            </h3>
+            <p style='color: #888; margin: 0; font-size: 14px;'>El sistema no puede verificar tu mundo físico. Tu honor es tu única garantía. Engañar al sistema corrompe tu disciplina real.</p>
+        </div>
+    """.replace('{monedas}', str(st.session_state.monedas)), unsafe_allow_html=True)
 
-    # El generador de misiones pseudo-aleatorio diario e inmutable por usuario
     random.seed(f"{st.session_state.usuario_id}_{hoy_str}")
     t1, d1 = "FÍSICO", random.choice(MISIONES_FISICAS)
     t2, d2 = "SOCIAL", random.choice(MISIONES_SOCIALES)
     t3, d3 = "MENTAL", random.choice(MISIONES_MENTALES)
     t4, d4 = "DISCIPLINA", random.choice(MISIONES_ORDEN)
-    random.seed() # Restauramos la entropía normal para los combates
+    random.seed() 
 
+    # --- DISEÑO ESPACIADO EN 2 COLUMNAS ---
     g1, g2 = st.columns(2)
+    
     with g1:
+        st.markdown(f"<div style='margin-bottom: 10px;'>", unsafe_allow_html=True)
         st.markdown(generar_html_mision(t1, d1, 15, st.session_state.gremio_m1), unsafe_allow_html=True)
-        if st.session_state.gremio_m1: st.button("✅ SUPERADO", disabled=True, key="g_m1_d", use_container_width=True)
+        if st.session_state.gremio_m1: 
+            st.button("✅ SUPERADO", disabled=True, key="g_m1_d", use_container_width=True)
         else:
             if st.button("🩸 LO HE HECHO", type="primary", key="g_m1_c", use_container_width=True):
                 st.session_state.monedas += 15; st.session_state.gremio_m1 = True
                 supabase.table("jugadores").update({"monedas": st.session_state.monedas, "gremio_m1": True}).eq("id", st.session_state.usuario_id).execute(); st.rerun()
+        st.markdown("</div><br>", unsafe_allow_html=True)
                 
+        st.markdown(f"<div style='margin-bottom: 10px;'>", unsafe_allow_html=True)
         st.markdown(generar_html_mision(t2, d2, 15, st.session_state.gremio_m2), unsafe_allow_html=True)
-        if st.session_state.gremio_m2: st.button("✅ SUPERADO", disabled=True, key="g_m2_d", use_container_width=True)
+        if st.session_state.gremio_m2: 
+            st.button("✅ SUPERADO", disabled=True, key="g_m2_d", use_container_width=True)
         else:
             if st.button("🩸 LO HE HECHO", type="primary", key="g_m2_c", use_container_width=True):
                 st.session_state.monedas += 15; st.session_state.gremio_m2 = True
                 supabase.table("jugadores").update({"monedas": st.session_state.monedas, "gremio_m2": True}).eq("id", st.session_state.usuario_id).execute(); st.rerun()
+        st.markdown("</div>", unsafe_allow_html=True)
 
     with g2:
+        st.markdown(f"<div style='margin-bottom: 10px;'>", unsafe_allow_html=True)
         st.markdown(generar_html_mision(t3, d3, 15, st.session_state.gremio_m3), unsafe_allow_html=True)
-        if st.session_state.gremio_m3: st.button("✅ SUPERADO", disabled=True, key="g_m3_d", use_container_width=True)
+        if st.session_state.gremio_m3: 
+            st.button("✅ SUPERADO", disabled=True, key="g_m3_d", use_container_width=True)
         else:
             if st.button("🩸 LO HE HECHO", type="primary", key="g_m3_c", use_container_width=True):
                 st.session_state.monedas += 15; st.session_state.gremio_m3 = True
                 supabase.table("jugadores").update({"monedas": st.session_state.monedas, "gremio_m3": True}).eq("id", st.session_state.usuario_id).execute(); st.rerun()
+        st.markdown("</div><br>", unsafe_allow_html=True)
                 
+        st.markdown(f"<div style='margin-bottom: 10px;'>", unsafe_allow_html=True)
         st.markdown(generar_html_mision(t4, d4, 15, st.session_state.gremio_m4), unsafe_allow_html=True)
-        if st.session_state.gremio_m4: st.button("✅ SUPERADO", disabled=True, key="g_m4_d", use_container_width=True)
+        if st.session_state.gremio_m4: 
+            st.button("✅ SUPERADO", disabled=True, key="g_m4_d", use_container_width=True)
         else:
             if st.button("🩸 LO HE HECHO", type="primary", key="g_m4_c", use_container_width=True):
                 st.session_state.monedas += 15; st.session_state.gremio_m4 = True
                 supabase.table("jugadores").update({"monedas": st.session_state.monedas, "gremio_m4": True}).eq("id", st.session_state.usuario_id).execute(); st.rerun()
+        st.markdown("</div>", unsafe_allow_html=True)
 
+    st.write("")
+    st.write("")
     render_navbar("gremio")
-
 # --- LA PLAZA PÚBLICA (MUNDO + CHAT) ---
 elif st.session_state.estado == "mundo":
     st.markdown("<h1 style='text-align: center; color: #fff; letter-spacing: 2px;'>🌍 LA PLAZA PÚBLICA</h1>", unsafe_allow_html=True)
