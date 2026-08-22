@@ -54,31 +54,36 @@ def generar_carta_html(nombre, elo, icono, color, etiqueta, skin="default"):
     fondo = "background: linear-gradient(145deg, #161616, #0a0a0a);"
     nombre_display = nombre
 
-    # INYECCIÓN DE SKINS PREMIUM (Invaden toda la carta)
+    # INYECCIÓN DE SKINS PREMIUM 
     if skin == "fuego": 
-        color_borde = "#ff4b4b"
-        color_texto = "#ff4b4b"
+        color_borde, color_texto = "#ff4b4b", "#ff4b4b"
         sombra = "box-shadow: 0 0 25px rgba(255, 75, 75, 0.5), inset 0 0 20px rgba(255, 75, 75, 0.3);"
-        fondo = "background: linear-gradient(145deg, #3a0808, #0a0a0a);" # Degradado rojo sangre
+        fondo = "background: linear-gradient(145deg, #3a0808, #0a0a0a);"
     elif skin == "sombra": 
-        color_borde = "#8a2be2"
-        color_texto = "#8a2be2"
+        color_borde, color_texto = "#8a2be2", "#8a2be2"
         sombra = "box-shadow: 0 0 25px rgba(138, 43, 226, 0.5), inset 0 0 20px rgba(138, 43, 226, 0.3);"
-        fondo = "background: linear-gradient(145deg, #1a083a, #0a0a0a);" # Degradado morado oscuro
+        fondo = "background: linear-gradient(145deg, #1a083a, #0a0a0a);"
     elif skin == "aura": 
-        color_borde = "#00aaff"
-        color_texto = "#00aaff"
+        color_borde, color_texto = "#00aaff", "#00aaff"
         sombra = "box-shadow: 0 0 25px rgba(0, 170, 255, 0.5), inset 0 0 20px rgba(0, 170, 255, 0.3);"
-        fondo = "background: linear-gradient(145deg, #08253a, #0a0a0a);" # Degradado azul eléctrico
+        fondo = "background: linear-gradient(145deg, #08253a, #0a0a0a);"
+    elif skin == "hielo": 
+        color_borde, color_texto = "#00ffff", "#00ffff"
+        sombra = "box-shadow: 0 0 25px rgba(0, 255, 255, 0.5), inset 0 0 20px rgba(0, 255, 255, 0.3);"
+        fondo = "background: linear-gradient(145deg, #001a1a, #0a0a0a);"
     elif skin == "corona":
-        # La corona respeta tu rango original, pero te da estatus de Rey
         sombra = "box-shadow: 0 0 15px rgba(255, 215, 0, 0.2);" 
         nombre_display = f"👑 {nombre}"
+    
+    # LA SKIN SECRETA: Solo para los elegidos
+    elif skin == "ascendido":
+        color_borde, color_texto = "#ffffff", "#ffffff"
+        sombra = "box-shadow: 0 0 40px rgba(255, 255, 255, 0.8), inset 0 0 20px rgba(255, 255, 255, 0.5);"
+        fondo = "background: linear-gradient(145deg, #2b2b2b, #000000);"
+        nombre_display = f"✨ {nombre} ✨"
 
     # Construcción del Estilo Final
     estilo_carta = f"border: 2px solid {color_borde}; {sombra} {fondo}"
-
-    # El Avatar Elegante teñido del color de la skin
     svg_icono = f'''<svg width="45" height="45" viewBox="0 0 24 24" fill="none" stroke="{color_texto}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>'''
 
     html = f"""
