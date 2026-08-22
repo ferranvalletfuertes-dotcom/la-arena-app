@@ -86,6 +86,7 @@ if 'gremio_m3' not in st.session_state: st.session_state.gremio_m3 = False
 if 'gremio_m4' not in st.session_state: st.session_state.gremio_m4 = False
 
 # --- MOTOR DE TRADUCCIÓN NATIVO (NIVEL 8) ---
+# --- MOTOR DE TRADUCCIÓN NATIVO (NIVEL 8) ---
 DIC = {
     "es": {
         "log_title": "MÁS QUE UNA APP. UN COLISEO.",
@@ -109,7 +110,31 @@ DIC = {
         "ajustes_musica": "Radio de Combate (Música)",
         "ajustes_volumen": "Volumen de la Radio",
         "ajustes_idioma": "Idioma / Language",
-        "ajustes_btn": "ACTUALIZAR AJUSTES"
+        "ajustes_btn": "ACTUALIZAR AJUSTES",
+        
+        # --- LOBBY ---
+        "lob_titulo": "⚔️ MODO COMBATE",
+        "lob_bienvenido": "Bienvenido",
+        "lob_leyenda": "TU LEYENDA",
+        "lob_rango": "Tu Rango",
+        "lob_boveda": "Bóveda",
+        "lob_contratos": "📜 CONTRATOS MERCENARIOS",
+        "lob_progreso": "Progreso Diario",
+        "lob_reclamado": "✅ RECLAMADO",
+        "lob_reclamar": "🎁 RECLAMAR",
+        "lob_falta": "Falta",
+        "lob_faltan": "Faltan",
+        "lob_leyes_tit": "⚠️ Las Leyes de la Arena",
+        "lob_leyes_1": "📱 <span class='neon-green'>CÓMO SE JUEGA:</span> Abre esto en tu móvil, déjalo en la mesa y ve a trabajar en tu PC o en tus libros.",
+        "lob_leyes_2": "🔴 <span class='neon-red'>CÓMO PIERDES:</span> Si coges el móvil y cambias de app, tu escudo colapsa y pierdes ELO.",
+        "lob_leyes_3": "⚔️ <strong style='color: #ffd700;'>EL PACTO:</strong> Convierte tu móvil en tu propio vigilante. No te engañes a ti mismo.",
+        "lob_declaracion": "🔥 DECLARACIÓN DE INTENCIONES",
+        "lob_ph_mision": "Ej: Terminar el ensayo de Filosofía...",
+        "lob_duracion": "Duración de la batalla:",
+        "lob_busqueda": "🌍 BÚSQUEDA MUNDIAL",
+        "lob_duelo_priv": "🤝 DUELO PRIVADO",
+        "lob_ph_codigo": "Pega código o vacío para crear",
+        "lob_btn_priv": "🚪 CREAR / UNIRSE"
     },
     "en": {
         "log_title": "MORE THAN AN APP. A COLOSSEUM.",
@@ -133,7 +158,31 @@ DIC = {
         "ajustes_musica": "Combat Radio (Music)",
         "ajustes_volumen": "Radio Volume",
         "ajustes_idioma": "Language / Idioma",
-        "ajustes_btn": "UPDATE SETTINGS"
+        "ajustes_btn": "UPDATE SETTINGS",
+        
+        # --- LOBBY ---
+        "lob_titulo": "⚔️ COMBAT MODE",
+        "lob_bienvenido": "Welcome",
+        "lob_leyenda": "YOUR LEGEND",
+        "lob_rango": "Your Rank",
+        "lob_boveda": "Vault",
+        "lob_contratos": "📜 MERCENARY CONTRACTS",
+        "lob_progreso": "Daily Progress",
+        "lob_reclamado": "✅ CLAIMED",
+        "lob_reclamar": "🎁 CLAIM",
+        "lob_falta": "Need",
+        "lob_faltan": "Need",
+        "lob_leyes_tit": "⚠️ The Laws of the Arena",
+        "lob_leyes_1": "📱 <span class='neon-green'>HOW TO PLAY:</span> Open this on your phone, leave it on the desk and work on your PC or books.",
+        "lob_leyes_2": "🔴 <span class='neon-red'>HOW YOU LOSE:</span> If you pick up your phone and change apps, your shield collapses and you lose ELO.",
+        "lob_leyes_3": "⚔️ <strong style='color: #ffd700;'>THE PACT:</strong> Turn your phone into your own warden. Do not deceive yourself.",
+        "lob_declaracion": "🔥 DECLARATION OF INTENT",
+        "lob_ph_mision": "Ex: Finish the Philosophy essay...",
+        "lob_duracion": "Battle duration:",
+        "lob_busqueda": "🌍 GLOBAL SEARCH",
+        "lob_duelo_priv": "🤝 PRIVATE DUEL",
+        "lob_ph_codigo": "Paste code or leave empty to create",
+        "lob_btn_priv": "🚪 CREATE / JOIN"
     }
 }
 
@@ -269,6 +318,7 @@ if st.session_state.estado == "login":
                     except Exception as e: 
                         st.error("Fallo en el registro.")
 # --- EL LOBBY BILINGÜE ---
+# --- EL LOBBY BILINGÜE ---
 elif st.session_state.estado == "lobby":
     render_top_bar()
     st.session_state.partida_id = None
@@ -276,78 +326,78 @@ elif st.session_state.estado == "lobby":
     rango_n, rango_s, rango_i, rango_c = calcular_rango(st.session_state.puntos_elo)
 
     st.markdown(f"<div style='text-align: center;'><img src='{LOGO_URL}' width='80' style='border-radius: 15px; box-shadow: 0 0 15px #ff4b4b; margin-bottom: 10px;'></div>", unsafe_allow_html=True)
-    st.markdown("<h1 class='epic-title'>⚔️ MODO COMBATE</h1>", unsafe_allow_html=True)
+    st.markdown(f"<h1 class='epic-title'>{t('lob_titulo')}</h1>", unsafe_allow_html=True)
     
     boosts_html = ""
     if tiene_boost_activo(st.session_state.boost_elo): boosts_html += "<span style='background:#ff4b4b; color:white; padding:2px 8px; border-radius:10px; font-size:12px; font-weight:bold; margin-right:5px;'>⚡ x2 ELO</span>"
     if tiene_boost_activo(st.session_state.boost_monedas): boosts_html += "<span style='background:#ffd700; color:black; padding:2px 8px; border-radius:10px; font-size:12px; font-weight:bold;'>💰 x2 MONEDAS</span>"
     
-    st.markdown(f"<h3 style='text-align: center; color: white; text-transform: uppercase;'>Bienvenido, {st.session_state.nombre_guerra} <br><div style='margin-top:10px;'>{boosts_html}</div></h3>".replace('\n', ''), unsafe_allow_html=True)
+    st.markdown(f"<h3 style='text-align: center; color: white; text-transform: uppercase;'>{t('lob_bienvenido')}, {st.session_state.nombre_guerra} <br><div style='margin-top:10px;'>{boosts_html}</div></h3>".replace('\n', ''), unsafe_allow_html=True)
     st.divider()
     
-    carta_propia = generar_carta_html(st.session_state.nombre_guerra, st.session_state.puntos_elo, rango_i, rango_c, "TU LEYENDA", st.session_state.skin_activa)
+    carta_propia = generar_carta_html(st.session_state.nombre_guerra, st.session_state.puntos_elo, rango_i, rango_c, t('lob_leyenda'), st.session_state.skin_activa)
     st.markdown(f"<div style='text-align: center; margin-bottom: 20px;'>{carta_propia}</div>".replace('\n', ''), unsafe_allow_html=True)
     
-    st.markdown(f"<div style='display: flex; justify-content: space-around; text-align: center; background-color: #121212; padding: 25px; border-radius: 12px; border: 1px solid {rango_c}; box-shadow: 0 4px 20px {rango_c}40;'><div><p style='margin: 0; color: #888; font-size: 14px; text-transform: uppercase;'>Tu Rango</p><h2 style='margin: 0; color: {rango_c};'>{rango_i} {rango_n}</h2></div><div style='border-left: 1px solid #333; border-right: 1px solid #333; padding: 0 20px;'><p style='margin: 0; color: #888; font-size: 14px; text-transform: uppercase;'>ELO</p><h2 style='margin: 0; color: white;'>{st.session_state.puntos_elo} pts</h2></div><div><p style='margin: 0; color: #888; font-size: 14px; text-transform: uppercase;'>Bóveda</p><h2 style='margin: 0; color: #ffd700;'>🪙 {st.session_state.monedas}</h2></div></div>".replace('\n', ''), unsafe_allow_html=True)
+    st.markdown(f"<div style='display: flex; justify-content: space-around; text-align: center; background-color: #121212; padding: 25px; border-radius: 12px; border: 1px solid {rango_c}; box-shadow: 0 4px 20px {rango_c}40;'><div><p style='margin: 0; color: #888; font-size: 14px; text-transform: uppercase;'>{t('lob_rango')}</p><h2 style='margin: 0; color: {rango_c};'>{rango_i} {rango_n}</h2></div><div style='border-left: 1px solid #333; border-right: 1px solid #333; padding: 0 20px;'><p style='margin: 0; color: #888; font-size: 14px; text-transform: uppercase;'>ELO</p><h2 style='margin: 0; color: white;'>{st.session_state.puntos_elo} pts</h2></div><div><p style='margin: 0; color: #888; font-size: 14px; text-transform: uppercase;'>{t('lob_boveda')}</p><h2 style='margin: 0; color: #ffd700;'>🪙 {st.session_state.monedas}</h2></div></div>".replace('\n', ''), unsafe_allow_html=True)
     
-    st.markdown("<h3 style='text-align: center; color: #00ff00; margin-top: 40px; text-shadow: 0 0 10px rgba(0,255,0,0.4);'>📜 CONTRATOS MERCENARIOS</h3>", unsafe_allow_html=True)
+    st.markdown(f"<h3 style='text-align: center; color: #00ff00; margin-top: 40px; text-shadow: 0 0 10px rgba(0,255,0,0.4);'>{t('lob_contratos')}</h3>", unsafe_allow_html=True)
     
     pasos_totales = 4
     pasos_actuales = min(st.session_state.progreso_m1, 1) + min(st.session_state.progreso_m2, 2) + min(st.session_state.progreso_m3, 1)
     porcentaje = int((pasos_actuales / pasos_totales) * 100)
-    st.markdown(f"<div style='width: 100%; background-color: #333; border-radius: 10px; margin-bottom: 20px;'><div style='width: {porcentaje}%; height: 15px; background: linear-gradient(90deg, #008000, #00ff00); border-radius: 10px; box-shadow: 0 0 10px #00ff00; transition: width 0.5s ease;'></div></div><p style='text-align: center; color: #888; font-size: 12px; margin-top: -10px;'>Progreso Diario: {porcentaje}%</p>".replace('\n', ''), unsafe_allow_html=True)
+    st.markdown(f"<div style='width: 100%; background-color: #333; border-radius: 10px; margin-bottom: 20px;'><div style='width: {porcentaje}%; height: 15px; background: linear-gradient(90deg, #008000, #00ff00); border-radius: 10px; box-shadow: 0 0 10px #00ff00; transition: width 0.5s ease;'></div></div><p style='text-align: center; color: #888; font-size: 12px; margin-top: -10px;'>{t('lob_progreso')}: {porcentaje}%</p>".replace('\n', ''), unsafe_allow_html=True)
     
     c_m1, c_m2, c_m3 = st.columns(3)
     with c_m1:
         st.markdown(generar_html_mision("Primer Sangrado", "Gana 1 combate", 50, st.session_state.m1_reclamada), unsafe_allow_html=True)
         if st.session_state.m1_reclamada: 
-            st.button("✅ RECLAMADO", disabled=True, key="btn_m1_d", use_container_width=True)
+            st.button(t('lob_reclamado'), disabled=True, key="btn_m1_d", use_container_width=True)
         elif st.session_state.progreso_m1 >= 1:
-            if st.button("🎁 RECLAMAR", type="primary", key="btn_m1_c", use_container_width=True):
+            if st.button(t('lob_reclamar'), type="primary", key="btn_m1_c", use_container_width=True):
                 st.session_state.monedas += 50
                 st.session_state.m1_reclamada = True
                 supabase.table("jugadores").update({"monedas": st.session_state.monedas, "m1_reclamada": True}).eq("id", st.session_state.usuario_id).execute()
                 st.rerun()
         else: 
-            st.button("Falta 1", disabled=True, key="btn_m1_f", use_container_width=True)
+            st.button(f"{t('lob_falta')} 1", disabled=True, key="btn_m1_f", use_container_width=True)
     with c_m2:
         st.markdown(generar_html_mision("Asesino a Sueldo", "Gana 2 escaramuzas", 100, st.session_state.m2_reclamada), unsafe_allow_html=True)
         if st.session_state.m2_reclamada: 
-            st.button("✅ RECLAMADO", disabled=True, key="btn_m2_d", use_container_width=True)
+            st.button(t('lob_reclamado'), disabled=True, key="btn_m2_d", use_container_width=True)
         elif st.session_state.progreso_m2 >= 2:
-            if st.button("🎁 RECLAMAR", type="primary", key="btn_m2_c", use_container_width=True):
+            if st.button(t('lob_reclamar'), type="primary", key="btn_m2_c", use_container_width=True):
                 st.session_state.monedas += 100
                 st.session_state.m2_reclamada = True
                 supabase.table("jugadores").update({"monedas": st.session_state.monedas, "m2_reclamada": True}).eq("id", st.session_state.usuario_id).execute()
                 st.rerun()
         else: 
-            st.button(f"Faltan {2 - st.session_state.progreso_m2}", disabled=True, key="btn_m2_f", use_container_width=True)
+            st.button(f"{t('lob_faltan')} {2 - st.session_state.progreso_m2}", disabled=True, key="btn_m2_f", use_container_width=True)
     with c_m3:
         st.markdown(generar_html_mision("El Titán", "Sobrevive 1 asalto", 300, st.session_state.m3_reclamada), unsafe_allow_html=True)
         if st.session_state.m3_reclamada: 
-            st.button("✅ RECLAMADO", disabled=True, key="btn_m3_d", use_container_width=True)
+            st.button(t('lob_reclamado'), disabled=True, key="btn_m3_d", use_container_width=True)
         elif st.session_state.progreso_m3 >= 1:
-            if st.button("🎁 RECLAMAR", type="primary", key="btn_m3_c", use_container_width=True):
+            if st.button(t('lob_reclamar'), type="primary", key="btn_m3_c", use_container_width=True):
                 st.session_state.monedas += 300
                 st.session_state.m3_reclamada = True
                 supabase.table("jugadores").update({"monedas": st.session_state.monedas, "m3_reclamada": True}).eq("id", st.session_state.usuario_id).execute()
                 st.rerun()
         else: 
-            st.button("Falta 1", disabled=True, key="btn_m3_f", use_container_width=True)
+            st.button(f"{t('lob_falta')} 1", disabled=True, key="btn_m3_f", use_container_width=True)
 
     st.write(""); st.divider()
-    st.markdown("""
+    st.markdown(f"""
         <div class="rules-box">
-            <h3 style="text-align: center; color: #ff4b4b; text-transform: uppercase; margin-top: 0;">⚠️ Las Leyes de la Arena</h3>
+            <h3 style="text-align: center; color: #ff4b4b; text-transform: uppercase; margin-top: 0;">{t('lob_leyes_tit')}</h3>
             <ul style="list-style-type: none; padding-left: 0; color: #ccc; font-size: 15px; line-height: 1.8;">
-                <li style="margin-bottom: 10px;">📱 <span class='neon-green'>CÓMO SE JUEGA:</span> Abre esto en tu móvil, déjalo en la mesa y ve a trabajar en tu PC o en tus libros.</li>
-                <li style="margin-bottom: 10px;">🔴 <span class='neon-red'>CÓMO PIERDES:</span> Si coges el móvil y cambias de app, tu escudo colapsa y pierdes ELO.</li>
-                <li>⚔️ <strong style='color: #ffd700;'>EL PACTO:</strong> Convierte tu móvil en tu propio vigilante. No te engañes a ti mismo.</li>
+                <li style="margin-bottom: 10px;">{t('lob_leyes_1')}</li>
+                <li style="margin-bottom: 10px;">{t('lob_leyes_2')}</li>
+                <li>{t('lob_leyes_3')}</li>
             </ul>
         </div>
     """.replace('\n', ''), unsafe_allow_html=True)
 
-    st.markdown("<h3 style='text-align: center; color: #ff4b4b;'>🔥 DECLARACIÓN DE INTENCIONES</h3>", unsafe_allow_html=True)
+    st.markdown(f"<h3 style='text-align: center; color: #ff4b4b;'>{t('lob_declaracion')}</h3>", unsafe_allow_html=True)
     c_texto, c_dado = st.columns([5, 1])
     with c_dado:
         st.write("")
@@ -355,7 +405,7 @@ elif st.session_state.estado == "lobby":
             st.session_state.input_mision_texto = random.choice(MISIONES_DESARROLLO)
             st.rerun()
     with c_texto:
-        mision_input = st.text_input("", value=st.session_state.input_mision_texto, placeholder="Ej: Terminar el ensayo de Filosofía...", label_visibility="collapsed")
+        mision_input = st.text_input("", value=st.session_state.input_mision_texto, placeholder=t('lob_ph_mision'), label_visibility="collapsed")
         st.session_state.input_mision_texto = mision_input 
     
     tiempo_opts = {
@@ -380,11 +430,11 @@ elif st.session_state.estado == "lobby":
         "⏱️ 100 Minutos": 6000
     }
 
-    tiempo_str = st.selectbox("Duración de la batalla:", list(tiempo_opts.keys()))
+    tiempo_str = st.selectbox(t('lob_duracion'), list(tiempo_opts.keys()))
     
     c_pub, c_priv = st.columns(2)
     with c_pub:
-        if st.button("🌍 BÚSQUEDA MUNDIAL", use_container_width=True, type="primary"):
+        if st.button(t('lob_busqueda'), use_container_width=True, type="primary"):
             if not st.session_state.input_mision_texto: 
                 st.error("Un guerrero no entra sin propósito. Declara tu misión o usa el dado 🎲.")
             else:
@@ -398,15 +448,14 @@ elif st.session_state.estado == "lobby":
                 st.session_state.codigo_sala = ""
                 st.session_state.inicio_busqueda = time.time(); st.session_state.estado = "buscando"; st.rerun()
                 
-    st.markdown("<h3 style='text-align: center; color: #888; margin-top: 30px;'>🤝 DUELO PRIVADO</h3>", unsafe_allow_html=True)
+    st.markdown(f"<h3 style='text-align: center; color: #888; margin-top: 30px;'>{t('lob_duelo_priv')}</h3>", unsafe_allow_html=True)
     c_p1, c_p2 = st.columns([2, 1])
     with c_p1: 
-        codigo_input = st.text_input("", placeholder="Pega código o vacío para crear", label_visibility="collapsed", key="input_cod_priv")
+        codigo_input = st.text_input("", placeholder=t('lob_ph_codigo'), label_visibility="collapsed", key="input_cod_priv")
     with c_p2:
-        if st.button("🚪 CREAR / UNIRSE", use_container_width=True):
+        if st.button(t('lob_btn_priv'), use_container_width=True):
             codigo_secreto = codigo_input.upper().strip()
             
-            # --- EASTER EGG INYECTADO ---
             if codigo_secreto == "NIVEL8":
                 st.session_state.monedas += 777
                 supabase.table("jugadores").update({"monedas": st.session_state.monedas}).eq("id", st.session_state.usuario_id).execute()
@@ -414,8 +463,6 @@ elif st.session_state.estado == "lobby":
                 st.success("💻 ACCESO CLASIFICADO: Has descubierto el Protocolo Nivel 8. El Arquitecto te observa. +777 Monedas transferidas.")
                 time.sleep(3)
                 st.rerun()
-            # -----------------------------
-            
             elif not st.session_state.input_mision_texto: 
                 st.error("Un guerrero no entra sin propósito. Declara tu misión o usa el dado 🎲.")
             else:
