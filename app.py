@@ -87,102 +87,25 @@ if 'gremio_m4' not in st.session_state: st.session_state.gremio_m4 = False
 
 # --- MOTOR DE TRADUCCIÓN NATIVO (NIVEL 8) ---
 # --- MOTOR DE TRADUCCIÓN NATIVO (NIVEL 8) ---
+# --- MOTOR DE TRADUCCIÓN NATIVO (NIVEL 8) ---
 DIC = {
     "es": {
-        "log_title": "MÁS QUE UNA APP. UN COLISEO.",
-        "log_manifesto": "El mundo moderno te quiere débil, distraído y adicto. La Arena es tu cura.",
-        "log_carcel_tit": "⛓️ EL CENTINELA",
-        "log_carcel_desc": "Inicia un combate. Si abandonas la app, tu escudo colapsa y tu rango es destruido.",
-        "log_mercado_tit": "🛒 EL MERCADO NEGRO",
-        "log_mercado_desc": "Gana oro con tu sudor. Compra skins, auras y multiplicadores.",
-        "log_ranking_tit": "🏆 LA TABERNA",
-        "log_ranking_desc": "Compara tu ELO con guerreros de todo el mundo. Solo la élite asciende.",
-        "tab_login": "🔑 ENTRAR AL COLISEO",
-        "tab_reg": "🩸 JURAMENTO DE SANGRE",
-        "ph_email": "Tu correo de combate",
-        "ph_pass": "Tu contraseña",
-        "btn_acceder": "ENTRAR A LA ARENA",
-        "ph_name": "Nombre de Guerra (Ej: Espartano)",
-        "ph_ref": "Código de Embajador (Opcional)",
-        "btn_jurar": "JURAR LEALTAD",
-        "ajustes_titulo": "⚙️ Ajustes de Perfil",
-        "ajustes_nombre": "Cambiar nombre (cambiará tu código)",
-        "ajustes_musica": "Radio de Combate (Música)",
-        "ajustes_volumen": "Volumen de la Radio",
-        "ajustes_idioma": "Idioma / Language",
-        "ajustes_btn": "ACTUALIZAR AJUSTES",
-        
-        # --- LOBBY ---
-        "lob_titulo": "⚔️ MODO COMBATE",
-        "lob_bienvenido": "Bienvenido",
-        "lob_leyenda": "TU LEYENDA",
-        "lob_rango": "Tu Rango",
-        "lob_boveda": "Bóveda",
-        "lob_contratos": "📜 CONTRATOS MERCENARIOS",
-        "lob_progreso": "Progreso Diario",
-        "lob_reclamado": "✅ RECLAMADO",
-        "lob_reclamar": "🎁 RECLAMAR",
-        "lob_falta": "Falta",
-        "lob_faltan": "Faltan",
-        "lob_leyes_tit": "⚠️ Las Leyes de la Arena",
-        "lob_leyes_1": "📱 <span class='neon-green'>CÓMO SE JUEGA:</span> Abre esto en tu móvil, déjalo en la mesa y ve a trabajar en tu PC o en tus libros.",
-        "lob_leyes_2": "🔴 <span class='neon-red'>CÓMO PIERDES:</span> Si coges el móvil y cambias de app, tu escudo colapsa y pierdes ELO.",
-        "lob_leyes_3": "⚔️ <strong style='color: #ffd700;'>EL PACTO:</strong> Convierte tu móvil en tu propio vigilante. No te engañes a ti mismo.",
-        "lob_declaracion": "🔥 DECLARACIÓN DE INTENCIONES",
-        "lob_ph_mision": "Ej: Terminar el ensayo de Filosofía...",
-        "lob_duracion": "Duración de la batalla:",
-        "lob_busqueda": "🌍 BÚSQUEDA MUNDIAL",
-        "lob_duelo_priv": "🤝 DUELO PRIVADO",
-        "lob_ph_codigo": "Pega código o vacío para crear",
-        "lob_btn_priv": "🚪 CREAR / UNIRSE"
+        "log_title": "MÁS QUE UNA APP. UN COLISEO.", "log_manifesto": "El mundo moderno te quiere débil, distraído y adicto. La Arena es tu cura.", "log_carcel_tit": "⛓️ EL CENTINELA", "log_carcel_desc": "Inicia un combate. Si abandonas la app, tu escudo colapsa y tu rango es destruido.", "log_mercado_tit": "🛒 EL MERCADO NEGRO", "log_mercado_desc": "Gana oro con tu sudor. Compra skins, auras y multiplicadores.", "log_ranking_tit": "🏆 LA TABERNA", "log_ranking_desc": "Compara tu ELO con guerreros de todo el mundo. Solo la élite asciende.", "tab_login": "🔑 ENTRAR AL COLISEO", "tab_reg": "🩸 JURAMENTO DE SANGRE", "ph_email": "Tu correo de combate", "ph_pass": "Tu contraseña", "btn_acceder": "ENTRAR A LA ARENA", "ph_name": "Nombre de Guerra (Ej: Espartano)", "ph_ref": "Código de Embajador (Opcional)", "btn_jurar": "JURAR LEALTAD", "ajustes_titulo": "⚙️ Ajustes de Perfil", "ajustes_nombre": "Cambiar nombre (cambiará tu código)", "ajustes_musica": "Radio de Combate (Música)", "ajustes_volumen": "Volumen de la Radio", "ajustes_idioma": "Idioma / Language", "ajustes_btn": "ACTUALIZAR AJUSTES",
+        # LOBBY
+        "lob_titulo": "⚔️ MODO COMBATE", "lob_bienvenido": "Bienvenido", "lob_leyenda": "TU LEYENDA", "lob_rango": "Tu Rango", "lob_boveda": "Bóveda", "lob_contratos": "📜 CONTRATOS MERCENARIOS", "lob_progreso": "Progreso Diario", "lob_reclamado": "✅ RECLAMADO", "lob_reclamar": "🎁 RECLAMAR", "lob_falta": "Falta", "lob_faltan": "Faltan", "lob_leyes_tit": "⚠️ Las Leyes de la Arena", "lob_leyes_1": "📱 <span class='neon-green'>CÓMO SE JUEGA:</span> Abre esto en tu móvil, déjalo en la mesa y ve a trabajar en tu PC o en tus libros.", "lob_leyes_2": "🔴 <span class='neon-red'>CÓMO PIERDES:</span> Si coges el móvil y cambias de app, tu escudo colapsa y pierdes ELO.", "lob_leyes_3": "⚔️ <strong style='color: #ffd700;'>EL PACTO:</strong> Convierte tu móvil en tu propio vigilante. No te engañes a ti mismo.", "lob_declaracion": "🔥 DECLARACIÓN DE INTENCIONES", "lob_ph_mision": "Ej: Terminar el ensayo de Filosofía...", "lob_duracion": "Duración de la batalla:", "lob_busqueda": "🌍 BÚSQUEDA MUNDIAL", "lob_duelo_priv": "🤝 DUELO PRIVADO", "lob_ph_codigo": "Pega código o vacío para crear", "lob_btn_priv": "🚪 CREAR / UNIRSE",
+        # TIENDA
+        "tie_tit": "🛒 EL MERCADO NEGRO", "tie_fondos": "Fondos Disponibles", "tie_cofre_tit": "### 🎲 EL COFRE DEL GLADIADOR", "tie_cofre_sub": "Cofre Misterioso", "tie_cofre_btn": "🎲 ABRIR COFRE (1000 Monedas)", "tie_boosts": "### 🧬 BOOSTS DIRECTOS (24H)", "tie_comprar": "COMPRAR", "tie_equipar": "EQUIPAR", "tie_equipada": "EQUIPADA", "tie_compra_dir": "### 🔥 COMPRA DIRECTA", "tie_quitar": "✖ QUITAR SKIN ACTUAL", "tie_oculto_tit": "👁️ EL MERCADO OCULTO", "tie_oculto_desc": "Solo los guerreros que han superado los 1000 ELO son dignos de introducir la palabra de paso.", "tie_oculto_ph": "Código de Ascensión", "tie_oculto_btn": "⚡ DESCIFRAR",
+        # GREMIO
+        "gre_tit": "⚔️ EL GREMIO", "gre_sub": "Conquista la realidad fuera de la pantalla", "gre_mis": "📜 MISIONES DIARIAS", "gre_aviso": "El sistema no puede verificar tu mundo físico. Tu honor es tu única garantía. Engañar al sistema corrompe tu disciplina real.", "gre_sup": "✅ SUPERADO", "gre_hacer": "🩸 LO HE HECHO"
     },
     "en": {
-        "log_title": "MORE THAN AN APP. A COLOSSEUM.",
-        "log_manifesto": "The modern world wants you weak, distracted, and addicted. The Arena is your cure.",
-        "log_carcel_tit": "⛓️ THE SENTINEL",
-        "log_carcel_desc": "Start a combat. If you leave the app, your shield collapses and your rank is destroyed.",
-        "log_mercado_tit": "🛒 THE BLACK MARKET",
-        "log_mercado_desc": "Earn gold with your sweat. Buy skins, auras, and multipliers.",
-        "log_ranking_tit": "🏆 THE TAVERN",
-        "log_ranking_desc": "Compare your ELO with warriors worldwide. Only the elite ascend.",
-        "tab_login": "🔑 ENTER COLOSSEUM",
-        "tab_reg": "🩸 BLOOD OATH",
-        "ph_email": "Your combat email",
-        "ph_pass": "Your password",
-        "btn_acceder": "ENTER THE ARENA",
-        "ph_name": "War Name (Ex: Spartan)",
-        "ph_ref": "Ambassador Code (Optional)",
-        "btn_jurar": "SWEAR LOYALTY",
-        "ajustes_titulo": "⚙️ Profile Settings",
-        "ajustes_nombre": "Change name (will change your code)",
-        "ajustes_musica": "Combat Radio (Music)",
-        "ajustes_volumen": "Radio Volume",
-        "ajustes_idioma": "Language / Idioma",
-        "ajustes_btn": "UPDATE SETTINGS",
-        
-        # --- LOBBY ---
-        "lob_titulo": "⚔️ COMBAT MODE",
-        "lob_bienvenido": "Welcome",
-        "lob_leyenda": "YOUR LEGEND",
-        "lob_rango": "Your Rank",
-        "lob_boveda": "Vault",
-        "lob_contratos": "📜 MERCENARY CONTRACTS",
-        "lob_progreso": "Daily Progress",
-        "lob_reclamado": "✅ CLAIMED",
-        "lob_reclamar": "🎁 CLAIM",
-        "lob_falta": "Need",
-        "lob_faltan": "Need",
-        "lob_leyes_tit": "⚠️ The Laws of the Arena",
-        "lob_leyes_1": "📱 <span class='neon-green'>HOW TO PLAY:</span> Open this on your phone, leave it on the desk and work on your PC or books.",
-        "lob_leyes_2": "🔴 <span class='neon-red'>HOW YOU LOSE:</span> If you pick up your phone and change apps, your shield collapses and you lose ELO.",
-        "lob_leyes_3": "⚔️ <strong style='color: #ffd700;'>THE PACT:</strong> Turn your phone into your own warden. Do not deceive yourself.",
-        "lob_declaracion": "🔥 DECLARATION OF INTENT",
-        "lob_ph_mision": "Ex: Finish the Philosophy essay...",
-        "lob_duracion": "Battle duration:",
-        "lob_busqueda": "🌍 GLOBAL SEARCH",
-        "lob_duelo_priv": "🤝 PRIVATE DUEL",
-        "lob_ph_codigo": "Paste code or leave empty to create",
-        "lob_btn_priv": "🚪 CREATE / JOIN"
+        "log_title": "MORE THAN AN APP. A COLOSSEUM.", "log_manifesto": "The modern world wants you weak, distracted, and addicted. The Arena is your cure.", "log_carcel_tit": "⛓️ THE SENTINEL", "log_carcel_desc": "Start a combat. If you leave the app, your shield collapses and your rank is destroyed.", "log_mercado_tit": "🛒 THE BLACK MARKET", "log_mercado_desc": "Earn gold with your sweat. Buy skins, auras, and multipliers.", "log_ranking_tit": "🏆 THE TAVERN", "log_ranking_desc": "Compare your ELO with warriors worldwide. Only the elite ascend.", "tab_login": "🔑 ENTER COLOSSEUM", "tab_reg": "🩸 BLOOD OATH", "ph_email": "Your combat email", "ph_pass": "Your password", "btn_acceder": "ENTER THE ARENA", "ph_name": "War Name (Ex: Spartan)", "ph_ref": "Ambassador Code (Optional)", "btn_jurar": "SWEAR LOYALTY", "ajustes_titulo": "⚙️ Profile Settings", "ajustes_nombre": "Change name (will change your code)", "ajustes_musica": "Combat Radio (Music)", "ajustes_volumen": "Radio Volume", "ajustes_idioma": "Language / Idioma", "ajustes_btn": "UPDATE SETTINGS",
+        # LOBBY
+        "lob_titulo": "⚔️ COMBAT MODE", "lob_bienvenido": "Welcome", "lob_leyenda": "YOUR LEGEND", "lob_rango": "Your Rank", "lob_boveda": "Vault", "lob_contratos": "📜 MERCENARY CONTRACTS", "lob_progreso": "Daily Progress", "lob_reclamado": "✅ CLAIMED", "lob_reclamar": "🎁 CLAIM", "lob_falta": "Need", "lob_faltan": "Need", "lob_leyes_tit": "⚠️ The Laws of the Arena", "lob_leyes_1": "📱 <span class='neon-green'>HOW TO PLAY:</span> Open this on your phone, leave it on the desk and work on your PC or books.", "lob_leyes_2": "🔴 <span class='neon-red'>HOW YOU LOSE:</span> If you pick up your phone and change apps, your shield collapses and you lose ELO.", "lob_leyes_3": "⚔️ <strong style='color: #ffd700;'>THE PACT:</strong> Turn your phone into your own warden. Do not deceive yourself.", "lob_declaracion": "🔥 DECLARATION OF INTENT", "lob_ph_mision": "Ex: Finish the Philosophy essay...", "lob_duracion": "Battle duration:", "lob_busqueda": "🌍 GLOBAL SEARCH", "lob_duelo_priv": "🤝 PRIVATE DUEL", "lob_ph_codigo": "Paste code or leave empty to create", "lob_btn_priv": "🚪 CREATE / JOIN",
+        # TIENDA
+        "tie_tit": "🛒 THE BLACK MARKET", "tie_fondos": "Available Funds", "tie_cofre_tit": "### 🎲 GLADIATOR'S CHEST", "tie_cofre_sub": "Mystery Chest", "tie_cofre_btn": "🎲 OPEN CHEST (1000 Coins)", "tie_boosts": "### 🧬 DIRECT BOOSTS (24H)", "tie_comprar": "BUY", "tie_equipar": "EQUIP", "tie_equipada": "EQUIPPED", "tie_compra_dir": "### 🔥 DIRECT PURCHASE", "tie_quitar": "✖ REMOVE CURRENT SKIN", "tie_oculto_tit": "👁️ THE HIDDEN MARKET", "tie_oculto_desc": "Only warriors who have surpassed 1000 ELO are worthy of entering the password.", "tie_oculto_ph": "Ascension Code", "tie_oculto_btn": "⚡ DECIPHER",
+        # GREMIO
+        "gre_tit": "⚔️ THE GUILD", "gre_sub": "Conquer reality off-screen", "gre_mis": "📜 DAILY MISSIONS", "gre_aviso": "The system cannot verify your physical world. Your honor is your only guarantee. Cheating the system corrupts your real discipline.", "gre_sup": "✅ COMPLETED", "gre_hacer": "🩸 I DID IT"
     }
 }
 
