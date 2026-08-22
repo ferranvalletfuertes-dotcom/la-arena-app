@@ -51,7 +51,7 @@ def render_navbar(activo):
     import streamlit as st
     idioma = st.session_state.get('idioma', 'es')
     
-    # Diccionario local ultrarrápido para la barra de navegación
+    # Diccionario local ultrarrápido exclusivo para la barra de navegación
     nav_txt = {
         "es": ["🔥 LOBBY", "🌍 MUNDO", "🛡️ CUARTEL", "🛒 TIENDA", "⚔️ GREMIO"],
         "en": ["🔥 LOBBY", "🌍 WORLD", "🛡️ BARRACKS", "🛒 STORE", "⚔️ GUILD"]
@@ -76,7 +76,6 @@ def render_navbar(activo):
     with c5:
         if st.button(txt[4], use_container_width=True, type="primary" if activo == "gremio" else "secondary", key=f"nav_5_{activo}"):
             st.session_state.estado = "gremio"; st.rerun()
-
 def generar_carta_html(nombre, elo, icono, color, etiqueta, skin="default"):
     # Parámetros por defecto (Rango normal)
     color_borde = color
