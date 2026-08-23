@@ -87,6 +87,7 @@ if 'gremio_m4' not in st.session_state: st.session_state.gremio_m4 = False
 # --- MOTOR DE TRADUCCIÓN NATIVO (NIVEL 8) ---
 # --- MOTOR DE TRADUCCIÓN NATIVO (NIVEL 8) ---
 # --- MOTOR DE TRADUCCIÓN NATIVO (NIVEL 8) ---
+# --- MOTOR DE TRADUCCIÓN NATIVO (NIVEL 8) ---
 DIC = {
     "es": {
         "log_title": "MÁS QUE UNA APP. UN COLISEO.", "log_manifesto": "El mundo moderno te quiere débil, distraído y adicto. La Arena es tu cura.", "log_carcel_tit": "⛓️ EL CENTINELA", "log_carcel_desc": "Inicia un combate. Si abandonas la app, tu escudo colapsa y tu rango es destruido.", "log_mercado_tit": "🛒 EL MERCADO NEGRO", "log_mercado_desc": "Gana oro con tu sudor. Compra skins, auras y multiplicadores.", "log_ranking_tit": "🏆 LA TABERNA", "log_ranking_desc": "Compara tu ELO con guerreros de todo el mundo. Solo la élite asciende.", "tab_login": "🔑 ENTRAR AL COLISEO", "tab_reg": "🩸 JURAMENTO DE SANGRE", "ph_email": "Tu correo de combate", "ph_pass": "Tu contraseña", "btn_acceder": "ENTRAR A LA ARENA", "ph_name": "Nombre de Guerra (Ej: Espartano)", "ph_ref": "Código de Embajador (Opcional)", "btn_jurar": "JURAR LEALTAD", "ajustes_titulo": "⚙️ Ajustes de Perfil", "ajustes_nombre": "Cambiar nombre (cambiará tu código)", "ajustes_musica": "Radio de Combate (Música)", "ajustes_volumen": "Volumen de la Radio", "ajustes_idioma": "Idioma / Language", "ajustes_btn": "ACTUALIZAR AJUSTES",
@@ -95,7 +96,9 @@ DIC = {
         # TIENDA
         "tie_tit": "🛒 EL MERCADO NEGRO", "tie_fondos": "Fondos Disponibles", "tie_cofre_tit": "### 🎲 EL COFRE DEL GLADIADOR", "tie_cofre_sub": "Cofre Misterioso", "tie_cofre_btn": "🎲 ABRIR COFRE (1000 Monedas)", "tie_boosts": "### 🧬 BOOSTS DIRECTOS (24H)", "tie_comprar": "COMPRAR", "tie_equipar": "EQUIPAR", "tie_equipada": "EQUIPADA", "tie_compra_dir": "### 🔥 COMPRA DIRECTA", "tie_quitar": "✖ QUITAR SKIN ACTUAL", "tie_oculto_tit": "👁️ EL MERCADO OCULTO", "tie_oculto_desc": "Solo los guerreros que han superado los 1000 ELO son dignos de introducir la palabra de paso.", "tie_oculto_ph": "Código de Ascensión", "tie_oculto_btn": "⚡ DESCIFRAR",
         # GREMIO
-        "gre_tit": "⚔️ EL GREMIO", "gre_sub": "Conquista la realidad fuera de la pantalla", "gre_mis": "📜 MISIONES DIARIAS", "gre_aviso": "El sistema no puede verificar tu mundo físico. Tu honor es tu única garantía. Engañar al sistema corrompe tu disciplina real.", "gre_sup": "✅ SUPERADO", "gre_hacer": "🩸 LO HE HECHO"
+        "gre_tit": "⚔️ EL GREMIO", "gre_sub": "Conquista la realidad fuera de la pantalla", "gre_mis": "📜 MISIONES DIARIAS", "gre_aviso": "El sistema no puede verificar tu mundo físico. Tu honor es tu única garantía. Engañar al sistema corrompe tu disciplina real.", "gre_sup": "✅ SUPERADO", "gre_hacer": "🩸 LO HE HECHO",
+        # MUNDO
+        "mun_tit": "🌍 LA PLAZA PÚBLICA", "mun_sub": "El mundo está observando.", "mun_tab1": "🌍 EL RADAR", "mun_tab2": "💬 LA TABERNA", "mun_top": "🏆 TOP GLOBAL", "mun_muro": "📡 MURO EN DIRECTO", "mun_silencio": "El silencio reina en la arena...", "mun_leyendas": "📜 LEYENDAS INMORTALES", "mun_ley_sub": "El Salón de los Dioses. Solo los ganadores de temporadas pasadas.", "mun_ley_vacio": "El pedestal está vacío. Sé tú el primero.", "mun_chat_tit": "💬 LA TABERNA GLOBAL", "mun_chat_vacio": "La taberna está vacía. Escribe el primer mensaje.", "mun_chat_err": "⚠️ Error al cargar la taberna.", "mun_ph_chat": "Habla, guerrero...", "mun_btn_chat": "ENVIAR"
     },
     "en": {
         "log_title": "MORE THAN AN APP. A COLOSSEUM.", "log_manifesto": "The modern world wants you weak, distracted, and addicted. The Arena is your cure.", "log_carcel_tit": "⛓️ THE SENTINEL", "log_carcel_desc": "Start a combat. If you leave the app, your shield collapses and your rank is destroyed.", "log_mercado_tit": "🛒 THE BLACK MARKET", "log_mercado_desc": "Earn gold with your sweat. Buy skins, auras, and multipliers.", "log_ranking_tit": "🏆 THE TAVERN", "log_ranking_desc": "Compare your ELO with warriors worldwide. Only the elite ascend.", "tab_login": "🔑 ENTER COLOSSEUM", "tab_reg": "🩸 BLOOD OATH", "ph_email": "Your combat email", "ph_pass": "Your password", "btn_acceder": "ENTER THE ARENA", "ph_name": "War Name (Ex: Spartan)", "ph_ref": "Ambassador Code (Optional)", "btn_jurar": "SWEAR LOYALTY", "ajustes_titulo": "⚙️ Profile Settings", "ajustes_nombre": "Change name (will change your code)", "ajustes_musica": "Combat Radio (Music)", "ajustes_volumen": "Radio Volume", "ajustes_idioma": "Language / Idioma", "ajustes_btn": "UPDATE SETTINGS",
@@ -104,7 +107,9 @@ DIC = {
         # TIENDA
         "tie_tit": "🛒 THE BLACK MARKET", "tie_fondos": "Available Funds", "tie_cofre_tit": "### 🎲 GLADIATOR'S CHEST", "tie_cofre_sub": "Mystery Chest", "tie_cofre_btn": "🎲 OPEN CHEST (1000 Coins)", "tie_boosts": "### 🧬 DIRECT BOOSTS (24H)", "tie_comprar": "BUY", "tie_equipar": "EQUIP", "tie_equipada": "EQUIPPED", "tie_compra_dir": "### 🔥 DIRECT PURCHASE", "tie_quitar": "✖ REMOVE CURRENT SKIN", "tie_oculto_tit": "👁️ THE HIDDEN MARKET", "tie_oculto_desc": "Only warriors who have surpassed 1000 ELO are worthy of entering the password.", "tie_oculto_ph": "Ascension Code", "tie_oculto_btn": "⚡ DECIPHER",
         # GREMIO
-        "gre_tit": "⚔️ THE GUILD", "gre_sub": "Conquer reality off-screen", "gre_mis": "📜 DAILY MISSIONS", "gre_aviso": "The system cannot verify your physical world. Your honor is your only guarantee. Cheating the system corrupts your real discipline.", "gre_sup": "✅ COMPLETED", "gre_hacer": "🩸 I DID IT"
+        "gre_tit": "⚔️ THE GUILD", "gre_sub": "Conquer reality off-screen", "gre_mis": "📜 DAILY MISSIONS", "gre_aviso": "The system cannot verify your physical world. Your honor is your only guarantee. Cheating the system corrupts your real discipline.", "gre_sup": "✅ COMPLETED", "gre_hacer": "🩸 I DID IT",
+        # MUNDO
+        "mun_tit": "🌍 THE PUBLIC SQUARE", "mun_sub": "The world is watching.", "mun_tab1": "🌍 THE RADAR", "mun_tab2": "💬 THE TAVERN", "mun_top": "🏆 GLOBAL TOP", "mun_muro": "📡 LIVE FEED", "mun_silencio": "Silence rules the arena...", "mun_leyendas": "📜 IMMORTAL LEGENDS", "mun_ley_sub": "The Hall of Gods. Only past season winners.", "mun_ley_vacio": "The pedestal is empty. Be the first.", "mun_chat_tit": "💬 GLOBAL TAVERN", "mun_chat_vacio": "The tavern is empty. Write the first message.", "mun_chat_err": "⚠️ Error loading the tavern.", "mun_ph_chat": "Speak, warrior...", "mun_btn_chat": "SEND"
     }
 }
 
@@ -505,17 +510,17 @@ elif st.session_state.estado == "gremio":
     st.write("")
     render_navbar("gremio")
 # --- LA PLAZA PÚBLICA (MUNDO + CHAT) ---
+# --- LA PLAZA PÚBLICA (MUNDO + CHAT) ---
 elif st.session_state.estado == "mundo":
-    st.markdown("<h1 style='text-align: center; color: #fff; letter-spacing: 2px;'>🌍 LA PLAZA PÚBLICA</h1>", unsafe_allow_html=True)
-    st.markdown("<h4 style='text-align: center; color: gray; margin-bottom: 20px;'>El mundo está observando.</h4>", unsafe_allow_html=True)
+    st.markdown(f"<h1 style='text-align: center; color: #fff; letter-spacing: 2px;'>{t('mun_tit')}</h1>", unsafe_allow_html=True)
+    st.markdown(f"<h4 style='text-align: center; color: gray; margin-bottom: 20px;'>{t('mun_sub')}</h4>", unsafe_allow_html=True)
     
-    # Creamos las dos sub-pestañas
-    tab_radar, tab_taberna = st.tabs(["🌍 EL RADAR", "💬 LA TABERNA"])
+    tab_radar, tab_taberna = st.tabs([t('mun_tab1'), t('mun_tab2')])
     
     with tab_radar:
         c_feed, c_rank = st.columns([1.2, 1])
         with c_rank:
-            st.markdown("<h3 style='color: #ffd700; text-align: center;'>🏆 TOP GLOBAL</h3>", unsafe_allow_html=True)
+            st.markdown(f"<h3 style='color: #ffd700; text-align: center;'>{t('mun_top')}</h3>", unsafe_allow_html=True)
             st.markdown("<div style='background-color: #111; border: 1px solid #333; border-radius: 12px; padding: 15px;'>", unsafe_allow_html=True)
             top_players = supabase.table("jugadores").select("nombre, elo, skin_activa").order("elo", desc=True).limit(10).execute()
             if top_players.data:
@@ -526,33 +531,37 @@ elif st.session_state.estado == "mundo":
             st.markdown("</div>", unsafe_allow_html=True)
             
         with c_feed:
-            st.markdown("<h3 style='color: #00aaff; text-align: center;'>📡 MURO EN DIRECTO</h3>", unsafe_allow_html=True)
+            st.markdown(f"<h3 style='color: #00aaff; text-align: center;'>{t('mun_muro')}</h3>", unsafe_allow_html=True)
             st.markdown("<div class='feed-box' style='background-color: #0a0a0a; border: 1px solid #333; border-radius: 12px; padding: 15px; height: 450px; overflow-y: auto;'>", unsafe_allow_html=True)
             feed = supabase.table("historial").select("*").order("id", desc=True).limit(15).execute()
             if feed.data:
                 for f in feed.data:
-                    res = f['resultado']; puntos = f['puntos_cambio']; j_nom = f.get('jugador_nombre', 'Un guerrero'); r_nom = f.get('rival_nombre', 'el Guardián')
-                    if res == "victoria": color = "#00ff00"; icono = "🟢"; texto = f"**{j_nom}** completó su misión y roba <span style='color:{color};'>+{puntos} ELO</span>."
-                    else: color = "#ff4b4b"; icono = "🔴"; texto = f"El escudo de **{j_nom}** colapsó. Pierde <span style='color:{color};'>{puntos} ELO</span>."
+                    res = f['resultado']; puntos = f['puntos_cambio']; j_nom = f.get('jugador_nombre', 'Un guerrero')
+                    
+                    texto_es = f"**{j_nom}** completó su misión y roba <span style='color:#00ff00;'>+{puntos} ELO</span>." if res == "victoria" else f"El escudo de **{j_nom}** colapsó. Pierde <span style='color:#ff4b4b;'>{puntos} ELO</span>."
+                    texto_en = f"**{j_nom}** completed the mission and steals <span style='color:#00ff00;'>+{puntos} ELO</span>." if res == "victoria" else f"**{j_nom}**'s shield collapsed. Loses <span style='color:#ff4b4b;'>{puntos} ELO</span>."
+                    texto = texto_en if st.session_state.get('idioma') == 'en' else texto_es
+                    
+                    color = "#00ff00" if res == "victoria" else "#ff4b4b"
+                    icono = "🟢" if res == "victoria" else "🔴"
+                    
                     st.markdown(f"<div style='background-color: #111; border-left: 3px solid {color}; padding: 10px; margin-bottom: 8px; border-radius: 4px;'><p style='color: #ccc; margin: 0; font-size: 13px;'>{icono} {texto}</p></div>".replace('\n', ''), unsafe_allow_html=True)
-            else: st.markdown("<p style='text-align: center; color: #555;'>El silencio reina en la arena...</p>", unsafe_allow_html=True)
+            else: st.markdown(f"<p style='text-align: center; color: #555;'>{t('mun_silencio')}</p>", unsafe_allow_html=True)
             st.markdown("</div>", unsafe_allow_html=True)
 
         st.divider()
-        st.markdown("<h3 style='text-align: center; color: #ffd700; margin-top: 20px;'>📜 LEYENDAS INMORTALES</h3>", unsafe_allow_html=True)
-        st.markdown("<p style='text-align: center; color: #888; font-size: 14px;'>El Salón de los Dioses. Solo los ganadores de temporadas pasadas.</p>", unsafe_allow_html=True)
+        st.markdown(f"<h3 style='text-align: center; color: #ffd700; margin-top: 20px;'>{t('mun_leyendas')}</h3>", unsafe_allow_html=True)
+        st.markdown(f"<p style='text-align: center; color: #888; font-size: 14px;'>{t('mun_ley_sub')}</p>", unsafe_allow_html=True)
         leyendas = supabase.table("leyendas").select("*").order("temporada", desc=True).execute()
         if leyendas.data:
             for l in leyendas.data:
                 st.markdown(f"<div style='background:#1a1a1a; border-left:4px solid {l['rango_color']}; padding:15px; margin-bottom:10px;'><h4 style='margin:0; color:white;'>Temporada {l['temporada']}: {l['nombre']}</h4><p style='margin:0; color:#888;'>{l['rango_icono']} {l['rango_nombre']} - {l['elo_final']} ELO</p></div>".replace('\n', ''), unsafe_allow_html=True)
-        else: st.markdown("<div style='text-align:center; padding:30px; border:1px dashed #333;'><p style='color:#555; font-style:italic;'>El pedestal está vacío. Sé tú el primero.</p></div>".replace('\n', ''), unsafe_allow_html=True)
+        else: st.markdown(f"<div style='text-align:center; padding:30px; border:1px dashed #333;'><p style='color:#555; font-style:italic;'>{t('mun_ley_vacio')}</p></div>".replace('\n', ''), unsafe_allow_html=True)
 
     with tab_taberna:
-        st.markdown("<h3 style='color: #ff4b4b; text-align: center;'>💬 LA TABERNA GLOBAL</h3>", unsafe_allow_html=True)
+        st.markdown(f"<h3 style='color: #ff4b4b; text-align: center;'>{t('mun_chat_tit')}</h3>", unsafe_allow_html=True)
         
-        # Caja de mensajes
         st.markdown("<div class='feed-box' style='background-color: #0a0a0a; border: 1px solid #333; border-radius: 12px; padding: 15px; height: 400px; overflow-y: auto; display: flex; flex-direction: column-reverse;'>", unsafe_allow_html=True)
-        
         try:
             chat_data = supabase.table("chat_global").select("*").order("fecha", desc=True).limit(30).execute()
             chat_html = ""
@@ -561,23 +570,20 @@ elif st.session_state.estado == "mundo":
                     es_mio = msg['jugador_id'] == st.session_state.usuario_id
                     bg_color = "#1a1a1a" if es_mio else "#111"
                     borde = "#ff4b4b" if es_mio else "#333"
-                    
                     chat_html += f"<div style='background-color: {bg_color}; border-left: 3px solid {borde}; padding: 10px; margin-bottom: 8px; border-radius: 4px; text-align: left;'><strong style='color: {borde}; font-size: 12px;'>{msg['nombre_jugador']}</strong><br><span style='color: #ccc; font-size: 14px;'>{msg['mensaje']}</span></div>"
                 st.markdown(chat_html, unsafe_allow_html=True)
             else:
-                st.markdown("<p style='text-align: center; color: #555;'>La taberna está vacía. Escribe el primer mensaje.</p>", unsafe_allow_html=True)
+                st.markdown(f"<p style='text-align: center; color: #555;'>{t('mun_chat_vacio')}</p>", unsafe_allow_html=True)
         except Exception as e:
-            st.markdown("<p style='text-align: center; color: #ff4b4b;'>⚠️ Error al cargar la taberna. ¿Creaste la tabla en Supabase?</p>", unsafe_allow_html=True)
-        
+            st.markdown(f"<p style='text-align: center; color: #ff4b4b;'>{t('mun_chat_err')}</p>", unsafe_allow_html=True)
         st.markdown("</div>", unsafe_allow_html=True)
         
-        # Formulario para enviar mensajes (limpia la caja al pulsar Enter/Enviar)
         with st.form("chat_form", clear_on_submit=True):
             c_input, c_btn = st.columns([4, 1])
             with c_input:
-                nuevo_msg = st.text_input("Mensaje", label_visibility="collapsed", placeholder="Habla, guerrero...")
+                nuevo_msg = st.text_input("Mensaje", label_visibility="collapsed", placeholder=t('mun_ph_chat'))
             with c_btn:
-                submit_btn = st.form_submit_button("ENVIAR", use_container_width=True)
+                submit_btn = st.form_submit_button(t('mun_btn_chat'), use_container_width=True)
             
             if submit_btn and nuevo_msg.strip():
                 try:
