@@ -366,7 +366,6 @@ elif st.session_state.estado == "lobby":
         st.session_state.input_mision_texto = mision_input 
     
     tiempo_opts = {
-        "⚙️ Modo Test (10 Segundos)": 10,
         "⏱️ 15 Minutos": 900,
         "⏱️ 20 Minutos": 1200,
         "⚔️ Escaramuza (25 Minutos)": 1500,
