@@ -433,75 +433,97 @@ elif st.session_state.estado == "lobby":
                 
     render_navbar("lobby")
 # --- MISIONES SECUNDARIAS (GREMIO) ---
+# --- MISIONES SECUNDARIAS (GREMIO) ---
 elif st.session_state.estado == "gremio":
-    render_top_bar()
+    idioma = st.session_state.get('idioma', 'es')
     
-    st.markdown("<h1 class='epic-title' style='color: #00ff00;'>⚔️ EL GREMIO</h1>", unsafe_allow_html=True)
-    st.markdown("<h4 style='text-align: center; color: #888; margin-bottom: 40px; text-transform: uppercase; letter-spacing: 2px;'>Conquista la realidad fuera de la pantalla</h4>", unsafe_allow_html=True)
+    # MISIONES BILINGÜES INYECTADAS
+    cat_fis = "FÍSICO" if idioma == 'es' else "PHYSICAL"
+    cat_soc = "SOCIAL" if idioma == 'es' else "SOCIAL"
+    cat_men = "MENTAL" if idioma == 'es' else "MENTAL"
+    cat_dis = "DISCIPLINA" if idioma == 'es' else "DISCIPLINE"
+    
+    mis_fis = {
+        "es": ["Ducha de agua fría extrema (Min 2 minutos).", "100 flexiones antes de que acabe el día.", "Salir a correr o caminar rápido 30 mins sin música."],
+        "en": ["Extreme cold shower (Min 2 minutes).", "100 push-ups before the day ends.", "Run or brisk walk for 30 mins without music."]
+    }
+    mis_soc = {
+        "es": ["Llamar a un familiar con el que hace tiempo que no hablas.", "Hacerle un cumplido sincero a un desconocido.", "Ayudar a alguien sin esperar nada a cambio."],
+        "en": ["Call a family member you haven't spoken to in a while.", "Give a sincere compliment to a stranger.", "Help someone without expecting anything in return."]
+    }
+    mis_men = {
+        "es": ["Escribir 500 palabras soltando todo lo que tienes en la cabeza.", "Leer 10 páginas de un libro que no sea ficción.", "Meditar 10 minutos en absoluto silencio."],
+        "en": ["Write 500 words letting out everything in your head.", "Read 10 pages of a non-fiction book.", "Meditate for 10 minutes in absolute silence."]
+    }
+    mis_dis = {
+        "es": ["Cancelar 1 suscripción o gasto hormiga innecesario.", "Limpiar y ordenar tu habitación al 100%.", "No comer nada de azúcar procesado en todo el día."],
+        "en": ["Cancel 1 subscription or unnecessary small expense.", "Clean and organize your room 100%.", "Eat zero processed sugar for the entire day."]
+    }
+
+    st.markdown(f"<h1 class='epic-title' style='color: #00ff00;'>{t('gre_tit')}</h1>", unsafe_allow_html=True)
+    st.markdown(f"<h4 style='text-align: center; color: #888; margin-bottom: 40px; text-transform: uppercase; letter-spacing: 2px;'>{t('gre_sub')}</h4>", unsafe_allow_html=True)
 
     hoy_str = datetime.now(timezone.utc).strftime('%Y-%m-%d')
     if st.session_state.gremio_fecha != hoy_str:
         supabase.table("jugadores").update({"gremio_fecha": hoy_str, "gremio_m1": False, "gremio_m2": False, "gremio_m3": False, "gremio_m4": False}).eq("id", st.session_state.usuario_id).execute()
         st.session_state.gremio_fecha = hoy_str; st.session_state.gremio_m1 = False; st.session_state.gremio_m2 = False; st.session_state.gremio_m3 = False; st.session_state.gremio_m4 = False
 
-    st.markdown("""
+    st.markdown(f"""
         <div style='background-color: #111; border-left: 4px solid #00ff00; border-radius: 8px; padding: 20px; margin-bottom: 40px; box-shadow: 0 4px 15px rgba(0,255,0,0.1);'>
             <h3 style='color: white; margin-top: 0; display: flex; justify-content: space-between;'>
-                <span>📜 MISIONES DIARIAS</span>
-                <span style='color: #ffd700;'>Bóveda: 🪙 {monedas}</span>
+                <span>{t('gre_mis')}</span>
+                <span style='color: #ffd700;'>🪙 {st.session_state.monedas}</span>
             </h3>
-            <p style='color: #888; margin: 0; font-size: 14px;'>El sistema no puede verificar tu mundo físico. Tu honor es tu única garantía. Engañar al sistema corrompe tu disciplina real.</p>
+            <p style='color: #888; margin: 0; font-size: 14px;'>{t('gre_aviso')}</p>
         </div>
-    """.replace('{monedas}', str(st.session_state.monedas)), unsafe_allow_html=True)
+    """, unsafe_allow_html=True)
 
     random.seed(f"{st.session_state.usuario_id}_{hoy_str}")
-    t1, d1 = "FÍSICO", random.choice(MISIONES_FISICAS)
-    t2, d2 = "SOCIAL", random.choice(MISIONES_SOCIALES)
-    t3, d3 = "MENTAL", random.choice(MISIONES_MENTALES)
-    t4, d4 = "DISCIPLINA", random.choice(MISIONES_ORDEN)
+    d1 = random.choice(mis_fis[idioma])
+    d2 = random.choice(mis_soc[idioma])
+    d3 = random.choice(mis_men[idioma])
+    d4 = random.choice(mis_dis[idioma])
     random.seed() 
 
-    # --- DISEÑO ESPACIADO EN 2 COLUMNAS ---
     g1, g2 = st.columns(2)
-    
     with g1:
         st.markdown(f"<div style='margin-bottom: 10px;'>", unsafe_allow_html=True)
-        st.markdown(generar_html_mision(t1, d1, 15, st.session_state.gremio_m1), unsafe_allow_html=True)
+        st.markdown(generar_html_mision(cat_fis, d1, 15, st.session_state.gremio_m1), unsafe_allow_html=True)
         if st.session_state.gremio_m1: 
-            st.button("✅ SUPERADO", disabled=True, key="g_m1_d", use_container_width=True)
+            st.button(t('gre_sup'), disabled=True, key="g_m1_d", use_container_width=True)
         else:
-            if st.button("🩸 LO HE HECHO", type="primary", key="g_m1_c", use_container_width=True):
+            if st.button(t('gre_hacer'), type="primary", key="g_m1_c", use_container_width=True):
                 st.session_state.monedas += 15; st.session_state.gremio_m1 = True
                 supabase.table("jugadores").update({"monedas": st.session_state.monedas, "gremio_m1": True}).eq("id", st.session_state.usuario_id).execute(); st.rerun()
         st.markdown("</div><br>", unsafe_allow_html=True)
                 
         st.markdown(f"<div style='margin-bottom: 10px;'>", unsafe_allow_html=True)
-        st.markdown(generar_html_mision(t2, d2, 15, st.session_state.gremio_m2), unsafe_allow_html=True)
+        st.markdown(generar_html_mision(cat_soc, d2, 15, st.session_state.gremio_m2), unsafe_allow_html=True)
         if st.session_state.gremio_m2: 
-            st.button("✅ SUPERADO", disabled=True, key="g_m2_d", use_container_width=True)
+            st.button(t('gre_sup'), disabled=True, key="g_m2_d", use_container_width=True)
         else:
-            if st.button("🩸 LO HE HECHO", type="primary", key="g_m2_c", use_container_width=True):
+            if st.button(t('gre_hacer'), type="primary", key="g_m2_c", use_container_width=True):
                 st.session_state.monedas += 15; st.session_state.gremio_m2 = True
                 supabase.table("jugadores").update({"monedas": st.session_state.monedas, "gremio_m2": True}).eq("id", st.session_state.usuario_id).execute(); st.rerun()
         st.markdown("</div>", unsafe_allow_html=True)
 
     with g2:
         st.markdown(f"<div style='margin-bottom: 10px;'>", unsafe_allow_html=True)
-        st.markdown(generar_html_mision(t3, d3, 15, st.session_state.gremio_m3), unsafe_allow_html=True)
+        st.markdown(generar_html_mision(cat_men, d3, 15, st.session_state.gremio_m3), unsafe_allow_html=True)
         if st.session_state.gremio_m3: 
-            st.button("✅ SUPERADO", disabled=True, key="g_m3_d", use_container_width=True)
+            st.button(t('gre_sup'), disabled=True, key="g_m3_d", use_container_width=True)
         else:
-            if st.button("🩸 LO HE HECHO", type="primary", key="g_m3_c", use_container_width=True):
+            if st.button(t('gre_hacer'), type="primary", key="g_m3_c", use_container_width=True):
                 st.session_state.monedas += 15; st.session_state.gremio_m3 = True
                 supabase.table("jugadores").update({"monedas": st.session_state.monedas, "gremio_m3": True}).eq("id", st.session_state.usuario_id).execute(); st.rerun()
         st.markdown("</div><br>", unsafe_allow_html=True)
                 
         st.markdown(f"<div style='margin-bottom: 10px;'>", unsafe_allow_html=True)
-        st.markdown(generar_html_mision(t4, d4, 15, st.session_state.gremio_m4), unsafe_allow_html=True)
+        st.markdown(generar_html_mision(cat_dis, d4, 15, st.session_state.gremio_m4), unsafe_allow_html=True)
         if st.session_state.gremio_m4: 
-            st.button("✅ SUPERADO", disabled=True, key="g_m4_d", use_container_width=True)
+            st.button(t('gre_sup'), disabled=True, key="g_m4_d", use_container_width=True)
         else:
-            if st.button("🩸 LO HE HECHO", type="primary", key="g_m4_c", use_container_width=True):
+            if st.button(t('gre_hacer'), type="primary", key="g_m4_c", use_container_width=True):
                 st.session_state.monedas += 15; st.session_state.gremio_m4 = True
                 supabase.table("jugadores").update({"monedas": st.session_state.monedas, "gremio_m4": True}).eq("id", st.session_state.usuario_id).execute(); st.rerun()
         st.markdown("</div>", unsafe_allow_html=True)
