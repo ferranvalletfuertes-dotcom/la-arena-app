@@ -251,7 +251,7 @@ if st.session_state.estado == "login":
                         
                     if usuarios_totales < 101:
                             skin_asignada = "oro_fundador"
-                        else:
+                    else:
                             skin_asignada = "default"
                             
                         supabase.table("jugadores").insert({
