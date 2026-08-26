@@ -247,7 +247,7 @@ if st.session_state.estado == "login":
                     hoy_str = datetime.now(timezone.utc).strftime('%Y-%m-%d')
                         
                     respuesta_conteo = supabase.table("jugadores").select("id", count="exact").execute()
-                        usuarios_totales = respuesta_conteo.count
+                    usuarios_totales = respuesta_conteo.count
                         
                         if usuarios_totales < 101:
                             skin_asignada = "oro_fundador"
