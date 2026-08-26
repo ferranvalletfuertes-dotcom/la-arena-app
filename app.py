@@ -244,7 +244,7 @@ if st.session_state.estado == "login":
         with tab2:
     # --- INICIO INYECCIÓN NIVEL 8 ---
                     auth_resp = supabase.auth.sign_up({"email": email_reg, "password": pass_reg})
-                        hoy_str = datetime.now(timezone.utc).strftime('%Y-%m-%d')
+                    hoy_str = datetime.now(timezone.utc).strftime('%Y-%m-%d')
                         
                         respuesta_conteo = supabase.table("jugadores").select("id", count="exact").execute()
                         usuarios_totales = respuesta_conteo.count
