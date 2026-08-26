@@ -111,6 +111,17 @@ def generar_carta_html(nombre, elo, icono, color, etiqueta, skin="default"):
         fondo = "background: linear-gradient(145deg, #2b2b2b, #000000);"
         nombre_display = f"✨ {nombre} ✨"
 
+    # --- INYECCIÓN NIVEL 8: LOS 101 FUNDADORES ---
+    elif skin == "oro_fundador":
+        color_borde, color_texto = "#FFD700", "#FFD700"
+        sombra = "box-shadow: 0 0 35px rgba(255, 215, 0, 0.5), inset 0 0 15px rgba(255, 215, 0, 0.2);"
+        fondo = "background: linear-gradient(145deg, #1a1a00, #000000);"
+        nombre_display = f"⚜️ {nombre} ⚜️"
+    # ---------------------------------------------
+
+    # Construcción del Estilo Final
+    estilo_carta = f"border: 2px solid {color_borde}; {sombra} {fondo}"
+
     # Construcción del Estilo Final
     estilo_carta = f"border: 2px solid {color_borde}; {sombra} {fondo}"
     svg_icono = f'''<svg width="45" height="45" viewBox="0 0 24 24" fill="none" stroke="{color_texto}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>'''
