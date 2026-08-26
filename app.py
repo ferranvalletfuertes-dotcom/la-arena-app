@@ -267,7 +267,7 @@ if st.session_state.estado == "login":
                             st.success("¡Registrado! Ve a 'Entrar al Coliseo'.")
                         # --- FIN INYECCIÓN NIVEL 8 ---
 
-                except Exception as e: 
+                except Exception as e:
                         st.error("Fallo en el registro.")
 # --- EL LOBBY BILINGÜE ---
 # --- EL LOBBY BILINGÜE ---
