@@ -263,7 +263,7 @@ if st.session_state.estado == "login":
                         
                     if usuarios_totales < 101:
                             st.success("¡REGISTRO VIP! Eres uno de los 101 Fundadores. Ve a 'Entrar al Coliseo'.")
-                        else:
+                    else:
                             st.success("¡Registrado! Ve a 'Entrar al Coliseo'.")
                         # --- FIN INYECCIÓN NIVEL 8 ---
 
