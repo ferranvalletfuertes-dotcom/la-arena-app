@@ -246,7 +246,7 @@ if st.session_state.estado == "login":
                     auth_resp = supabase.auth.sign_up({"email": email_reg, "password": pass_reg})
                     hoy_str = datetime.now(timezone.utc).strftime('%Y-%m-%d')
                         
-                        respuesta_conteo = supabase.table("jugadores").select("id", count="exact").execute()
+                    respuesta_conteo = supabase.table("jugadores").select("id", count="exact").execute()
                         usuarios_totales = respuesta_conteo.count
                         
                         if usuarios_totales < 101:
