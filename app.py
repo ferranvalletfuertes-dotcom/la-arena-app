@@ -235,8 +235,7 @@ if st.session_state.estado == "login":
                         else:
                             st.session_state.ultima_fecha_misiones = fecha_db; st.session_state.progreso_m1 = d.get('progreso_m1', 0); st.session_state.progreso_m2 = d.get('progreso_m2', 0); st.session_state.progreso_m3 = d.get('progreso_m3', 0); st.session_state.m1_reclamada = d.get('m1_reclamada', False); st.session_state.m2_reclamada = d.get('m2_reclamada', False); st.session_state.m3_reclamada = d.get('m3_reclamada', False)
                             
-                        if not st.session_state.bautismo_visto: st.session_state.estado = "bautismo"
-                        else: st.session_state.estado = "lobby"
+                        st.session_state.estado = "lobby"
                     else: st.error("No se encontraron los datos del guerrero."); st.stop()
                     st.rerun()
                 except Exception as e: st.error("❌ El sistema no reconoce tus credenciales.")
