@@ -242,36 +242,32 @@ if st.session_state.estado == "login":
                 except Exception as e: st.error("❌ El sistema no reconoce tus credenciales.")
                     
         with tab2:
-            email_reg = st.text_input(DIC[lang]['ph_email'], key="reg_email")
-            nombre_reg = st.text_input(DIC[lang]['ph_name'], key="reg_nombre")
-            pass_reg = st.text_input(DIC[lang]['ph_pass'], type="password", key="reg_pass")
-            referido_reg = st.text_input(DIC[lang]['ph_ref'], key="reg_ref")
-            
-            if st.button(DIC[lang]['btn_jurar'], type="primary", use_container_width=True):
-                if not nombre_reg: 
-                    st.error("Necesitas un nombre de guerra.")
-                else:
-                    try:
-                        monedas_iniciales = 0
-                        if referido_reg:
-                            reclutador_data = supabase.table("jugadores").select("id, monedas").eq("nombre", referido_reg.strip()).execute()
-                            if len(reclutador_data.data) > 0:
-                                r_id = reclutador_data.data[0]['id']
-                                r_monedas = reclutador_data.data[0]['monedas']
-                                supabase.table("jugadores").update({"monedas": r_monedas + 1000}).eq("id", r_id).execute()
-                                monedas_iniciales = 500
-                                st.success(f"¡Reclutado por {referido_reg}! Entras con 500 monedas extra.")
-                            else: 
-                                st.warning("Código de embajador no existe.")
-                                
+    # --- INICIO INYECCIÓN NIVEL 8 ---
                         auth_resp = supabase.auth.sign_up({"email": email_reg, "password": pass_reg})
                         hoy_str = datetime.now(timezone.utc).strftime('%Y-%m-%d')
+                        
+                        # EL CENTINELA: Contamos cuántos guerreros existen
+                        respuesta_conteo = supabase.table("jugadores").select("id", count="exact").execute()
+                        usuarios_totales = respuesta_conteo.count
+                        
+                        # EL CLUB DE LOS 101: Asignamos la reliquia
+                        if usuarios_totales < 101:
+                            skin_asignada = "oro_fundador"
+                        else:
+                            skin_asignada = "default"
+                            
                         supabase.table("jugadores").insert({
                             "id": auth_resp.user.id, "elo": 100, "racha": 0, "monedas": monedas_iniciales, 
                             "nombre": nombre_reg, "ultima_fecha_misiones": hoy_str, "victorias": 0, "derrotas": 0,
-                            "minutos_focus": 0, "bautismo_completado": False, "gremio_fecha": "", "referido_por": referido_reg if referido_reg else None
+                            "minutos_focus": 0, "bautismo_completado": False, "gremio_fecha": "", "referido_por": referido_reg if referido_reg else None,
+                            "skin_activa": skin_asignada # <- AQUÍ SE GUARDA LA SKIN
                         }).execute()
-                        st.success("¡Registrado! Ve a 'Entrar al Coliseo'.")
+                        
+                        if usuarios_totales < 101:
+                            st.success("¡REGISTRO VIP! Eres uno de los 101 Fundadores. Ve a 'Entrar al Coliseo'.")
+                        else:
+                            st.success("¡Registrado! Ve a 'Entrar al Coliseo'.")
+                        # --- FIN INYECCIÓN NIVEL 8 ---
                     except Exception as e: 
                         st.error("Fallo en el registro.")
 # --- EL LOBBY BILINGÜE ---
