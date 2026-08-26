@@ -254,7 +254,7 @@ if st.session_state.estado == "login":
                     else:
                             skin_asignada = "default"
                             
-                        supabase.table("jugadores").insert({
+                    supabase.table("jugadores").insert({
                             "id": auth_resp.user.id, "elo": 100, "racha": 0, "monedas": monedas_iniciales, 
                             "nombre": nombre_reg, "ultima_fecha_misiones": hoy_str, "victorias": 0, "derrotas": 0,
                             "minutos_focus": 0, "bautismo_completado": False, "gremio_fecha": "", "referido_por": referido_reg if referido_reg else None,
