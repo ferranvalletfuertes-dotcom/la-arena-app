@@ -243,14 +243,12 @@ if st.session_state.estado == "login":
                     
         with tab2:
     # --- INICIO INYECCIÓN NIVEL 8 ---
-                        auth_resp = supabase.auth.sign_up({"email": email_reg, "password": pass_reg})
+                    auth_resp = supabase.auth.sign_up({"email": email_reg, "password": pass_reg})
                         hoy_str = datetime.now(timezone.utc).strftime('%Y-%m-%d')
                         
-                        # EL CENTINELA: Contamos cuántos guerreros existen
                         respuesta_conteo = supabase.table("jugadores").select("id", count="exact").execute()
                         usuarios_totales = respuesta_conteo.count
                         
-                        # EL CLUB DE LOS 101: Asignamos la reliquia
                         if usuarios_totales < 101:
                             skin_asignada = "oro_fundador"
                         else:
@@ -260,7 +258,7 @@ if st.session_state.estado == "login":
                             "id": auth_resp.user.id, "elo": 100, "racha": 0, "monedas": monedas_iniciales, 
                             "nombre": nombre_reg, "ultima_fecha_misiones": hoy_str, "victorias": 0, "derrotas": 0,
                             "minutos_focus": 0, "bautismo_completado": False, "gremio_fecha": "", "referido_por": referido_reg if referido_reg else None,
-                            "skin_activa": skin_asignada # <- AQUÍ SE GUARDA LA SKIN
+                            "skin_activa": skin_asignada
                         }).execute()
                         
                         if usuarios_totales < 101:
@@ -268,6 +266,7 @@ if st.session_state.estado == "login":
                         else:
                             st.success("¡Registrado! Ve a 'Entrar al Coliseo'.")
                         # --- FIN INYECCIÓN NIVEL 8 ---
+
                     except Exception as e: 
                         st.error("Fallo en el registro.")
 # --- EL LOBBY BILINGÜE ---
