@@ -261,7 +261,7 @@ if st.session_state.estado == "login":
                             "skin_activa": skin_asignada
                         }).execute()
                         
-                        if usuarios_totales < 101:
+                    if usuarios_totales < 101:
                             st.success("¡REGISTRO VIP! Eres uno de los 101 Fundadores. Ve a 'Entrar al Coliseo'.")
                         else:
                             st.success("¡Registrado! Ve a 'Entrar al Coliseo'.")
