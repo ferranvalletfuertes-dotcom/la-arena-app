@@ -243,31 +243,43 @@ if st.session_state.estado == "login":
                     
         with tab2:
     # --- INICIO INYECCIÓN NIVEL 8 ---
-                    auth_resp = supabase.auth.sign_up({"email": email_reg, "password": pass_reg})
-                    hoy_str = datetime.now(timezone.utc).strftime('%Y-%m-%d')
+                try:
+                        monedas_iniciales = 0
+                        if referido_reg:
+                            reclutador_data = supabase.table("jugadores").select("id, monedas").eq("nombre", referido_reg.strip()).execute()
+                            if len(reclutador_data.data) > 0:
+                                r_id = reclutador_data.data[0]['id']
+                                r_monedas = reclutador_data.data[0]['monedas']
+                                supabase.table("jugadores").update({"monedas": r_monedas + 1000}).eq("id", r_id).execute()
+                                monedas_iniciales = 500
+                                st.success(f"¡Reclutado por {referido_reg}! Entras con 500 monedas extra.")
+                            else: 
+                                st.warning("Código de embajador no existe.")
+                                
+                        auth_resp = supabase.auth.sign_up({"email": email_reg, "password": pass_reg})
+                        hoy_str = datetime.now(timezone.utc).strftime('%Y-%m-%d')
                         
-                    respuesta_conteo = supabase.table("jugadores").select("id", count="exact").execute()
-                    usuarios_totales = respuesta_conteo.count
+                        respuesta_conteo = supabase.table("jugadores").select("id", count="exact").execute()
+                        usuarios_totales = respuesta_conteo.count
                         
-                    if usuarios_totales < 101:
+                        if usuarios_totales < 101:
                             skin_asignada = "oro_fundador"
-                    else:
+                        else:
                             skin_asignada = "default"
                             
-                    supabase.table("jugadores").insert({
+                        supabase.table("jugadores").insert({
                             "id": auth_resp.user.id, "elo": 100, "racha": 0, "monedas": monedas_iniciales, 
                             "nombre": nombre_reg, "ultima_fecha_misiones": hoy_str, "victorias": 0, "derrotas": 0,
                             "minutos_focus": 0, "bautismo_completado": False, "gremio_fecha": "", "referido_por": referido_reg if referido_reg else None,
                             "skin_activa": skin_asignada
                         }).execute()
                         
-                    if usuarios_totales < 101:
+                        if usuarios_totales < 101:
                             st.success("¡REGISTRO VIP! Eres uno de los 101 Fundadores. Ve a 'Entrar al Coliseo'.")
-                    else:
+                        else:
                             st.success("¡Registrado! Ve a 'Entrar al Coliseo'.")
-                        # --- FIN INYECCIÓN NIVEL 8 ---
 
-        except Exception as e:
+                    except Exception as e:
                         st.error("Fallo en el registro.")
 # --- EL LOBBY BILINGÜE ---
 # --- EL LOBBY BILINGÜE ---
